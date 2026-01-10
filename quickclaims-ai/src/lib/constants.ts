@@ -2,6 +2,8 @@
  * QuickClaims AI - Application Constants
  */
 
+import type { ClaimStatus } from "@prisma/client";
+
 // Claim status labels for UI
 export const CLAIM_STATUS_LABELS: Record<string, string> = {
   new_supplement: "New Supplement",
@@ -139,3 +141,23 @@ export const DEFAULT_ESTIMATOR_COMMISSION_PERCENTAGE = 0.05; // 5%
 // 48-hour compliance thresholds (in hours)
 export const COMPLIANCE_WARNING_HOURS = 36;
 export const COMPLIANCE_OVERDUE_HOURS = 48;
+
+// Status transition helper functions
+
+/**
+ * Get valid next statuses for a claim
+ */
+export function getValidNextStatuses(currentStatus: ClaimStatus): ClaimStatus[] {
+  return (STATUS_TRANSITIONS[currentStatus] || []) as ClaimStatus[];
+}
+
+/**
+ * Check if a status transition is valid
+ */
+export function isValidStatusTransition(
+  currentStatus: ClaimStatus,
+  newStatus: ClaimStatus
+): boolean {
+  const validTransitions = STATUS_TRANSITIONS[currentStatus] || [];
+  return validTransitions.includes(newStatus);
+}

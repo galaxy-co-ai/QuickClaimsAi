@@ -6,6 +6,7 @@ import { Badge } from "@/components/ui/badge";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { SupplementFormModal } from "@/components/supplements/supplement-form-modal";
 import { DocumentUploadModal } from "@/components/documents/document-upload-modal";
+import { NoteForm } from "@/components/notes/note-form";
 import { formatCurrency, formatDate, formatDateTime } from "@/lib/utils";
 import { decimalToNumber } from "@/lib/calculations";
 import { LOSS_TYPE_LABELS, DOCUMENT_TYPE_LABELS } from "@/lib/constants";
@@ -119,11 +120,18 @@ export function ClaimDetailTabs({
           <CardHeader>
             <CardTitle>Activity Timeline</CardTitle>
           </CardHeader>
-          <CardContent>
+          <CardContent className="space-y-6">
+            {/* Note Input Form */}
+            <div className="p-4 rounded-lg border bg-slate-50">
+              <NoteForm claimId={claim.id} />
+            </div>
+
+            {/* Timeline Entries */}
             {notes.length === 0 ? (
               <div className="text-center py-8 text-slate-500">
                 <Clock className="h-8 w-8 mx-auto mb-2 text-slate-300" />
                 <p>No activity yet</p>
+                <p className="text-sm">Add a note above to start the timeline</p>
               </div>
             ) : (
               <div className="space-y-4">

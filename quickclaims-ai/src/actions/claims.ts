@@ -5,6 +5,7 @@ import { db } from "@/lib/db";
 import { claimInputSchema, claimFiltersSchema, type ClaimInput, type ClaimFilters } from "@/lib/validations/claim";
 import { requireRole } from "@/lib/auth";
 import { calculateInitialDollarPerSquare, decimalToNumber } from "@/lib/calculations";
+import { CLAIM_STATUS_LABELS, getValidNextStatuses, isValidStatusTransition } from "@/lib/constants";
 import type { ClaimStatus } from "@prisma/client";
 
 /**
@@ -308,6 +309,16 @@ export async function updateClaimStatus(id: string, newStatus: ClaimStatus) {
   }
 
   const oldStatus = existingClaim.status;
+
+  // Validate status transition
+  if (!isValidStatusTransition(oldStatus, newStatus)) {
+    const validOptions = getValidNextStatuses(oldStatus)
+      .map((s) => CLAIM_STATUS_LABELS[s] || s)
+      .join(", ");
+    throw new Error(
+      `Invalid status transition from "${CLAIM_STATUS_LABELS[oldStatus]}" to "${CLAIM_STATUS_LABELS[newStatus]}". Valid options: ${validOptions || "none (terminal state)"}`
+    );
+  }
 
   // Update claim with new status and timestamps
   const updateData: Record<string, unknown> = {

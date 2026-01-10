@@ -36,7 +36,8 @@ export function ClaimStatusDropdown({
         await updateClaimStatus(claimId, newStatus);
         toast.success(`Status updated to ${CLAIM_STATUS_LABELS[newStatus]}`);
       } catch (error) {
-        toast.error("Failed to update status");
+        const message = error instanceof Error ? error.message : "Failed to update status";
+        toast.error(message);
         console.error(error);
       }
     });
