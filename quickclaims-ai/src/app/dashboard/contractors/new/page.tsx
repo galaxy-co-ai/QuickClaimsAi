@@ -1,3 +1,5 @@
+export const dynamic = "force-dynamic";
+
 import { ContractorForm } from "@/components/contractors/contractor-form";
 
 export default function NewContractorPage() {

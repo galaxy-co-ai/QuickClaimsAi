@@ -1,0 +1,515 @@
+"use client";
+
+import { useRouter } from "next/navigation";
+import { useForm } from "react-hook-form";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { toast } from "sonner";
+import { Loader2 } from "lucide-react";
+
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { claimInputSchema, type ClaimInput } from "@/lib/validations/claim";
+import { createClaim, updateClaim } from "@/actions/claims";
+import { US_STATES, LOSS_TYPE_LABELS } from "@/lib/constants";
+import type { AdjusterType } from "@prisma/client";
+
+interface ClaimFormProps {
+  claim?: {
+    id: string;
+    policyholderName: string;
+    policyholderEmail: string | null;
+    policyholderPhone: string | null;
+    lossAddress: string;
+    lossCity: string;
+    lossState: string;
+    lossZip: string;
+    claimNumber: string | null;
+    dateOfLoss: Date | null;
+    lossType: string | null;
+    contractorId: string;
+    estimatorId: string;
+    carrierId: string;
+    adjusterId: string | null;
+    jobType: string;
+    totalSquares: number | string;
+    roofRCV: number | string;
+    initialRCV: number | string;
+  };
+  contractors: { id: string; companyName: string }[];
+  estimators: { id: string; firstName: string; lastName: string }[];
+  carriers: { id: string; name: string }[];
+  adjusters: { id: string; name: string; carrierId: string; type: AdjusterType }[];
+}
+
+export function ClaimForm({
+  claim,
+  contractors,
+  estimators,
+  carriers,
+  adjusters,
+}: ClaimFormProps) {
+  const router = useRouter();
+  const isEditing = !!claim;
+
+  const {
+    register,
+    handleSubmit,
+    watch,
+    formState: { errors, isSubmitting },
+  } = useForm<ClaimInput>({
+    resolver: zodResolver(claimInputSchema),
+    defaultValues: claim
+      ? {
+          policyholderName: claim.policyholderName,
+          policyholderEmail: claim.policyholderEmail ?? "",
+          policyholderPhone: claim.policyholderPhone ?? "",
+          lossAddress: claim.lossAddress,
+          lossCity: claim.lossCity,
+          lossState: claim.lossState,
+          lossZip: claim.lossZip,
+          claimNumber: claim.claimNumber ?? "",
+          dateOfLoss: claim.dateOfLoss ?? undefined,
+          lossType: claim.lossType as ClaimInput["lossType"] ?? undefined,
+          contractorId: claim.contractorId,
+          estimatorId: claim.estimatorId,
+          carrierId: claim.carrierId,
+          adjusterId: claim.adjusterId ?? "",
+          jobType: claim.jobType as ClaimInput["jobType"],
+          totalSquares: Number(claim.totalSquares),
+          roofRCV: Number(claim.roofRCV),
+          initialRCV: Number(claim.initialRCV),
+        }
+      : {
+          jobType: "supplement",
+          lossState: "TX",
+        },
+  });
+
+  // Watch carrier to filter adjusters
+  const selectedCarrierId = watch("carrierId");
+  const filteredAdjusters = adjusters.filter(
+    (adj) => adj.carrierId === selectedCarrierId
+  );
+
+  async function onSubmit(data: ClaimInput) {
+    try {
+      if (isEditing) {
+        await updateClaim(claim.id, data);
+        toast.success("Claim updated successfully");
+        router.push(`/dashboard/claims/${claim.id}`);
+      } else {
+        const result = await createClaim(data);
+        toast.success("Claim created successfully");
+        router.push(`/dashboard/claims/${result.claim.id}`);
+      }
+      router.refresh();
+    } catch (error) {
+      toast.error("Something went wrong. Please try again.");
+      console.error(error);
+    }
+  }
+
+  return (
+    <form onSubmit={handleSubmit(onSubmit)} className="space-y-6">
+      {/* Policyholder Information */}
+      <Card>
+        <CardHeader>
+          <CardTitle>Policyholder Information</CardTitle>
+        </CardHeader>
+        <CardContent className="space-y-4">
+          {/* Name */}
+          <div className="space-y-2">
+            <Label htmlFor="policyholderName">
+              Policyholder Name <span className="text-red-500">*</span>
+            </Label>
+            <Input
+              id="policyholderName"
+              placeholder="John Smith"
+              {...register("policyholderName")}
+              aria-invalid={!!errors.policyholderName}
+            />
+            {errors.policyholderName && (
+              <p className="text-sm text-red-500">
+                {errors.policyholderName.message}
+              </p>
+            )}
+          </div>
+
+          {/* Email & Phone Row */}
+          <div className="grid gap-4 md:grid-cols-2">
+            <div className="space-y-2">
+              <Label htmlFor="policyholderEmail">Email</Label>
+              <Input
+                id="policyholderEmail"
+                type="email"
+                placeholder="john@example.com"
+                {...register("policyholderEmail")}
+              />
+              {errors.policyholderEmail && (
+                <p className="text-sm text-red-500">
+                  {errors.policyholderEmail.message}
+                </p>
+              )}
+            </div>
+            <div className="space-y-2">
+              <Label htmlFor="policyholderPhone">Phone</Label>
+              <Input
+                id="policyholderPhone"
+                type="tel"
+                placeholder="(555) 123-4567"
+                {...register("policyholderPhone")}
+              />
+            </div>
+          </div>
+
+          {/* Address */}
+          <div className="space-y-2">
+            <Label htmlFor="lossAddress">
+              Loss Address <span className="text-red-500">*</span>
+            </Label>
+            <Input
+              id="lossAddress"
+              placeholder="123 Main Street"
+              {...register("lossAddress")}
+              aria-invalid={!!errors.lossAddress}
+            />
+            {errors.lossAddress && (
+              <p className="text-sm text-red-500">{errors.lossAddress.message}</p>
+            )}
+          </div>
+
+          {/* City, State, ZIP Row */}
+          <div className="grid gap-4 md:grid-cols-3">
+            <div className="space-y-2">
+              <Label htmlFor="lossCity">
+                City <span className="text-red-500">*</span>
+              </Label>
+              <Input
+                id="lossCity"
+                placeholder="Austin"
+                {...register("lossCity")}
+                aria-invalid={!!errors.lossCity}
+              />
+              {errors.lossCity && (
+                <p className="text-sm text-red-500">{errors.lossCity.message}</p>
+              )}
+            </div>
+            <div className="space-y-2">
+              <Label htmlFor="lossState">
+                State <span className="text-red-500">*</span>
+              </Label>
+              <select
+                id="lossState"
+                {...register("lossState")}
+                className="h-10 w-full rounded-md border border-slate-200 bg-white px-3 text-sm focus:border-blue-500 focus:outline-none focus:ring-1 focus:ring-blue-500"
+                aria-invalid={!!errors.lossState}
+              >
+                {US_STATES.map((state) => (
+                  <option key={state.value} value={state.value}>
+                    {state.label}
+                  </option>
+                ))}
+              </select>
+              {errors.lossState && (
+                <p className="text-sm text-red-500">{errors.lossState.message}</p>
+              )}
+            </div>
+            <div className="space-y-2">
+              <Label htmlFor="lossZip">
+                ZIP Code <span className="text-red-500">*</span>
+              </Label>
+              <Input
+                id="lossZip"
+                placeholder="78701"
+                {...register("lossZip")}
+                aria-invalid={!!errors.lossZip}
+              />
+              {errors.lossZip && (
+                <p className="text-sm text-red-500">{errors.lossZip.message}</p>
+              )}
+            </div>
+          </div>
+        </CardContent>
+      </Card>
+
+      {/* Assignment */}
+      <Card>
+        <CardHeader>
+          <CardTitle>Assignment</CardTitle>
+        </CardHeader>
+        <CardContent className="space-y-4">
+          <div className="grid gap-4 md:grid-cols-2">
+            {/* Contractor */}
+            <div className="space-y-2">
+              <Label htmlFor="contractorId">
+                Contractor <span className="text-red-500">*</span>
+              </Label>
+              <select
+                id="contractorId"
+                {...register("contractorId")}
+                className="h-10 w-full rounded-md border border-slate-200 bg-white px-3 text-sm focus:border-blue-500 focus:outline-none focus:ring-1 focus:ring-blue-500"
+                aria-invalid={!!errors.contractorId}
+              >
+                <option value="">Select contractor...</option>
+                {contractors.map((c) => (
+                  <option key={c.id} value={c.id}>
+                    {c.companyName}
+                  </option>
+                ))}
+              </select>
+              {errors.contractorId && (
+                <p className="text-sm text-red-500">
+                  {errors.contractorId.message}
+                </p>
+              )}
+            </div>
+
+            {/* Estimator */}
+            <div className="space-y-2">
+              <Label htmlFor="estimatorId">
+                Estimator <span className="text-red-500">*</span>
+              </Label>
+              <select
+                id="estimatorId"
+                {...register("estimatorId")}
+                className="h-10 w-full rounded-md border border-slate-200 bg-white px-3 text-sm focus:border-blue-500 focus:outline-none focus:ring-1 focus:ring-blue-500"
+                aria-invalid={!!errors.estimatorId}
+              >
+                <option value="">Select estimator...</option>
+                {estimators.map((e) => (
+                  <option key={e.id} value={e.id}>
+                    {e.firstName} {e.lastName}
+                  </option>
+                ))}
+              </select>
+              {errors.estimatorId && (
+                <p className="text-sm text-red-500">
+                  {errors.estimatorId.message}
+                </p>
+              )}
+            </div>
+          </div>
+
+          {/* Job Type */}
+          <div className="space-y-2">
+            <Label htmlFor="jobType">Job Type</Label>
+            <select
+              id="jobType"
+              {...register("jobType")}
+              className="h-10 w-full rounded-md border border-slate-200 bg-white px-3 text-sm focus:border-blue-500 focus:outline-none focus:ring-1 focus:ring-blue-500"
+            >
+              <option value="supplement">Supplement</option>
+              <option value="reinspection">Reinspection</option>
+              <option value="estimate">Estimate</option>
+              <option value="final_invoice">Final Invoice</option>
+            </select>
+          </div>
+        </CardContent>
+      </Card>
+
+      {/* Insurance Information */}
+      <Card>
+        <CardHeader>
+          <CardTitle>Insurance Information</CardTitle>
+        </CardHeader>
+        <CardContent className="space-y-4">
+          <div className="grid gap-4 md:grid-cols-2">
+            {/* Carrier */}
+            <div className="space-y-2">
+              <Label htmlFor="carrierId">
+                Insurance Carrier <span className="text-red-500">*</span>
+              </Label>
+              <select
+                id="carrierId"
+                {...register("carrierId")}
+                className="h-10 w-full rounded-md border border-slate-200 bg-white px-3 text-sm focus:border-blue-500 focus:outline-none focus:ring-1 focus:ring-blue-500"
+                aria-invalid={!!errors.carrierId}
+              >
+                <option value="">Select carrier...</option>
+                {carriers.map((c) => (
+                  <option key={c.id} value={c.id}>
+                    {c.name}
+                  </option>
+                ))}
+              </select>
+              {errors.carrierId && (
+                <p className="text-sm text-red-500">{errors.carrierId.message}</p>
+              )}
+            </div>
+
+            {/* Claim Number */}
+            <div className="space-y-2">
+              <Label htmlFor="claimNumber">Claim Number</Label>
+              <Input
+                id="claimNumber"
+                placeholder="INS-2024-00123"
+                {...register("claimNumber")}
+              />
+            </div>
+          </div>
+
+          <div className="grid gap-4 md:grid-cols-2">
+            {/* Adjuster */}
+            <div className="space-y-2">
+              <Label htmlFor="adjusterId">Adjuster</Label>
+              <select
+                id="adjusterId"
+                {...register("adjusterId")}
+                className="h-10 w-full rounded-md border border-slate-200 bg-white px-3 text-sm focus:border-blue-500 focus:outline-none focus:ring-1 focus:ring-blue-500"
+                disabled={!selectedCarrierId}
+              >
+                <option value="">
+                  {selectedCarrierId
+                    ? "Select adjuster..."
+                    : "Select carrier first"}
+                </option>
+                {filteredAdjusters.map((adj) => (
+                  <option key={adj.id} value={adj.id}>
+                    {adj.name} ({adj.type})
+                  </option>
+                ))}
+              </select>
+              {!selectedCarrierId && (
+                <p className="text-xs text-slate-500">
+                  Select a carrier to see available adjusters
+                </p>
+              )}
+            </div>
+
+            {/* Loss Type */}
+            <div className="space-y-2">
+              <Label htmlFor="lossType">Loss Type</Label>
+              <select
+                id="lossType"
+                {...register("lossType")}
+                className="h-10 w-full rounded-md border border-slate-200 bg-white px-3 text-sm focus:border-blue-500 focus:outline-none focus:ring-1 focus:ring-blue-500"
+              >
+                <option value="">Select type...</option>
+                {Object.entries(LOSS_TYPE_LABELS).map(([value, label]) => (
+                  <option key={value} value={value}>
+                    {label}
+                  </option>
+                ))}
+              </select>
+            </div>
+          </div>
+
+          {/* Date of Loss */}
+          <div className="space-y-2">
+            <Label htmlFor="dateOfLoss">Date of Loss</Label>
+            <Input
+              id="dateOfLoss"
+              type="date"
+              {...register("dateOfLoss", { valueAsDate: true })}
+            />
+          </div>
+        </CardContent>
+      </Card>
+
+      {/* Roof Details */}
+      <Card>
+        <CardHeader>
+          <CardTitle>Roof Details</CardTitle>
+        </CardHeader>
+        <CardContent className="space-y-4">
+          <div className="grid gap-4 md:grid-cols-3">
+            {/* Total Squares */}
+            <div className="space-y-2">
+              <Label htmlFor="totalSquares">
+                Total Squares <span className="text-red-500">*</span>
+              </Label>
+              <Input
+                id="totalSquares"
+                type="number"
+                step="0.01"
+                placeholder="25.5"
+                {...register("totalSquares", { valueAsNumber: true })}
+                aria-invalid={!!errors.totalSquares}
+              />
+              {errors.totalSquares && (
+                <p className="text-sm text-red-500">
+                  {errors.totalSquares.message}
+                </p>
+              )}
+              <p className="text-xs text-slate-500">
+                1 square = 100 sq ft
+              </p>
+            </div>
+
+            {/* Initial RCV */}
+            <div className="space-y-2">
+              <Label htmlFor="initialRCV">
+                Initial RCV <span className="text-red-500">*</span>
+              </Label>
+              <div className="relative">
+                <span className="absolute left-3 top-1/2 -translate-y-1/2 text-slate-500">
+                  $
+                </span>
+                <Input
+                  id="initialRCV"
+                  type="number"
+                  step="0.01"
+                  placeholder="18500.00"
+                  className="pl-7"
+                  {...register("initialRCV", { valueAsNumber: true })}
+                  aria-invalid={!!errors.initialRCV}
+                />
+              </div>
+              {errors.initialRCV && (
+                <p className="text-sm text-red-500">{errors.initialRCV.message}</p>
+              )}
+              <p className="text-xs text-slate-500">
+                Full claim initial value
+              </p>
+            </div>
+
+            {/* Roof RCV */}
+            <div className="space-y-2">
+              <Label htmlFor="roofRCV">
+                Roof RCV <span className="text-red-500">*</span>
+              </Label>
+              <div className="relative">
+                <span className="absolute left-3 top-1/2 -translate-y-1/2 text-slate-500">
+                  $
+                </span>
+                <Input
+                  id="roofRCV"
+                  type="number"
+                  step="0.01"
+                  placeholder="15000.00"
+                  className="pl-7"
+                  {...register("roofRCV", { valueAsNumber: true })}
+                  aria-invalid={!!errors.roofRCV}
+                />
+              </div>
+              {errors.roofRCV && (
+                <p className="text-sm text-red-500">{errors.roofRCV.message}</p>
+              )}
+              <p className="text-xs text-slate-500">
+                Roof portion only (for $/sq calculation)
+              </p>
+            </div>
+          </div>
+        </CardContent>
+      </Card>
+
+      {/* Actions */}
+      <div className="flex items-center justify-end gap-4">
+        <Button
+          type="button"
+          variant="outline"
+          onClick={() => router.back()}
+          disabled={isSubmitting}
+        >
+          Cancel
+        </Button>
+        <Button type="submit" disabled={isSubmitting}>
+          {isSubmitting && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
+          {isEditing ? "Save Changes" : "Create Claim"}
+        </Button>
+      </div>
+    </form>
+  );
+}

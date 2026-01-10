@@ -1,3 +1,5 @@
+export const dynamic = "force-dynamic";
+
 import { EstimatorForm } from "@/components/estimators/estimator-form";
 
 export default function NewEstimatorPage() {

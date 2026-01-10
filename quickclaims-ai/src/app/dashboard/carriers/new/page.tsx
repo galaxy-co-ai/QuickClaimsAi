@@ -1,3 +1,5 @@
+export const dynamic = "force-dynamic";
+
 import { CarrierForm } from "@/components/carriers/carrier-form";
 
 export default function NewCarrierPage() {

@@ -8,6 +8,7 @@ import {
   Users,
   Building2,
   Shield,
+  UserCheck,
   BarChart3,
   Settings,
   ChevronLeft,
@@ -29,6 +30,7 @@ const navItems: NavItem[] = [
   { label: "Contractors", href: "/dashboard/contractors", icon: Building2 },
   { label: "Estimators", href: "/dashboard/estimators", icon: Users },
   { label: "Carriers", href: "/dashboard/carriers", icon: Shield },
+  { label: "Adjusters", href: "/dashboard/adjusters", icon: UserCheck },
   { label: "Reports", href: "/dashboard/reports", icon: BarChart3 },
   { label: "Settings", href: "/dashboard/settings", icon: Settings },
 ];

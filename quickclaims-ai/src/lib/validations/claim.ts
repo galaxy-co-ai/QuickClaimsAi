@@ -19,16 +19,16 @@ export const claimInputSchema = z.object({
     .toUpperCase(),
   lossZip: z.string().regex(/^\d{5}(-\d{4})?$/, "Invalid ZIP code"),
   claimNumber: z.string().max(50).optional(),
-  dateOfLoss: z.coerce.date().optional(),
+  dateOfLoss: z.date().optional(),
   lossType: z.enum(["hail", "wind", "fire", "other"]).optional(),
   contractorId: z.string().min(1, "Contractor is required"),
   estimatorId: z.string().min(1, "Estimator is required"),
   carrierId: z.string().min(1, "Carrier is required"),
   adjusterId: z.string().optional(),
-  jobType: z.enum(["supplement", "reinspection", "estimate", "final_invoice"]).default("supplement"),
-  totalSquares: z.coerce.number().positive("Total squares must be positive"),
-  roofRCV: z.coerce.number().nonnegative("Roof RCV cannot be negative"),
-  initialRCV: z.coerce.number().nonnegative("Initial RCV cannot be negative"),
+  jobType: z.enum(["supplement", "reinspection", "estimate", "final_invoice"]),
+  totalSquares: z.number().positive("Total squares must be positive"),
+  roofRCV: z.number().nonnegative("Roof RCV cannot be negative"),
+  initialRCV: z.number().nonnegative("Initial RCV cannot be negative"),
 });
 
 export type ClaimInput = z.infer<typeof claimInputSchema>;
