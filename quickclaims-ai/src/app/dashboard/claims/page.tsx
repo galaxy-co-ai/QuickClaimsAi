@@ -2,7 +2,7 @@ export const dynamic = "force-dynamic";
 
 import { Suspense } from "react";
 import Link from "next/link";
-import { Plus } from "lucide-react";
+import { Plus, LayoutGrid } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { getClaims, getClaimFormOptions } from "@/actions/claims";
 import { ClaimsTable } from "@/components/claims/claims-table";
@@ -47,12 +47,20 @@ export default async function ClaimsPage({ searchParams }: ClaimsPageProps) {
             Manage and track all supplement claims
           </p>
         </div>
-        <Link href="/dashboard/claims/new">
-          <Button className="gap-2">
-            <Plus className="h-4 w-4" aria-hidden="true" />
-            New Claim
-          </Button>
-        </Link>
+        <div className="flex gap-2">
+          <Link href="/dashboard/claims/kanban">
+            <Button variant="outline" className="gap-2">
+              <LayoutGrid className="h-4 w-4" aria-hidden="true" />
+              Kanban
+            </Button>
+          </Link>
+          <Link href="/dashboard/claims/new">
+            <Button className="gap-2">
+              <Plus className="h-4 w-4" aria-hidden="true" />
+              New Claim
+            </Button>
+          </Link>
+        </div>
       </div>
 
       {/* Filters */}

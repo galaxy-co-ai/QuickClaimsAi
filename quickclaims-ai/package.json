@@ -11,6 +11,9 @@
   },
   "dependencies": {
     "@clerk/nextjs": "^6.36.7",
+    "@dnd-kit/core": "^6.3.1",
+    "@dnd-kit/sortable": "^10.0.0",
+    "@dnd-kit/utilities": "^3.2.2",
     "@galaxyco/design-system": "link:C:/Users/Owner/workspace/design-system",
     "@hookform/resolvers": "^5.2.2",
     "@prisma/client": "^5.22.0",
@@ -37,6 +40,7 @@
     "react": "19.2.3",
     "react-dom": "19.2.3",
     "react-hook-form": "^7.70.0",
+    "recharts": "^3.6.0",
     "sonner": "^2.0.7",
     "svix": "^1.84.1",
     "tailwind-merge": "^3.4.0",

@@ -483,3 +483,166 @@ export async function getClaimFormOptions() {
 
   return { contractors, estimators, carriers, adjusters };
 }
+
+/**
+ * Get all active claims for Kanban board view
+ */
+export async function getClaimsForKanban() {
+  await requireRole(["admin", "manager", "estimator"]);
+
+  const claims = await db.claim.findMany({
+    where: {
+      status: {
+        notIn: ["completed", "closed_lost"],
+      },
+    },
+    orderBy: { lastActivityAt: "desc" },
+    include: {
+      contractor: {
+        select: { id: true, companyName: true },
+      },
+      estimator: {
+        select: { id: true, firstName: true, lastName: true },
+      },
+    },
+  });
+
+  return claims;
+}
+
+/**
+ * Get enhanced manager dashboard statistics
+ */
+export async function getManagerDashboardStats() {
+  await requireRole(["admin", "manager"]);
+
+  const now = new Date();
+  const startOfMonth = new Date(now.getFullYear(), now.getMonth(), 1);
+  const startOfLastMonth = new Date(now.getFullYear(), now.getMonth() - 1, 1);
+  const endOfLastMonth = new Date(now.getFullYear(), now.getMonth(), 0);
+  
+  // 48-hour compliance thresholds
+  const complianceThreshold = new Date(Date.now() - 48 * 60 * 60 * 1000);
+
+  const [
+    // Basic stats
+    activeClaims,
+    completedThisMonth,
+    completedLastMonth,
+    totalIncreaseThisMonth,
+    avgDollarPerSquare,
+    // Claims by status
+    claimsByStatus,
+    // Compliance stats
+    overdueCount,
+    totalActiveForCompliance,
+    // Recent activity (last 10 status changes)
+    recentActivity,
+    // Claims requiring attention
+    claimsNeedingAttention,
+  ] = await Promise.all([
+    // Active claims
+    db.claim.count({
+      where: { status: { notIn: ["completed", "closed_lost"] } },
+    }),
+    // Completed this month
+    db.claim.count({
+      where: {
+        completedAt: { gte: startOfMonth },
+        status: "completed",
+      },
+    }),
+    // Completed last month
+    db.claim.count({
+      where: {
+        completedAt: { gte: startOfLastMonth, lte: endOfLastMonth },
+        status: "completed",
+      },
+    }),
+    // Total increase this month
+    db.claim.aggregate({
+      where: {
+        statusChangedAt: { gte: startOfMonth },
+        status: { in: ["approved", "final_invoice_pending", "final_invoice_sent", "completed"] },
+      },
+      _sum: { totalIncrease: true },
+    }),
+    // Average dollar per square
+    db.claim.aggregate({
+      where: { status: { notIn: ["completed", "closed_lost"] } },
+      _avg: { dollarPerSquare: true },
+    }),
+    // Claims grouped by status
+    db.claim.groupBy({
+      by: ["status"],
+      _count: { _all: true },
+      where: { status: { notIn: ["completed", "closed_lost"] } },
+    }),
+    // Overdue claims (more than 48 hours since last activity)
+    db.claim.count({
+      where: {
+        status: { notIn: ["completed", "closed_lost"] },
+        lastActivityAt: { lt: complianceThreshold },
+      },
+    }),
+    // Total active claims for compliance calculation
+    db.claim.count({
+      where: { status: { notIn: ["completed", "closed_lost"] } },
+    }),
+    // Recent activity
+    db.note.findMany({
+      where: { type: "status_change" },
+      orderBy: { createdAt: "desc" },
+      take: 10,
+      include: {
+        claim: {
+          select: { id: true, policyholderName: true },
+        },
+        user: {
+          select: { firstName: true, lastName: true },
+        },
+      },
+    }),
+    // Claims requiring attention (overdue)
+    db.claim.findMany({
+      where: {
+        status: { notIn: ["completed", "closed_lost"] },
+        lastActivityAt: { lt: complianceThreshold },
+      },
+      orderBy: { lastActivityAt: "asc" },
+      take: 5,
+      include: {
+        contractor: { select: { companyName: true } },
+        estimator: { select: { firstName: true, lastName: true } },
+      },
+    }),
+  ]);
+
+  // Calculate compliance percentage
+  const compliancePercentage = totalActiveForCompliance > 0
+    ? ((totalActiveForCompliance - overdueCount) / totalActiveForCompliance) * 100
+    : 100;
+
+  // Format claims by status for chart
+  const statusChartData = claimsByStatus.map((item) => ({
+    status: CLAIM_STATUS_LABELS[item.status] || item.status,
+    count: item._count._all,
+  }));
+
+  return {
+    activeClaims,
+    completedThisMonth,
+    completedLastMonth,
+    totalIncreaseThisMonth: totalIncreaseThisMonth._sum.totalIncrease
+      ? decimalToNumber(totalIncreaseThisMonth._sum.totalIncrease)
+      : 0,
+    avgDollarPerSquare: avgDollarPerSquare._avg.dollarPerSquare
+      ? decimalToNumber(avgDollarPerSquare._avg.dollarPerSquare)
+      : 0,
+    compliancePercentage: Math.round(compliancePercentage),
+    overdueCount,
+    statusChartData,
+    recentActivity,
+    claimsNeedingAttention,
+  };
+}

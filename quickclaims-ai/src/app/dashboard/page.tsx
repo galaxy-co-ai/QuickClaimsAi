@@ -11,15 +11,23 @@ import {
   Clock,
   CheckCircle2,
   Plus,
+  BarChart3,
+  Activity,
+  ShieldCheck,
 } from "lucide-react";
-import { getDashboardStats, getClaimsRequiringAction } from "@/actions/claims";
+import { getDashboardStats, getClaimsRequiringAction, getManagerDashboardStats } from "@/actions/claims";
+import { hasPermission } from "@/lib/auth";
+import { StatusChart } from "@/components/dashboard/status-chart";
 import { formatCurrency, getComplianceStatus, hoursSince } from "@/lib/utils";
 import { CLAIM_STATUS_LABELS, CLAIM_STATUS_COLORS } from "@/lib/constants";
 
 export default async function DashboardPage() {
-  const [stats, claimsRequiringAction] = await Promise.all([
+  const isManager = await hasPermission(["admin", "manager"]);
+
+  const [stats, claimsRequiringAction, managerStats] = await Promise.all([
     getDashboardStats(),
     getClaimsRequiringAction(10),
+    isManager ? getManagerDashboardStats() : Promise.resolve(null),
   ]);
 
   return (
@@ -99,22 +107,43 @@ export default async function DashboardPage() {
           </CardContent>
         </Card>
 
-        <Card>
-          <CardHeader className="flex flex-row items-center justify-between pb-2">
-            <CardTitle className="text-sm font-medium text-slate-600">
-              Requires Action
-            </CardTitle>
-            <div className="rounded-lg p-2 bg-orange-100">
-              <Clock className="h-4 w-4 text-orange-600" aria-hidden="true" />
-            </div>
-          </CardHeader>
-          <CardContent>
-            <div className="text-2xl font-bold text-orange-600">
-              {claimsRequiringAction.length}
-            </div>
-            <p className="text-xs text-slate-500">48-hour compliance</p>
-          </CardContent>
-        </Card>
+        {isManager && managerStats ? (
+          <Card>
+            <CardHeader className="flex flex-row items-center justify-between pb-2">
+              <CardTitle className="text-sm font-medium text-slate-600">
+                Compliance Rate
+              </CardTitle>
+              <div className="rounded-lg p-2 bg-emerald-100">
+                <ShieldCheck className="h-4 w-4 text-emerald-600" aria-hidden="true" />
+              </div>
+            </CardHeader>
+            <CardContent>
+              <div className={`text-2xl font-bold ${managerStats.compliancePercentage >= 90 ? "text-emerald-600" : managerStats.compliancePercentage >= 70 ? "text-yellow-600" : "text-red-600"}`}>
+                {managerStats.compliancePercentage}%
+              </div>
+              <p className="text-xs text-slate-500">
+                {managerStats.overdueCount} overdue claims
+              </p>
+            </CardContent>
+          </Card>
+        ) : (
+          <Card>
+            <CardHeader className="flex flex-row items-center justify-between pb-2">
+              <CardTitle className="text-sm font-medium text-slate-600">
+                Requires Action
+              </CardTitle>
+              <div className="rounded-lg p-2 bg-orange-100">
+                <Clock className="h-4 w-4 text-orange-600" aria-hidden="true" />
+              </div>
+            </CardHeader>
+            <CardContent>
+              <div className="text-2xl font-bold text-orange-600">
+                {claimsRequiringAction.length}
+              </div>
+              <p className="text-xs text-slate-500">48-hour compliance</p>
+            </CardContent>
+          </Card>
+        )}
       </div>
 
       {/* Claims Requiring Action */}
@@ -151,6 +180,72 @@ export default async function DashboardPage() {
           )}
         </CardContent>
       </Card>
+
+      {/* Manager-Only: Status Distribution & Activity */}
+      {isManager && managerStats && (
+        <div className="grid gap-6 md:grid-cols-2">
+          {/* Status Distribution Chart */}
+          <Card>
+            <CardHeader className="flex flex-row items-center justify-between">
+              <CardTitle className="flex items-center gap-2">
+                <BarChart3 className="h-5 w-5 text-indigo-500" />
+                Claims by Status
+              </CardTitle>
+              <Link
+                href="/dashboard/claims/kanban"
+                className="text-sm text-blue-600 hover:underline"
+              >
+                Kanban view →
+              </Link>
+            </CardHeader>
+            <CardContent>
+              <StatusChart data={managerStats.statusChartData} />
+            </CardContent>
+          </Card>
+
+          {/* Recent Activity Feed */}
+          <Card>
+            <CardHeader>
+              <CardTitle className="flex items-center gap-2">
+                <Activity className="h-5 w-5 text-blue-500" />
+                Recent Activity
+              </CardTitle>
+            </CardHeader>
+            <CardContent>
+              {managerStats.recentActivity.length === 0 ? (
+                <div className="text-center py-8">
+                  <Activity className="h-12 w-12 mx-auto text-slate-300 mb-3" />
+                  <p className="text-slate-500">No recent activity</p>
+                </div>
+              ) : (
+                <div className="space-y-3">
+                  {managerStats.recentActivity.map((activity) => (
+                    <Link
+                      key={activity.id}
+                      href={`/dashboard/claims/${activity.claim.id}`}
+                      className="flex items-start gap-3 p-3 rounded-lg hover:bg-slate-50 transition-colors"
+                    >
+                      <div className="mt-1 h-2 w-2 rounded-full bg-blue-500 flex-shrink-0" />
+                      <div className="flex-1 min-w-0">
+                        <p className="text-sm font-medium text-slate-900 truncate">
+                          {activity.claim.policyholderName}
+                        </p>
+                        <p className="text-xs text-slate-500 truncate">
+                          {activity.content}
+                        </p>
+                        <p className="text-xs text-slate-400 mt-1">
+                          {activity.user.firstName} {activity.user.lastName} ·{" "}
+                          {new Date(activity.createdAt).toLocaleDateString()}
+                        </p>
+                      </div>
+                    </Link>
+                  ))}
+                </div>
+              )}
+            </CardContent>
+          </Card>
+        </div>
+      )}
 
       {/* Quick Actions */}
       <Card>
