@@ -1,101 +1,56 @@
 import { auth, currentUser } from "@clerk/nextjs/server";
-import { db } from "./db";
+import { redirect } from "next/navigation";
 
 export type UserRole = "admin" | "manager" | "estimator" | "contractor";
 
 /**
- * Get the current authenticated user from Clerk and sync with database
+ * Get the current authenticated user's role from Clerk metadata
  */
-export async function getCurrentUser() {
-  const { userId } = await auth();
-
-  if (!userId) {
+export async function getCurrentUserRole(): Promise<UserRole | null> {
+  const user = await currentUser();
+  
+  if (!user) {
     return null;
   }
 
-  // Try to get user from database
-  let dbUser = await db.user.findUnique({
-    where: { clerkId: userId },
-    include: {
-      estimatorProfile: true,
-      contractor: true,
-    },
-  });
-
-  // If not found, sync from Clerk
-  if (!dbUser) {
-    const clerkUser = await currentUser();
-    if (!clerkUser) return null;
-
-    dbUser = await db.user.create({
-      data: {
-        clerkId: userId,
-        email: clerkUser.emailAddresses[0]?.emailAddress ?? "",
-        firstName: clerkUser.firstName ?? "",
-        lastName: clerkUser.lastName ?? "",
-        role: "estimator", // Default role
-      },
-      include: {
-        estimatorProfile: true,
-        contractor: true,
-      },
-    });
-  }
-
-  return dbUser;
+  // Get role from public metadata (set in Clerk Dashboard or via API)
+  const role = user.publicMetadata?.role as UserRole | undefined;
+  
+  // Default to estimator if no role set
+  return role || "estimator";
 }
 
 /**
- * Check if current user has required role
+ * Require authentication and optionally specific roles
+ * Throws redirect if not authenticated or unauthorized
  */
-export async function requireRole(allowedRoles: UserRole[]) {
-  const user = await getCurrentUser();
+export async function requireRole(allowedRoles?: UserRole[]) {
+  const { userId } = await auth();
 
-  if (!user) {
-    throw new Error("Unauthorized: No user found");
+  if (!userId) {
+    redirect("/sign-in");
   }
 
-  if (!allowedRoles.includes(user.role as UserRole)) {
-    throw new Error(`Unauthorized: Requires one of: ${allowedRoles.join(", ")}`);
+  if (allowedRoles && allowedRoles.length > 0) {
+    const role = await getCurrentUserRole();
+    
+    if (!role || !allowedRoles.includes(role)) {
+      redirect("/dashboard?error=unauthorized");
+    }
   }
 
-  return user;
+  return userId;
 }
 
 /**
- * Check if user can access a specific claim
+ * Check if current user has permission for an action
  */
-export async function canAccessClaim(claimId: string) {
-  const user = await getCurrentUser();
-
-  if (!user) return false;
-
-  // Admins and managers can access all claims
-  if (user.role === "admin" || user.role === "manager") {
-    return true;
+export async function hasPermission(allowedRoles: UserRole[]): Promise<boolean> {
+  const role = await getCurrentUserRole();
+  
+  if (!role) {
+    return false;
   }
 
-  // Estimators can only access their assigned claims
-  if (user.role === "estimator" && user.estimatorProfile) {
-    const claim = await db.claim.findFirst({
-      where: {
-        id: claimId,
-        estimatorId: user.estimatorProfile.id,
-      },
-    });
-    return !!claim;
-  }
-
-  // Contractors can only access their company's claims
-  if (user.role === "contractor" && user.contractorId) {
-    const claim = await db.claim.findFirst({
-      where: {
-        id: claimId,
-        contractorId: user.contractorId,
-      },
-    });
-    return !!claim;
-  }
-
-  return false;
+  return allowedRoles.includes(role);
 }
