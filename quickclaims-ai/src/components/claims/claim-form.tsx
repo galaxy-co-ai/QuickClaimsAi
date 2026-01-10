@@ -10,9 +10,11 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { ScopeUpload } from "@/components/claims/scope-upload";
 import { claimInputSchema, type ClaimInput } from "@/lib/validations/claim";
 import { createClaim, updateClaim } from "@/actions/claims";
 import { US_STATES, LOSS_TYPE_LABELS } from "@/lib/constants";
+import type { ExtractedScopeData } from "@/actions/scope-parser";
 import type { AdjusterType } from "@prisma/client";
 
 interface ClaimFormProps {
@@ -57,6 +59,7 @@ export function ClaimForm({
     register,
     handleSubmit,
     watch,
+    setValue,
     formState: { errors, isSubmitting },
   } = useForm<ClaimInput>({
     resolver: zodResolver(claimInputSchema),
@@ -93,6 +96,74 @@ export function ClaimForm({
     (adj) => adj.carrierId === selectedCarrierId
   );
 
+  // Handle extracted data from scope PDF upload
+  const handleScopeDataExtracted = (data: ExtractedScopeData) => {
+    // Policyholder info
+    if (data.policyholderName) {
+      setValue("policyholderName", data.policyholderName, { shouldValidate: true });
+    }
+    if (data.policyholderEmail) {
+      setValue("policyholderEmail", data.policyholderEmail);
+    }
+    if (data.policyholderPhone) {
+      setValue("policyholderPhone", data.policyholderPhone);
+    }
+
+    // Address
+    if (data.lossAddress) {
+      setValue("lossAddress", data.lossAddress, { shouldValidate: true });
+    }
+    if (data.lossCity) {
+      setValue("lossCity", data.lossCity, { shouldValidate: true });
+    }
+    if (data.lossState) {
+      setValue("lossState", data.lossState, { shouldValidate: true });
+    }
+    if (data.lossZip) {
+      setValue("lossZip", data.lossZip, { shouldValidate: true });
+    }
+
+    // Claim info
+    if (data.claimNumber) {
+      setValue("claimNumber", data.claimNumber);
+    }
+    if (data.dateOfLoss) {
+      setValue("dateOfLoss", new Date(data.dateOfLoss));
+    }
+    if (data.lossType) {
+      setValue("lossType", data.lossType);
+    }
+
+    // Roof details
+    if (data.totalSquares !== null) {
+      setValue("totalSquares", data.totalSquares, { shouldValidate: true });
+    }
+    if (data.roofRCV !== null) {
+      setValue("roofRCV", data.roofRCV, { shouldValidate: true });
+    }
+    if (data.initialRCV !== null) {
+      setValue("initialRCV", data.initialRCV, { shouldValidate: true });
+    }
+
+    // Try to match carrier by name (case-insensitive partial match)
+    if (data.carrierName) {
+      const carrierNameLower = data.carrierName.toLowerCase();
+      const matchedCarrier = carriers.find((c) =>
+        carrierNameLower.includes(c.name.toLowerCase()) ||
+        c.name.toLowerCase().includes(carrierNameLower.split(" ")[0])
+      );
+      if (matchedCarrier) {
+        setValue("carrierId", matchedCarrier.id, { shouldValidate: true });
+      }
+    }
+
+    // Show success message with extraction notes
+    const notesMessage = data.extractionNotes.length > 0
+      ? ` Notes: ${data.extractionNotes.join(", ")}`
+      : "";
+    toast.success(`Form populated from PDF (${data.confidence} confidence).${notesMessage}`);
+  };
+
   async function onSubmit(data: ClaimInput) {
     try {
       if (isEditing) {
@@ -113,6 +184,21 @@ export function ClaimForm({
 
   return (
     <form onSubmit={handleSubmit(onSubmit)} className="space-y-6">
+      {/* Scope Upload - Only show for new claims */}
+      {!isEditing && (
+        <Card>
+          <CardHeader>
+            <CardTitle>Quick Start</CardTitle>
+          </CardHeader>
+          <CardContent>
+            <ScopeUpload
+              onDataExtracted={handleScopeDataExtracted}
+              disabled={isSubmitting}
+            />
+          </CardContent>
+        </Card>
+      )}
+
       {/* Policyholder Information */}
       <Card>
         <CardHeader>
