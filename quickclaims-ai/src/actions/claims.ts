@@ -167,31 +167,64 @@ export async function createClaim(data: ClaimInput) {
 
   const claim = await db.claim.create({
     data: {
+      // Policyholder Info
       policyholderName: validated.policyholderName,
       policyholderEmail: validated.policyholderEmail || null,
       policyholderPhone: validated.policyholderPhone || null,
+      policyholderWorkPhone: validated.policyholderWorkPhone || null,
+      policyholderFax: validated.policyholderFax || null,
+
+      // Address
       lossAddress: validated.lossAddress,
+      lossAddressLine2: validated.lossAddressLine2 || null,
       lossCity: validated.lossCity,
       lossState: validated.lossState,
       lossZip: validated.lossZip,
+
+      // Claim Info
       claimNumber: validated.claimNumber || null,
+      policyNumber: validated.policyNumber || null,
       dateOfLoss: validated.dateOfLoss || null,
       lossType: validated.lossType || null,
+
+      // Relationships
       contractorId: validated.contractorId,
       estimatorId: validated.estimatorId,
       carrierId: validated.carrierId,
       adjusterId: validated.adjusterId || null,
+
+      // Direct Adjuster Info
+      adjusterNameOverride: validated.adjusterNameOverride || null,
+      adjusterPhoneOverride: validated.adjusterPhoneOverride || null,
+      adjusterEmailOverride: validated.adjusterEmailOverride || null,
+
+      // Supervisor Info
+      supervisorName: validated.supervisorName || null,
+      supervisorPhone: validated.supervisorPhone || null,
+
+      // External References
+      contractorCrmId: validated.contractorCrmId || null,
+      externalJobNumber: validated.externalJobNumber || null,
+
+      // Job Classification
       jobType: validated.jobType,
       status: "new_supplement",
+
+      // Financial - Initial
       totalSquares: validated.totalSquares,
       roofRCV: validated.roofRCV,
       initialRCV: validated.initialRCV,
+      dollarPerSquare,
+
+      // Financial - Tracking
       currentTotalRCV: validated.initialRCV,
       totalIncrease: 0,
       percentageIncrease: 0,
-      dollarPerSquare,
       contractorBillingAmount: 0,
       estimatorCommission: 0,
+
+      // Money Released
+      moneyReleasedAmount: validated.moneyReleasedAmount || null,
     },
   });
 
@@ -248,24 +281,59 @@ export async function updateClaim(id: string, data: Partial<ClaimInput>) {
 
   // Merge with existing data for validation
   const mergedData = {
+    // Policyholder Info
     policyholderName: data.policyholderName ?? existingClaim.policyholderName,
     policyholderEmail: data.policyholderEmail ?? existingClaim.policyholderEmail ?? "",
     policyholderPhone: data.policyholderPhone ?? existingClaim.policyholderPhone ?? "",
+    policyholderWorkPhone: data.policyholderWorkPhone ?? existingClaim.policyholderWorkPhone ?? "",
+    policyholderFax: data.policyholderFax ?? existingClaim.policyholderFax ?? "",
+
+    // Address
     lossAddress: data.lossAddress ?? existingClaim.lossAddress,
+    lossAddressLine2: data.lossAddressLine2 ?? existingClaim.lossAddressLine2 ?? "",
     lossCity: data.lossCity ?? existingClaim.lossCity,
     lossState: data.lossState ?? existingClaim.lossState,
     lossZip: data.lossZip ?? existingClaim.lossZip,
+
+    // Claim Info
     claimNumber: data.claimNumber ?? existingClaim.claimNumber ?? "",
+    policyNumber: data.policyNumber ?? existingClaim.policyNumber ?? "",
     dateOfLoss: data.dateOfLoss ?? existingClaim.dateOfLoss ?? undefined,
     lossType: data.lossType ?? existingClaim.lossType ?? undefined,
+
+    // Relationships
     contractorId: data.contractorId ?? existingClaim.contractorId,
     estimatorId: data.estimatorId ?? existingClaim.estimatorId,
     carrierId: data.carrierId ?? existingClaim.carrierId,
     adjusterId: data.adjusterId ?? existingClaim.adjusterId ?? "",
+
+    // Direct Adjuster Info
+    adjusterNameOverride: data.adjusterNameOverride ?? existingClaim.adjusterNameOverride ?? "",
+    adjusterPhoneOverride: data.adjusterPhoneOverride ?? existingClaim.adjusterPhoneOverride ?? "",
+    adjusterEmailOverride: data.adjusterEmailOverride ?? existingClaim.adjusterEmailOverride ?? "",
+
+    // Supervisor Info
+    supervisorName: data.supervisorName ?? existingClaim.supervisorName ?? "",
+    supervisorPhone: data.supervisorPhone ?? existingClaim.supervisorPhone ?? "",
+
+    // External References
+    contractorCrmId: data.contractorCrmId ?? existingClaim.contractorCrmId ?? "",
+    externalJobNumber: data.externalJobNumber ?? existingClaim.externalJobNumber ?? "",
+
+    // Job Type
     jobType: data.jobType ?? existingClaim.jobType,
+
+    // Financial - Initial
     totalSquares: data.totalSquares ?? decimalToNumber(existingClaim.totalSquares),
     roofRCV: data.roofRCV ?? decimalToNumber(existingClaim.roofRCV),
     initialRCV: data.initialRCV ?? decimalToNumber(existingClaim.initialRCV),
+
+    // Financial - Final
+    finalRoofRCV: data.finalRoofRCV ?? (existingClaim.finalRoofRCV ? decimalToNumber(existingClaim.finalRoofRCV) : undefined),
+    finalTotalRCV: data.finalTotalRCV ?? (existingClaim.finalTotalRCV ? decimalToNumber(existingClaim.finalTotalRCV) : undefined),
+
+    // Money Released
+    moneyReleasedAmount: data.moneyReleasedAmount ?? (existingClaim.moneyReleasedAmount ? decimalToNumber(existingClaim.moneyReleasedAmount) : undefined),
   };
 
   const validated = claimInputSchema.parse(mergedData);
@@ -276,28 +344,68 @@ export async function updateClaim(id: string, data: Partial<ClaimInput>) {
     validated.totalSquares
   );
 
+  // Calculate final dollar per square if final values provided
+  const finalDollarPerSquare = validated.finalRoofRCV && validated.totalSquares
+    ? calculateInitialDollarPerSquare(validated.finalRoofRCV, validated.totalSquares)
+    : null;
+
   const claim = await db.claim.update({
     where: { id },
     data: {
+      // Policyholder Info
       policyholderName: validated.policyholderName,
       policyholderEmail: validated.policyholderEmail || null,
       policyholderPhone: validated.policyholderPhone || null,
+      policyholderWorkPhone: validated.policyholderWorkPhone || null,
+      policyholderFax: validated.policyholderFax || null,
+
+      // Address
       lossAddress: validated.lossAddress,
+      lossAddressLine2: validated.lossAddressLine2 || null,
       lossCity: validated.lossCity,
       lossState: validated.lossState,
       lossZip: validated.lossZip,
+
+      // Claim Info
       claimNumber: validated.claimNumber || null,
+      policyNumber: validated.policyNumber || null,
       dateOfLoss: validated.dateOfLoss || null,
       lossType: validated.lossType || null,
+
+      // Relationships
       contractorId: validated.contractorId,
       estimatorId: validated.estimatorId,
       carrierId: validated.carrierId,
       adjusterId: validated.adjusterId || null,
+
+      // Direct Adjuster Info
+      adjusterNameOverride: validated.adjusterNameOverride || null,
+      adjusterPhoneOverride: validated.adjusterPhoneOverride || null,
+      adjusterEmailOverride: validated.adjusterEmailOverride || null,
+
+      // Supervisor Info
+      supervisorName: validated.supervisorName || null,
+      supervisorPhone: validated.supervisorPhone || null,
+
+      // External References
+      contractorCrmId: validated.contractorCrmId || null,
+      externalJobNumber: validated.externalJobNumber || null,
+
+      // Job Type
       jobType: validated.jobType,
+
+      // Financial
       totalSquares: validated.totalSquares,
       roofRCV: validated.roofRCV,
       initialRCV: validated.initialRCV,
       dollarPerSquare,
+      finalRoofRCV: validated.finalRoofRCV || null,
+      finalTotalRCV: validated.finalTotalRCV || null,
+      finalDollarPerSquare,
+
+      // Money Released
+      moneyReleasedAmount: validated.moneyReleasedAmount || null,
+
       lastActivityAt: new Date(),
     },
   });

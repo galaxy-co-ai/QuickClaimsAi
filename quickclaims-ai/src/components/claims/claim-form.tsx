@@ -16,6 +16,7 @@ import { createClaim, updateClaim } from "@/actions/claims";
 import { US_STATES, LOSS_TYPE_LABELS } from "@/lib/constants";
 import type { ExtractedScopeData } from "@/actions/scope-parser";
 import type { AdjusterType } from "@prisma/client";
+import type { Decimal } from "@prisma/client/runtime/library";
 
 interface ClaimFormProps {
   claim?: {
@@ -23,21 +24,37 @@ interface ClaimFormProps {
     policyholderName: string;
     policyholderEmail: string | null;
     policyholderPhone: string | null;
+    policyholderWorkPhone: string | null;
+    policyholderFax: string | null;
     lossAddress: string;
+    lossAddressLine2: string | null;
     lossCity: string;
     lossState: string;
     lossZip: string;
     claimNumber: string | null;
+    policyNumber: string | null;
     dateOfLoss: Date | null;
     lossType: string | null;
     contractorId: string;
     estimatorId: string;
     carrierId: string;
     adjusterId: string | null;
+    adjusterNameOverride: string | null;
+    adjusterPhoneOverride: string | null;
+    adjusterEmailOverride: string | null;
+    supervisorName: string | null;
+    supervisorPhone: string | null;
+    contractorCrmId: string | null;
+    externalJobNumber: string | null;
     jobType: string;
-    totalSquares: number | string;
-    roofRCV: number | string;
-    initialRCV: number | string;
+    totalSquares: number | string | Decimal;
+    roofRCV: number | string | Decimal;
+    initialRCV: number | string | Decimal;
+    dollarPerSquare: number | string | Decimal;
+    finalRoofRCV: number | string | Decimal | null;
+    finalTotalRCV: number | string | Decimal | null;
+    finalDollarPerSquare: number | string | Decimal | null;
+    moneyReleasedAmount: number | string | Decimal | null;
   };
   contractors: { id: string; companyName: string }[];
   estimators: { id: string; firstName: string; lastName: string }[];
@@ -68,21 +85,35 @@ export function ClaimForm({
           policyholderName: claim.policyholderName,
           policyholderEmail: claim.policyholderEmail ?? "",
           policyholderPhone: claim.policyholderPhone ?? "",
+          policyholderWorkPhone: claim.policyholderWorkPhone ?? "",
+          policyholderFax: claim.policyholderFax ?? "",
           lossAddress: claim.lossAddress,
+          lossAddressLine2: claim.lossAddressLine2 ?? "",
           lossCity: claim.lossCity,
           lossState: claim.lossState,
           lossZip: claim.lossZip,
           claimNumber: claim.claimNumber ?? "",
+          policyNumber: claim.policyNumber ?? "",
           dateOfLoss: claim.dateOfLoss ?? undefined,
           lossType: claim.lossType as ClaimInput["lossType"] ?? undefined,
           contractorId: claim.contractorId,
           estimatorId: claim.estimatorId,
           carrierId: claim.carrierId,
           adjusterId: claim.adjusterId ?? "",
+          adjusterNameOverride: claim.adjusterNameOverride ?? "",
+          adjusterPhoneOverride: claim.adjusterPhoneOverride ?? "",
+          adjusterEmailOverride: claim.adjusterEmailOverride ?? "",
+          supervisorName: claim.supervisorName ?? "",
+          supervisorPhone: claim.supervisorPhone ?? "",
+          contractorCrmId: claim.contractorCrmId ?? "",
+          externalJobNumber: claim.externalJobNumber ?? "",
           jobType: claim.jobType as ClaimInput["jobType"],
           totalSquares: Number(claim.totalSquares),
           roofRCV: Number(claim.roofRCV),
           initialRCV: Number(claim.initialRCV),
+          finalRoofRCV: claim.finalRoofRCV ? Number(claim.finalRoofRCV) : undefined,
+          finalTotalRCV: claim.finalTotalRCV ? Number(claim.finalTotalRCV) : undefined,
+          moneyReleasedAmount: claim.moneyReleasedAmount ? Number(claim.moneyReleasedAmount) : undefined,
         }
       : {
           jobType: "supplement",
@@ -95,6 +126,24 @@ export function ClaimForm({
   const filteredAdjusters = adjusters.filter(
     (adj) => adj.carrierId === selectedCarrierId
   );
+
+  // Watch financial fields for display calculations
+  const totalSquares = watch("totalSquares");
+  const roofRCV = watch("roofRCV");
+  const initialRCV = watch("initialRCV");
+  const finalRoofRCV = watch("finalRoofRCV");
+  const finalTotalRCV = watch("finalTotalRCV");
+
+  // Calculate dollar per square values for display
+  const initialDollarPerSquare = totalSquares && roofRCV
+    ? (roofRCV / totalSquares).toFixed(2)
+    : "0.00";
+  const finalDollarPerSquare = totalSquares && finalRoofRCV
+    ? (finalRoofRCV / totalSquares).toFixed(2)
+    : null;
+  const totalIncrease = finalTotalRCV && initialRCV
+    ? (finalTotalRCV - initialRCV).toFixed(2)
+    : null;
 
   // Handle extracted data from scope PDF upload
   const handleScopeDataExtracted = (data: ExtractedScopeData) => {
@@ -127,11 +176,25 @@ export function ClaimForm({
     if (data.claimNumber) {
       setValue("claimNumber", data.claimNumber);
     }
+    if (data.policyNumber) {
+      setValue("policyNumber", data.policyNumber);
+    }
     if (data.dateOfLoss) {
       setValue("dateOfLoss", new Date(data.dateOfLoss));
     }
     if (data.lossType) {
       setValue("lossType", data.lossType);
+    }
+
+    // Adjuster info (use override fields since adjuster may not be in system)
+    if (data.adjusterName) {
+      setValue("adjusterNameOverride", data.adjusterName);
+    }
+    if (data.adjusterPhone) {
+      setValue("adjusterPhoneOverride", data.adjusterPhone);
+    }
+    if (data.adjusterEmail) {
+      setValue("adjusterEmailOverride", data.adjusterEmail);
     }
 
     // Roof details
@@ -223,7 +286,7 @@ export function ClaimForm({
             )}
           </div>
 
-          {/* Email & Phone Row */}
+          {/* Contact Row */}
           <div className="grid gap-4 md:grid-cols-2">
             <div className="space-y-2">
               <Label htmlFor="policyholderEmail">Email</Label>
@@ -240,7 +303,7 @@ export function ClaimForm({
               )}
             </div>
             <div className="space-y-2">
-              <Label htmlFor="policyholderPhone">Phone</Label>
+              <Label htmlFor="policyholderPhone">Home Phone</Label>
               <Input
                 id="policyholderPhone"
                 type="tel"
@@ -250,10 +313,32 @@ export function ClaimForm({
             </div>
           </div>
 
+          {/* Additional Contact Row */}
+          <div className="grid gap-4 md:grid-cols-2">
+            <div className="space-y-2">
+              <Label htmlFor="policyholderWorkPhone">Work Phone</Label>
+              <Input
+                id="policyholderWorkPhone"
+                type="tel"
+                placeholder="(555) 987-6543"
+                {...register("policyholderWorkPhone")}
+              />
+            </div>
+            <div className="space-y-2">
+              <Label htmlFor="policyholderFax">Fax Number</Label>
+              <Input
+                id="policyholderFax"
+                type="tel"
+                placeholder="(555) 456-7890"
+                {...register("policyholderFax")}
+              />
+            </div>
+          </div>
+
           {/* Address */}
           <div className="space-y-2">
             <Label htmlFor="lossAddress">
-              Loss Address <span className="text-red-500">*</span>
+              Address Line 1 <span className="text-red-500">*</span>
             </Label>
             <Input
               id="lossAddress"
@@ -264,6 +349,15 @@ export function ClaimForm({
             {errors.lossAddress && (
               <p className="text-sm text-red-500">{errors.lossAddress.message}</p>
             )}
+          </div>
+
+          <div className="space-y-2">
+            <Label htmlFor="lossAddressLine2">Address Line 2</Label>
+            <Input
+              id="lossAddressLine2"
+              placeholder="Apt, Suite, Unit, etc."
+              {...register("lossAddressLine2")}
+            />
           </div>
 
           {/* City, State, ZIP Row */}
@@ -304,7 +398,7 @@ export function ClaimForm({
             </div>
             <div className="space-y-2">
               <Label htmlFor="lossZip">
-                ZIP Code <span className="text-red-500">*</span>
+                Postal Code <span className="text-red-500">*</span>
               </Label>
               <Input
                 id="lossZip"
@@ -320,81 +414,6 @@ export function ClaimForm({
         </CardContent>
       </Card>
 
-      {/* Assignment */}
-      <Card>
-        <CardHeader>
-          <CardTitle>Assignment</CardTitle>
-        </CardHeader>
-        <CardContent className="space-y-4">
-          <div className="grid gap-4 md:grid-cols-2">
-            {/* Contractor */}
-            <div className="space-y-2">
-              <Label htmlFor="contractorId">
-                Contractor <span className="text-red-500">*</span>
-              </Label>
-              <select
-                id="contractorId"
-                {...register("contractorId")}
-                className="h-10 w-full rounded-md border border-slate-200 bg-white px-3 text-sm focus:border-blue-500 focus:outline-none focus:ring-1 focus:ring-blue-500"
-                aria-invalid={!!errors.contractorId}
-              >
-                <option value="">Select contractor...</option>
-                {contractors.map((c) => (
-                  <option key={c.id} value={c.id}>
-                    {c.companyName}
-                  </option>
-                ))}
-              </select>
-              {errors.contractorId && (
-                <p className="text-sm text-red-500">
-                  {errors.contractorId.message}
-                </p>
-              )}
-            </div>
-
-            {/* Estimator */}
-            <div className="space-y-2">
-              <Label htmlFor="estimatorId">
-                Estimator <span className="text-red-500">*</span>
-              </Label>
-              <select
-                id="estimatorId"
-                {...register("estimatorId")}
-                className="h-10 w-full rounded-md border border-slate-200 bg-white px-3 text-sm focus:border-blue-500 focus:outline-none focus:ring-1 focus:ring-blue-500"
-                aria-invalid={!!errors.estimatorId}
-              >
-                <option value="">Select estimator...</option>
-                {estimators.map((e) => (
-                  <option key={e.id} value={e.id}>
-                    {e.firstName} {e.lastName}
-                  </option>
-                ))}
-              </select>
-              {errors.estimatorId && (
-                <p className="text-sm text-red-500">
-                  {errors.estimatorId.message}
-                </p>
-              )}
-            </div>
-          </div>
-
-          {/* Job Type */}
-          <div className="space-y-2">
-            <Label htmlFor="jobType">Job Type</Label>
-            <select
-              id="jobType"
-              {...register("jobType")}
-              className="h-10 w-full rounded-md border border-slate-200 bg-white px-3 text-sm focus:border-blue-500 focus:outline-none focus:ring-1 focus:ring-blue-500"
-            >
-              <option value="supplement">Supplement</option>
-              <option value="reinspection">Reinspection</option>
-              <option value="estimate">Estimate</option>
-              <option value="final_invoice">Final Invoice</option>
-            </select>
-          </div>
-        </CardContent>
-      </Card>
-
       {/* Insurance Information */}
       <Card>
         <CardHeader>
@@ -405,7 +424,7 @@ export function ClaimForm({
             {/* Carrier */}
             <div className="space-y-2">
               <Label htmlFor="carrierId">
-                Insurance Carrier <span className="text-red-500">*</span>
+                Insurance Company <span className="text-red-500">*</span>
               </Label>
               <select
                 id="carrierId"
@@ -425,21 +444,47 @@ export function ClaimForm({
               )}
             </div>
 
-            {/* Claim Number */}
+            {/* Date of Loss */}
             <div className="space-y-2">
-              <Label htmlFor="claimNumber">Claim Number</Label>
+              <Label htmlFor="dateOfLoss">
+                Date of Loss <span className="text-red-500">*</span>
+              </Label>
               <Input
-                id="claimNumber"
-                placeholder="INS-2024-00123"
-                {...register("claimNumber")}
+                id="dateOfLoss"
+                type="date"
+                {...register("dateOfLoss", { valueAsDate: true })}
               />
             </div>
           </div>
 
           <div className="grid gap-4 md:grid-cols-2">
-            {/* Adjuster */}
+            {/* Claim Number */}
             <div className="space-y-2">
-              <Label htmlFor="adjusterId">Adjuster</Label>
+              <Label htmlFor="claimNumber">
+                Claim Number <span className="text-red-500">*</span>
+              </Label>
+              <Input
+                id="claimNumber"
+                placeholder="CLM-2024-00123"
+                {...register("claimNumber")}
+              />
+            </div>
+
+            {/* Policy Number */}
+            <div className="space-y-2">
+              <Label htmlFor="policyNumber">Policy #</Label>
+              <Input
+                id="policyNumber"
+                placeholder="POL-12345678"
+                {...register("policyNumber")}
+              />
+            </div>
+          </div>
+
+          <div className="grid gap-4 md:grid-cols-2">
+            {/* Adjuster Dropdown */}
+            <div className="space-y-2">
+              <Label htmlFor="adjusterId">Adjuster (from system)</Label>
               <select
                 id="adjusterId"
                 {...register("adjusterId")}
@@ -482,29 +527,174 @@ export function ClaimForm({
             </div>
           </div>
 
-          {/* Date of Loss */}
-          <div className="space-y-2">
-            <Label htmlFor="dateOfLoss">Date of Loss</Label>
-            <Input
-              id="dateOfLoss"
-              type="date"
-              {...register("dateOfLoss", { valueAsDate: true })}
-            />
+          {/* Adjuster Override Fields */}
+          <div className="border-t pt-4">
+            <p className="text-sm font-medium text-slate-700 mb-3">
+              Or enter adjuster details manually:
+            </p>
+            <div className="grid gap-4 md:grid-cols-3">
+              <div className="space-y-2">
+                <Label htmlFor="adjusterNameOverride">Adjuster Name</Label>
+                <Input
+                  id="adjusterNameOverride"
+                  placeholder="Jane Doe"
+                  {...register("adjusterNameOverride")}
+                />
+              </div>
+              <div className="space-y-2">
+                <Label htmlFor="adjusterPhoneOverride">Adjuster Phone</Label>
+                <Input
+                  id="adjusterPhoneOverride"
+                  type="tel"
+                  placeholder="(800) 555-1234"
+                  {...register("adjusterPhoneOverride")}
+                />
+              </div>
+              <div className="space-y-2">
+                <Label htmlFor="adjusterEmailOverride">Adjuster Email</Label>
+                <Input
+                  id="adjusterEmailOverride"
+                  type="email"
+                  placeholder="adjuster@insurance.com"
+                  {...register("adjusterEmailOverride")}
+                />
+              </div>
+            </div>
+          </div>
+
+          {/* Supervisor Fields */}
+          <div className="grid gap-4 md:grid-cols-2">
+            <div className="space-y-2">
+              <Label htmlFor="supervisorName">Supervisor Name</Label>
+              <Input
+                id="supervisorName"
+                placeholder="Supervisor name"
+                {...register("supervisorName")}
+              />
+            </div>
+            <div className="space-y-2">
+              <Label htmlFor="supervisorPhone">Supervisor Phone</Label>
+              <Input
+                id="supervisorPhone"
+                type="tel"
+                placeholder="(800) 555-9999"
+                {...register("supervisorPhone")}
+              />
+            </div>
           </div>
         </CardContent>
       </Card>
 
-      {/* Roof Details */}
+      {/* Assignment */}
       <Card>
         <CardHeader>
-          <CardTitle>Roof Details</CardTitle>
+          <CardTitle>Assignment</CardTitle>
         </CardHeader>
         <CardContent className="space-y-4">
+          <div className="grid gap-4 md:grid-cols-2">
+            {/* Contractor */}
+            <div className="space-y-2">
+              <Label htmlFor="contractorId">
+                Contractor <span className="text-red-500">*</span>
+              </Label>
+              <select
+                id="contractorId"
+                {...register("contractorId")}
+                className="h-10 w-full rounded-md border border-slate-200 bg-white px-3 text-sm focus:border-blue-500 focus:outline-none focus:ring-1 focus:ring-blue-500"
+                aria-invalid={!!errors.contractorId}
+              >
+                <option value="">Select contractor...</option>
+                {contractors.map((c) => (
+                  <option key={c.id} value={c.id}>
+                    {c.companyName}
+                  </option>
+                ))}
+              </select>
+              {errors.contractorId && (
+                <p className="text-sm text-red-500">
+                  {errors.contractorId.message}
+                </p>
+              )}
+            </div>
+
+            {/* Estimator/Salesperson */}
+            <div className="space-y-2">
+              <Label htmlFor="estimatorId">
+                Salesperson <span className="text-red-500">*</span>
+              </Label>
+              <select
+                id="estimatorId"
+                {...register("estimatorId")}
+                className="h-10 w-full rounded-md border border-slate-200 bg-white px-3 text-sm focus:border-blue-500 focus:outline-none focus:ring-1 focus:ring-blue-500"
+                aria-invalid={!!errors.estimatorId}
+              >
+                <option value="">Select salesperson...</option>
+                {estimators.map((e) => (
+                  <option key={e.id} value={e.id}>
+                    {e.firstName} {e.lastName}
+                  </option>
+                ))}
+              </select>
+              {errors.estimatorId && (
+                <p className="text-sm text-red-500">
+                  {errors.estimatorId.message}
+                </p>
+              )}
+            </div>
+          </div>
+
           <div className="grid gap-4 md:grid-cols-3">
+            {/* Job Type */}
+            <div className="space-y-2">
+              <Label htmlFor="jobType">
+                Supplement/Estimate/ReInspect <span className="text-red-500">*</span>
+              </Label>
+              <select
+                id="jobType"
+                {...register("jobType")}
+                className="h-10 w-full rounded-md border border-slate-200 bg-white px-3 text-sm focus:border-blue-500 focus:outline-none focus:ring-1 focus:ring-blue-500"
+              >
+                <option value="supplement">Supplement</option>
+                <option value="reinspection">Reinspection</option>
+                <option value="estimate">Estimate</option>
+                <option value="final_invoice">Final Invoice</option>
+              </select>
+            </div>
+
+            {/* Contractor CRM */}
+            <div className="space-y-2">
+              <Label htmlFor="contractorCrmId">Contractor CRM</Label>
+              <Input
+                id="contractorCrmId"
+                placeholder="CRM Reference"
+                {...register("contractorCrmId")}
+              />
+            </div>
+
+            {/* External Job # */}
+            <div className="space-y-2">
+              <Label htmlFor="externalJobNumber">Job #</Label>
+              <Input
+                id="externalJobNumber"
+                placeholder="External job number"
+                {...register("externalJobNumber")}
+              />
+            </div>
+          </div>
+        </CardContent>
+      </Card>
+
+      {/* Financial - Initial Values */}
+      <Card>
+        <CardHeader>
+          <CardTitle>Initial Values (from Insurance Scope)</CardTitle>
+        </CardHeader>
+        <CardContent className="space-y-4">
+          <div className="grid gap-4 md:grid-cols-4">
             {/* Total Squares */}
             <div className="space-y-2">
               <Label htmlFor="totalSquares">
-                Total Squares <span className="text-red-500">*</span>
+                Squares <span className="text-red-500">*</span>
               </Label>
               <Input
                 id="totalSquares"
@@ -519,42 +709,12 @@ export function ClaimForm({
                   {errors.totalSquares.message}
                 </p>
               )}
-              <p className="text-xs text-slate-500">
-                1 square = 100 sq ft
-              </p>
             </div>
 
-            {/* Initial RCV */}
-            <div className="space-y-2">
-              <Label htmlFor="initialRCV">
-                Initial RCV <span className="text-red-500">*</span>
-              </Label>
-              <div className="relative">
-                <span className="absolute left-3 top-1/2 -translate-y-1/2 text-slate-500">
-                  $
-                </span>
-                <Input
-                  id="initialRCV"
-                  type="number"
-                  step="0.01"
-                  placeholder="18500.00"
-                  className="pl-7"
-                  {...register("initialRCV", { valueAsNumber: true })}
-                  aria-invalid={!!errors.initialRCV}
-                />
-              </div>
-              {errors.initialRCV && (
-                <p className="text-sm text-red-500">{errors.initialRCV.message}</p>
-              )}
-              <p className="text-xs text-slate-500">
-                Full claim initial value
-              </p>
-            </div>
-
-            {/* Roof RCV */}
+            {/* Initial Roof RCV */}
             <div className="space-y-2">
               <Label htmlFor="roofRCV">
-                Roof RCV <span className="text-red-500">*</span>
+                Initial Roof RCV <span className="text-red-500">*</span>
               </Label>
               <div className="relative">
                 <span className="absolute left-3 top-1/2 -translate-y-1/2 text-slate-500">
@@ -573,13 +733,129 @@ export function ClaimForm({
               {errors.roofRCV && (
                 <p className="text-sm text-red-500">{errors.roofRCV.message}</p>
               )}
-              <p className="text-xs text-slate-500">
-                Roof portion only (for $/sq calculation)
-              </p>
+            </div>
+
+            {/* Initial Total RCV */}
+            <div className="space-y-2">
+              <Label htmlFor="initialRCV">
+                Initial Total RCV <span className="text-red-500">*</span>
+              </Label>
+              <div className="relative">
+                <span className="absolute left-3 top-1/2 -translate-y-1/2 text-slate-500">
+                  $
+                </span>
+                <Input
+                  id="initialRCV"
+                  type="number"
+                  step="0.01"
+                  placeholder="18500.00"
+                  className="pl-7"
+                  {...register("initialRCV", { valueAsNumber: true })}
+                  aria-invalid={!!errors.initialRCV}
+                />
+              </div>
+              {errors.initialRCV && (
+                <p className="text-sm text-red-500">{errors.initialRCV.message}</p>
+              )}
+            </div>
+
+            {/* Initial $ Per SQ (calculated) */}
+            <div className="space-y-2">
+              <Label>Initial $ Per SQ</Label>
+              <div className="h-10 flex items-center px-3 bg-slate-100 rounded-md border border-slate-200 text-sm">
+                ${initialDollarPerSquare}
+              </div>
+              <p className="text-xs text-slate-500">Auto-calculated</p>
             </div>
           </div>
         </CardContent>
       </Card>
+
+      {/* Financial - Final Values (only show when editing) */}
+      {isEditing && (
+        <Card>
+          <CardHeader>
+            <CardTitle>Final Values (After Supplements)</CardTitle>
+          </CardHeader>
+          <CardContent className="space-y-4">
+            <div className="grid gap-4 md:grid-cols-4">
+              {/* Final Roof RCV */}
+              <div className="space-y-2">
+                <Label htmlFor="finalRoofRCV">Final Roof RCV</Label>
+                <div className="relative">
+                  <span className="absolute left-3 top-1/2 -translate-y-1/2 text-slate-500">
+                    $
+                  </span>
+                  <Input
+                    id="finalRoofRCV"
+                    type="number"
+                    step="0.01"
+                    placeholder="20000.00"
+                    className="pl-7"
+                    {...register("finalRoofRCV", { valueAsNumber: true })}
+                  />
+                </div>
+              </div>
+
+              {/* Final Total RCV */}
+              <div className="space-y-2">
+                <Label htmlFor="finalTotalRCV">Final Total RCV</Label>
+                <div className="relative">
+                  <span className="absolute left-3 top-1/2 -translate-y-1/2 text-slate-500">
+                    $
+                  </span>
+                  <Input
+                    id="finalTotalRCV"
+                    type="number"
+                    step="0.01"
+                    placeholder="25000.00"
+                    className="pl-7"
+                    {...register("finalTotalRCV", { valueAsNumber: true })}
+                  />
+                </div>
+              </div>
+
+              {/* Final $ Per SQ (calculated) */}
+              <div className="space-y-2">
+                <Label>Final $ Per SQ</Label>
+                <div className="h-10 flex items-center px-3 bg-slate-100 rounded-md border border-slate-200 text-sm">
+                  {finalDollarPerSquare ? `$${finalDollarPerSquare}` : "-"}
+                </div>
+                <p className="text-xs text-slate-500">Auto-calculated</p>
+              </div>
+
+              {/* Total Increase (calculated) */}
+              <div className="space-y-2">
+                <Label>Total Increase</Label>
+                <div className="h-10 flex items-center px-3 bg-slate-100 rounded-md border border-slate-200 text-sm">
+                  {totalIncrease ? `$${totalIncrease}` : "-"}
+                </div>
+                <p className="text-xs text-slate-500">Final - Initial</p>
+              </div>
+            </div>
+
+            {/* Money Released */}
+            <div className="grid gap-4 md:grid-cols-4">
+              <div className="space-y-2">
+                <Label htmlFor="moneyReleasedAmount">Money Released Amount</Label>
+                <div className="relative">
+                  <span className="absolute left-3 top-1/2 -translate-y-1/2 text-slate-500">
+                    $
+                  </span>
+                  <Input
+                    id="moneyReleasedAmount"
+                    type="number"
+                    step="0.01"
+                    placeholder="0.00"
+                    className="pl-7"
+                    {...register("moneyReleasedAmount", { valueAsNumber: true })}
+                  />
+                </div>
+              </div>
+            </div>
+          </CardContent>
+        </Card>
+      )}
 
       {/* Actions */}
       <div className="flex items-center justify-end gap-4">

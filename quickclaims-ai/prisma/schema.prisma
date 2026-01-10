@@ -201,46 +201,69 @@ model Adjuster {
 
 model Claim {
   id                String      @id @default(cuid())
-  
+
   // Policyholder Info
   policyholderName  String
   policyholderEmail String?
   policyholderPhone String?
+  policyholderWorkPhone String?
+  policyholderFax   String?
   lossAddress       String
+  lossAddressLine2  String?
   lossCity          String
   lossState         String      @db.Char(2)
   lossZip           String
-  
+
   // Claim Info
   claimNumber       String?
+  policyNumber      String?
   dateOfLoss        DateTime?
   lossType          LossType?
-  
+
   // Relationships
   contractorId      String
   estimatorId       String
   carrierId         String
   adjusterId        String?
-  
+
+  // Direct Adjuster Info (for when adjuster not in system or override)
+  adjusterNameOverride  String?
+  adjusterPhoneOverride String?
+  adjusterEmailOverride String?
+
+  // Supervisor Info
+  supervisorName    String?
+  supervisorPhone   String?
+
+  // External References
+  contractorCrmId   String?     // Contractor's CRM reference
+  externalJobNumber String?     // External job number
+
   // Job Classification
   jobType           JobType     @default(supplement)
   status            ClaimStatus @default(new_supplement)
-  
-  // Financial - Roof Specific
+
+  // Financial - Initial (from insurance scope)
   totalSquares      Decimal     @db.Decimal(10, 2)
-  roofRCV           Decimal     @db.Decimal(12, 2)
-  
-  // Financial - Full Claim
-  initialRCV        Decimal     @db.Decimal(12, 2)
-  
-  // Computed fields (updated via triggers or application logic)
+  roofRCV           Decimal     @db.Decimal(12, 2)      // Initial Roof RCV
+  initialRCV        Decimal     @db.Decimal(12, 2)      // Initial Total RCV
+  dollarPerSquare   Decimal     @default(0) @db.Decimal(10, 2) // Initial $/SQ (calculated)
+
+  // Financial - Final (updated as claim progresses)
+  finalRoofRCV      Decimal?    @db.Decimal(12, 2)      // Final Roof RCV after all supplements
+  finalTotalRCV     Decimal?    @db.Decimal(12, 2)      // Final Total RCV
+  finalDollarPerSquare Decimal? @db.Decimal(10, 2)      // Final $/SQ
+
+  // Financial - Computed/Tracking
   currentTotalRCV          Decimal  @default(0) @db.Decimal(12, 2)
   totalIncrease            Decimal  @default(0) @db.Decimal(12, 2)
   percentageIncrease       Decimal  @default(0) @db.Decimal(8, 4)
-  dollarPerSquare          Decimal  @default(0) @db.Decimal(10, 2)
   contractorBillingAmount  Decimal  @default(0) @db.Decimal(12, 2)
   estimatorCommission      Decimal  @default(0) @db.Decimal(12, 2)
-  
+
+  // Money Released
+  moneyReleasedAmount Decimal?  @db.Decimal(12, 2)
+
   // Timestamps
   createdAt         DateTime    @default(now())
   updatedAt         DateTime    @updatedAt
@@ -263,28 +286,35 @@ model Claim {
   @@index([status])
   @@index([lastActivityAt])
   @@index([policyholderName])
+  @@index([claimNumber])
   @@map("claims")
 }
 
 model Supplement {
   id             String           @id @default(cuid())
   claimId        String
-  
-  // Financial
-  amount         Decimal          @db.Decimal(12, 2)
-  previousRCV    Decimal          @db.Decimal(12, 2)
-  newRCV         Decimal          @db.Decimal(12, 2)
-  
+  sequenceNumber Int              @default(1) // SOL 1, SOL 2, etc.
+
+  // Financial - Total RCV
+  amount         Decimal          @db.Decimal(12, 2)  // Increase amount
+  previousRCV    Decimal          @db.Decimal(12, 2)  // Previous Total RCV
+  newRCV         Decimal          @db.Decimal(12, 2)  // New Total RCV
+
+  // Financial - Roof Specific
+  previousRoofRCV Decimal?        @db.Decimal(12, 2)  // Previous Roof RCV
+  newRoofRCV      Decimal?        @db.Decimal(12, 2)  // New Roof RCV
+  roofIncrease    Decimal?        @db.Decimal(12, 2)  // Roof-specific increase
+
   // Details
   description    String           @db.Text
   lineItems      Json?
-  
+
   // Status
   status         SupplementStatus @default(draft)
   submittedAt    DateTime?
   approvedAt     DateTime?
   approvedAmount Decimal?         @db.Decimal(12, 2)
-  
+
   // Metadata
   createdById    String
   createdAt      DateTime         @default(now())
@@ -296,6 +326,7 @@ model Supplement {
 
   @@index([claimId])
   @@index([status])
+  @@index([claimId, sequenceNumber])
   @@map("supplements")
 }
 
