@@ -118,7 +118,7 @@ async function createTestUsers() {
 
   for (const testUser of TEST_USERS) {
     try {
-      // Create user in Clerk with verified email (skip verification)
+      // Create user in Clerk
       const clerkUser = await clerk.users.createUser({
         emailAddress: [testUser.email],
         password: testUser.password,
@@ -128,8 +128,15 @@ async function createTestUsers() {
           role: testUser.role,
         },
         skipPasswordChecks: true,
-        skipEmailVerification: true,
       });
+
+      // Mark the email as verified
+      const primaryEmailId = clerkUser.emailAddresses[0]?.id;
+      if (primaryEmailId) {
+        await clerk.emailAddresses.updateEmailAddress(primaryEmailId, {
+          verified: true,
+        });
+      }
 
       console.log(`   ✓ Created Clerk user: ${testUser.email} (${testUser.role})`);
 
