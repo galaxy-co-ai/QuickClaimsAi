@@ -339,3 +339,23 @@ model Document {
   @@index([type])
   @@map("documents")
 }
+
+model AuditLog {
+  id          String   @id @default(cuid())
+  userId      String
+  userEmail   String
+  action      String   // create, update, delete, status_change, approve
+  entityType  String   // claim, supplement, note, contractor, etc.
+  entityId    String
+  fieldName   String?  // for updates: which field changed
+  oldValue    String?  @db.Text
+  newValue    String?  @db.Text
+  metadata    Json?    // additional context
+  createdAt   DateTime @default(now())
+
+  @@index([entityType, entityId])
+  @@index([userId])
+  @@index([createdAt])
+  @@index([action])
+  @@map("audit_logs")
+}

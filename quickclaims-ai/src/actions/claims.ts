@@ -6,6 +6,8 @@ import { claimInputSchema, claimFiltersSchema, type ClaimInput, type ClaimFilter
 import { requireRole } from "@/lib/auth";
 import { calculateInitialDollarPerSquare, decimalToNumber } from "@/lib/calculations";
 import { CLAIM_STATUS_LABELS, getValidNextStatuses, isValidStatusTransition } from "@/lib/constants";
+import { logAudit } from "@/actions/audit";
+import { sendStatusChangeNotification } from "@/actions/notifications";
 import type { ClaimStatus } from "@prisma/client";
 
 /**
@@ -211,6 +213,19 @@ export async function createClaim(data: ClaimInput) {
     });
   }
 
+  // Log audit entry for claim creation
+  await logAudit({
+    action: "create",
+    entityType: "claim",
+    entityId: claim.id,
+    newValue: `Claim created for ${validated.policyholderName}`,
+    metadata: {
+      policyholderName: validated.policyholderName,
+      lossAddress: validated.lossAddress,
+      initialRCV: validated.initialRCV,
+    },
+  });
+
   revalidatePath("/dashboard/claims");
   revalidatePath("/dashboard");
   return { success: true, claim };
@@ -287,6 +302,17 @@ export async function updateClaim(id: string, data: Partial<ClaimInput>) {
     },
   });
 
+  // Log audit entry for claim update
+  await logAudit({
+    action: "update",
+    entityType: "claim",
+    entityId: id,
+    newValue: `Claim updated: ${validated.policyholderName}`,
+    metadata: {
+      policyholderName: validated.policyholderName,
+    },
+  });
+
   revalidatePath("/dashboard/claims");
   revalidatePath(`/dashboard/claims/${id}`);
   return { success: true, claim };
@@ -354,6 +380,24 @@ export async function updateClaimStatus(id: string, newStatus: ClaimStatus) {
       },
     });
   }
+
+  // Log audit entry for status change
+  await logAudit({
+    action: "status_change",
+    entityType: "claim",
+    entityId: id,
+    fieldName: "status",
+    oldValue: oldStatus,
+    newValue: newStatus,
+    metadata: {
+      statusLabel: CLAIM_STATUS_LABELS[newStatus],
+    },
+  });
+
+  // Send email notification to contractor (async, don't await)
+  sendStatusChangeNotification(id, oldStatus, newStatus).catch((err) => {
+    console.error("[Claims] Failed to send status change notification:", err);
+  });
 
   revalidatePath("/dashboard/claims");
   revalidatePath(`/dashboard/claims/${id}`);

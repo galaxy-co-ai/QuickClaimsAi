@@ -13,6 +13,7 @@ import {
   Settings,
   ChevronLeft,
   ChevronRight,
+  History,
 } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
@@ -32,6 +33,7 @@ const navItems: NavItem[] = [
   { label: "Carriers", href: "/dashboard/carriers", icon: Shield },
   { label: "Adjusters", href: "/dashboard/adjusters", icon: UserCheck },
   { label: "Reports", href: "/dashboard/reports", icon: BarChart3 },
+  { label: "Audit Log", href: "/dashboard/audit", icon: History },
   { label: "Settings", href: "/dashboard/settings", icon: Settings },
 ];
 

@@ -15,6 +15,8 @@ interface ClaimsPageProps {
     estimator?: string;
     carrier?: string;
     search?: string;
+    dateFrom?: string;
+    dateTo?: string;
     page?: string;
   }>;
 }
@@ -28,6 +30,8 @@ export default async function ClaimsPage({ searchParams }: ClaimsPageProps) {
     estimatorId: params.estimator,
     carrierId: params.carrier,
     search: params.search,
+    dateFrom: params.dateFrom ? new Date(params.dateFrom) : undefined,
+    dateTo: params.dateTo ? new Date(params.dateTo) : undefined,
     page: params.page ? parseInt(params.page) : 1,
     limit: 20,
   };

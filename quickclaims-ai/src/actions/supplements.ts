@@ -11,6 +11,8 @@ import {
 } from "@/lib/validations/supplement";
 import { requireRole } from "@/lib/auth";
 import { calculateClaimMetrics, decimalToNumber } from "@/lib/calculations";
+import { logAudit } from "@/actions/audit";
+import { sendSupplementApprovedNotification } from "@/actions/notifications";
 import type { SupplementStatus } from "@prisma/client";
 
 /**
@@ -176,6 +178,19 @@ export async function createSupplement(data: SupplementInput) {
     data: { lastActivityAt: new Date() },
   });
 
+  // Log audit entry for supplement creation
+  await logAudit({
+    action: "create",
+    entityType: "supplement",
+    entityId: supplement.id,
+    newValue: `Supplement created: ${validated.description} ($${validated.amount.toLocaleString()})`,
+    metadata: {
+      claimId: validated.claimId,
+      amount: validated.amount,
+      description: validated.description,
+    },
+  });
+
   revalidatePath(`/dashboard/claims/${validated.claimId}`);
   revalidatePath("/dashboard/claims");
   revalidatePath("/dashboard");
@@ -222,6 +237,19 @@ export async function updateSupplement(
   ) {
     await recalculateClaimTotals(existingSupplement.claimId);
   }
+
+  // Log audit entry for supplement update
+  await logAudit({
+    action: "update",
+    entityType: "supplement",
+    entityId: id,
+    newValue: `Supplement updated`,
+    metadata: {
+      claimId: existingSupplement.claimId,
+      amount: data.amount,
+      description: data.description,
+    },
+  });
 
   revalidatePath(`/dashboard/claims/${existingSupplement.claimId}`);
   revalidatePath("/dashboard/claims");
@@ -304,6 +332,31 @@ export async function updateSupplementStatus(
     await recalculateClaimTotals(existingSupplement.claimId);
   }
 
+  // Log audit entry for supplement status change
+  const auditAction = status === "approved" || status === "partial" ? "approve" :
+                      status === "submitted" ? "submit" : "status_change";
+  await logAudit({
+    action: auditAction,
+    entityType: "supplement",
+    entityId: id,
+    fieldName: "status",
+    oldValue: oldStatus,
+    newValue: status,
+    metadata: {
+      claimId: existingSupplement.claimId,
+      description: existingSupplement.description,
+      amount: decimalToNumber(existingSupplement.amount),
+      approvedAmount: approvedAmount,
+    },
+  });
+
+  // Send email notification when supplement is approved (async, don't await)
+  if (status === "approved" || status === "partial") {
+    sendSupplementApprovedNotification(id).catch((err) => {
+      console.error("[Supplements] Failed to send approval notification:", err);
+    });
+  }
+
   revalidatePath(`/dashboard/claims/${existingSupplement.claimId}`);
   revalidatePath("/dashboard/claims");
   revalidatePath("/dashboard");
@@ -364,6 +417,18 @@ export async function deleteSupplement(id: string) {
       },
     });
   }
+
+  // Log audit entry for supplement deletion
+  await logAudit({
+    action: "delete",
+    entityType: "supplement",
+    entityId: id,
+    oldValue: supplement.description,
+    metadata: {
+      claimId: supplement.claimId,
+      description: supplement.description,
+    },
+  });
 
   revalidatePath(`/dashboard/claims/${supplement.claimId}`);
   revalidatePath("/dashboard/claims");
