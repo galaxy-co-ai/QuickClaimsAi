@@ -27,32 +27,32 @@ const clerk = createClerkClient({
   secretKey: process.env.CLERK_SECRET_KEY!,
 });
 
-// Test user configurations
+// Test user configurations - using unique passwords to avoid Clerk's breach detection
 const TEST_USERS = [
   {
     email: "admin@test.quickclaims.dev",
-    password: "TestAdmin123!",
+    password: "QcAdmin2026!xK9m",
     firstName: "Admin",
     lastName: "User",
     role: "admin" as const,
   },
   {
     email: "manager@test.quickclaims.dev",
-    password: "TestManager123!",
+    password: "QcManager2026!pL7n",
     firstName: "Manager",
     lastName: "User",
     role: "manager" as const,
   },
   {
     email: "estimator@test.quickclaims.dev",
-    password: "TestEstimator123!",
+    password: "QcEstimator2026!vR3q",
     firstName: "Estimator",
     lastName: "User",
     role: "estimator" as const,
   },
   {
     email: "contractor@test.quickclaims.dev",
-    password: "TestContractor123!",
+    password: "QcContractor2026!wT5s",
     firstName: "Contractor",
     lastName: "User",
     role: "contractor" as const,
@@ -118,7 +118,7 @@ async function createTestUsers() {
 
   for (const testUser of TEST_USERS) {
     try {
-      // Create user in Clerk
+      // Create user in Clerk with verified email (skip verification)
       const clerkUser = await clerk.users.createUser({
         emailAddress: [testUser.email],
         password: testUser.password,
@@ -128,6 +128,7 @@ async function createTestUsers() {
           role: testUser.role,
         },
         skipPasswordChecks: true,
+        skipEmailVerification: true,
       });
 
       console.log(`   ✓ Created Clerk user: ${testUser.email} (${testUser.role})`);
