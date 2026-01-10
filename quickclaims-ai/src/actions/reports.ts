@@ -9,6 +9,7 @@ import {
   type EstimatorCommissionReportInput,
   type EstimatorCommissionReportData,
 } from "@/lib/validations/report";
+import { auth } from "@clerk/nextjs/server";
 import { requireRole } from "@/lib/auth";
 import { decimalToNumber } from "@/lib/calculations";
 import { CLAIM_STATUS_LABELS } from "@/lib/constants";
@@ -246,6 +247,149 @@ export async function getContractorsForReport() {
       companyName: true,
     },
   });
+}
+
+/**
+ * Get contractor's own info for their billing report
+ */
+export async function getContractorOwnInfo() {
+  const { userId } = await auth();
+
+  if (!userId) {
+    throw new Error("Not authenticated");
+  }
+
+  const user = await db.user.findFirst({
+    where: { clerkId: userId },
+    select: {
+      role: true,
+      contractor: {
+        select: {
+          id: true,
+          companyName: true,
+          billingPercentage: true,
+        },
+      },
+    },
+  });
+
+  if (user?.role !== "contractor" || !user.contractor) {
+    throw new Error("Not a contractor user");
+  }
+
+  return user.contractor;
+}
+
+/**
+ * Generate contractor's own billing report (for contractor users)
+ */
+export async function generateContractorOwnBillingReport(
+  input: Omit<ContractorBillingReportInput, "contractorId">
+): Promise<{ success: true; data: ContractorBillingReportData } | { success: true; csv: string }> {
+  const { userId } = await auth();
+
+  if (!userId) {
+    throw new Error("Not authenticated");
+  }
+
+  // Get the contractor's own ID
+  const user = await db.user.findFirst({
+    where: { clerkId: userId },
+    select: {
+      role: true,
+      contractor: {
+        select: {
+          id: true,
+          companyName: true,
+          billingPercentage: true,
+        },
+      },
+    },
+  });
+
+  if (user?.role !== "contractor" || !user.contractor) {
+    throw new Error("You must be a contractor to view this report");
+  }
+
+  const contractor = user.contractor;
+
+  // Validate dates
+  const startDate = new Date(input.startDate);
+  const endDate = new Date(input.endDate);
+
+  // Get claims for this contractor in the date range
+  const claims = await db.claim.findMany({
+    where: {
+      contractorId: contractor.id,
+      OR: [
+        {
+          completedAt: {
+            gte: startDate,
+            lte: endDate,
+          },
+        },
+        {
+          status: { in: ["approved", "final_invoice_pending", "final_invoice_sent", "completed"] },
+          statusChangedAt: {
+            gte: startDate,
+            lte: endDate,
+          },
+        },
+      ],
+    },
+    orderBy: { completedAt: "desc" },
+    select: {
+      id: true,
+      policyholderName: true,
+      lossAddress: true,
+      lossCity: true,
+      lossState: true,
+      totalIncrease: true,
+      contractorBillingAmount: true,
+      status: true,
+      completedAt: true,
+    },
+  });
+
+  // Transform claims data
+  const claimsData = claims.map((claim) => ({
+    id: claim.id,
+    policyholderName: claim.policyholderName,
+    lossAddress: `${claim.lossAddress}, ${claim.lossCity}, ${claim.lossState}`,
+    totalIncrease: decimalToNumber(claim.totalIncrease),
+    billingAmount: decimalToNumber(claim.contractorBillingAmount),
+    status: CLAIM_STATUS_LABELS[claim.status] || claim.status,
+    completedAt: claim.completedAt,
+  }));
+
+  // Calculate totals
+  const totals = {
+    claimCount: claimsData.length,
+    totalIncrease: claimsData.reduce((sum, c) => sum + c.totalIncrease, 0),
+    totalBilling: claimsData.reduce((sum, c) => sum + c.billingAmount, 0),
+  };
+
+  const reportData: ContractorBillingReportData = {
+    contractor: {
+      id: contractor.id,
+      companyName: contractor.companyName,
+      billingPercentage: decimalToNumber(contractor.billingPercentage),
+    },
+    period: {
+      start: startDate,
+      end: endDate,
+    },
+    claims: claimsData,
+    totals,
+  };
+
+  // Return CSV if requested
+  if (input.format === "csv") {
+    const csv = generateContractorBillingCSV(reportData);
+    return { success: true, csv };
+  }
+
+  return { success: true, data: reportData };
 }
 
 /**
