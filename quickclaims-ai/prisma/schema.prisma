@@ -1,0 +1,326 @@
+// QuickClaims AI - Prisma Schema
+// Based on data models from docs/planning/08-data-models.md
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+// ============================================================================
+// ENUMS
+// ============================================================================
+
+enum UserRole {
+  admin
+  manager
+  estimator
+  contractor
+}
+
+enum ClaimStatus {
+  new_supplement
+  missing_info
+  contractor_review
+  supplement_in_progress
+  supplement_sent
+  awaiting_carrier_response
+  reinspection_requested
+  reinspection_scheduled
+  approved
+  final_invoice_pending
+  final_invoice_sent
+  completed
+  closed_lost
+}
+
+enum JobType {
+  supplement
+  reinspection
+  estimate
+  final_invoice
+}
+
+enum LossType {
+  hail
+  wind
+  fire
+  other
+}
+
+enum SupplementStatus {
+  draft
+  submitted
+  pending
+  approved
+  denied
+  partial
+}
+
+enum AdjusterType {
+  desk
+  field
+  independent
+}
+
+enum NoteType {
+  general
+  status_change
+  carrier_communication
+  internal
+}
+
+enum DocumentType {
+  insurance_scope
+  signed_agreement
+  measurement_report
+  photo_inspection
+  supplement_estimate
+  material_invoice
+  final_invoice
+  carrier_correspondence
+  other
+}
+
+// ============================================================================
+// MODELS
+// ============================================================================
+
+model User {
+  id                 String     @id @default(cuid())
+  clerkId            String     @unique
+  email              String     @unique
+  firstName          String
+  lastName           String
+  role               UserRole   @default(estimator)
+  isActive           Boolean    @default(true)
+  createdAt          DateTime   @default(now())
+  updatedAt          DateTime   @updatedAt
+  lastLoginAt        DateTime?
+
+  // Relations
+  estimatorProfile   Estimator?
+  contractor         Contractor? @relation(fields: [contractorId], references: [id])
+  contractorId       String?
+  notes              Note[]
+  supplements        Supplement[] @relation("CreatedBy")
+  documents          Document[]
+
+  @@index([role])
+  @@index([clerkId])
+  @@map("users")
+}
+
+model Contractor {
+  id                String   @id @default(cuid())
+  companyName       String
+  contactName       String?
+  email             String
+  phone             String?
+  address           String?
+  billingPercentage Decimal  @db.Decimal(5, 4) // 0.1000 to 0.2000 (10-20%)
+  paymentTerms      String?
+  notes             String?  @db.Text
+  isActive          Boolean  @default(true)
+  createdAt         DateTime @default(now())
+  updatedAt         DateTime @updatedAt
+
+  // Relations
+  claims            Claim[]
+  users             User[]
+
+  @@index([companyName])
+  @@index([isActive])
+  @@map("contractors")
+}
+
+model Estimator {
+  id                   String   @id @default(cuid())
+  userId               String   @unique
+  commissionPercentage Decimal  @db.Decimal(5, 4) // 0.0500 (5%)
+  hireDate             DateTime?
+  isActive             Boolean  @default(true)
+  createdAt            DateTime @default(now())
+  updatedAt            DateTime @updatedAt
+
+  // Relations
+  user                 User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  claims               Claim[]
+
+  @@index([isActive])
+  @@map("estimators")
+}
+
+model Carrier {
+  id        String   @id @default(cuid())
+  name      String   @unique
+  createdAt DateTime @default(now())
+
+  // Relations
+  claims    Claim[]
+  adjusters Adjuster[]
+
+  @@map("carriers")
+}
+
+model Adjuster {
+  id        String        @id @default(cuid())
+  carrierId String
+  name      String
+  email     String?
+  phone     String?
+  type      AdjusterType?
+  createdAt DateTime      @default(now())
+
+  // Relations
+  carrier   Carrier       @relation(fields: [carrierId], references: [id])
+  claims    Claim[]
+
+  @@index([carrierId])
+  @@index([name])
+  @@map("adjusters")
+}
+
+model Claim {
+  id                String      @id @default(cuid())
+  
+  // Policyholder Info
+  policyholderName  String
+  policyholderEmail String?
+  policyholderPhone String?
+  lossAddress       String
+  lossCity          String
+  lossState         String      @db.Char(2)
+  lossZip           String
+  
+  // Claim Info
+  claimNumber       String?
+  dateOfLoss        DateTime?
+  lossType          LossType?
+  
+  // Relationships
+  contractorId      String
+  estimatorId       String
+  carrierId         String
+  adjusterId        String?
+  
+  // Job Classification
+  jobType           JobType     @default(supplement)
+  status            ClaimStatus @default(new_supplement)
+  
+  // Financial - Roof Specific
+  totalSquares      Decimal     @db.Decimal(10, 2)
+  roofRCV           Decimal     @db.Decimal(12, 2)
+  
+  // Financial - Full Claim
+  initialRCV        Decimal     @db.Decimal(12, 2)
+  
+  // Computed fields (updated via triggers or application logic)
+  currentTotalRCV          Decimal  @default(0) @db.Decimal(12, 2)
+  totalIncrease            Decimal  @default(0) @db.Decimal(12, 2)
+  percentageIncrease       Decimal  @default(0) @db.Decimal(8, 4)
+  dollarPerSquare          Decimal  @default(0) @db.Decimal(10, 2)
+  contractorBillingAmount  Decimal  @default(0) @db.Decimal(12, 2)
+  estimatorCommission      Decimal  @default(0) @db.Decimal(12, 2)
+  
+  // Timestamps
+  createdAt         DateTime    @default(now())
+  updatedAt         DateTime    @updatedAt
+  lastActivityAt    DateTime    @default(now())
+  statusChangedAt   DateTime    @default(now())
+  completedAt       DateTime?
+
+  // Relations
+  contractor        Contractor  @relation(fields: [contractorId], references: [id])
+  estimator         Estimator   @relation(fields: [estimatorId], references: [id])
+  carrier           Carrier     @relation(fields: [carrierId], references: [id])
+  adjuster          Adjuster?   @relation(fields: [adjusterId], references: [id])
+  supplements       Supplement[]
+  notes             Note[]
+  documents         Document[]
+
+  @@index([contractorId])
+  @@index([estimatorId])
+  @@index([carrierId])
+  @@index([status])
+  @@index([lastActivityAt])
+  @@index([policyholderName])
+  @@map("claims")
+}
+
+model Supplement {
+  id             String           @id @default(cuid())
+  claimId        String
+  
+  // Financial
+  amount         Decimal          @db.Decimal(12, 2)
+  previousRCV    Decimal          @db.Decimal(12, 2)
+  newRCV         Decimal          @db.Decimal(12, 2)
+  
+  // Details
+  description    String           @db.Text
+  lineItems      Json?
+  
+  // Status
+  status         SupplementStatus @default(draft)
+  submittedAt    DateTime?
+  approvedAt     DateTime?
+  approvedAmount Decimal?         @db.Decimal(12, 2)
+  
+  // Metadata
+  createdById    String
+  createdAt      DateTime         @default(now())
+  updatedAt      DateTime         @updatedAt
+
+  // Relations
+  claim          Claim            @relation(fields: [claimId], references: [id], onDelete: Cascade)
+  createdBy      User             @relation("CreatedBy", fields: [createdById], references: [id])
+
+  @@index([claimId])
+  @@index([status])
+  @@map("supplements")
+}
+
+model Note {
+  id         String   @id @default(cuid())
+  claimId    String
+  userId     String
+  content    String   @db.Text
+  type       NoteType @default(general)
+  isInternal Boolean  @default(false)
+  createdAt  DateTime @default(now())
+  updatedAt  DateTime @updatedAt
+
+  // Relations
+  claim      Claim    @relation(fields: [claimId], references: [id], onDelete: Cascade)
+  user       User     @relation(fields: [userId], references: [id])
+
+  @@index([claimId, createdAt])
+  @@index([type])
+  @@map("notes")
+}
+
+model Document {
+  id               String       @id @default(cuid())
+  claimId          String
+  filename         String
+  originalFilename String
+  mimeType         String
+  size             Int
+  url              String
+  type             DocumentType
+  description      String?
+  uploadedById     String
+  uploadedAt       DateTime     @default(now())
+
+  // Relations
+  claim            Claim        @relation(fields: [claimId], references: [id], onDelete: Cascade)
+  uploadedBy       User         @relation(fields: [uploadedById], references: [id])
+
+  @@index([claimId])
+  @@index([type])
+  @@map("documents")
+}
