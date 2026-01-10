@@ -1,6 +1,6 @@
 import { clerkMiddleware, createRouteMatcher } from "@clerk/nextjs/server";
 
-// Routes that require authentication
+// Routes that require authentication and organization
 const isProtectedRoute = createRouteMatcher([
   "/dashboard(.*)",
   "/contractor(.*)",
@@ -13,6 +13,11 @@ const isProtectedRoute = createRouteMatcher([
   "/portal(.*)",
 ]);
 
+// Routes for organization selection (auth required, org not required)
+const isOrgSelectionRoute = createRouteMatcher([
+  "/org-selection(.*)",
+]);
+
 // Public routes (no auth required)
 const isPublicRoute = createRouteMatcher([
   "/",
@@ -22,8 +27,33 @@ const isPublicRoute = createRouteMatcher([
 ]);
 
 export default clerkMiddleware(async (auth, req) => {
+  const { userId, orgId } = await auth();
+
+  // Protected routes require both auth and organization
   if (isProtectedRoute(req)) {
-    await auth.protect();
+    if (!userId) {
+      const signInUrl = new URL("/sign-in", req.url);
+      return Response.redirect(signInUrl);
+    }
+
+    // If user has no active organization, redirect to org selection
+    if (!orgId) {
+      const orgSelectionUrl = new URL("/org-selection", req.url);
+      return Response.redirect(orgSelectionUrl);
+    }
+  }
+
+  // Org selection route requires auth but not organization
+  if (isOrgSelectionRoute(req)) {
+    if (!userId) {
+      const signInUrl = new URL("/sign-in", req.url);
+      return Response.redirect(signInUrl);
+    }
+    // If user already has an org, redirect to dashboard
+    if (orgId) {
+      const dashboardUrl = new URL("/dashboard", req.url);
+      return Response.redirect(dashboardUrl);
+    }
   }
 });
 

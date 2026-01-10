@@ -1,6 +1,6 @@
 "use client";
 
-import { UserButton } from "@clerk/nextjs";
+import { UserButton, OrganizationSwitcher } from "@clerk/nextjs";
 import { Bell, Search } from "lucide-react";
 import { Button } from "@/components/ui/button";
 
@@ -40,6 +40,19 @@ export function Header({ title = "Dashboard" }: HeaderProps) {
           <Bell className="h-5 w-5 text-slate-600" aria-hidden="true" />
           <span className="absolute right-1.5 top-1.5 h-2 w-2 rounded-full bg-red-500" />
         </Button>
+
+        {/* Organization Switcher */}
+        <OrganizationSwitcher
+          hidePersonal
+          afterCreateOrganizationUrl="/dashboard"
+          afterSelectOrganizationUrl="/dashboard"
+          appearance={{
+            elements: {
+              rootBox: "flex items-center",
+              organizationSwitcherTrigger: "rounded-lg border border-slate-200 px-3 py-1.5",
+            },
+          }}
+        />
 
         {/* User Menu */}
         <UserButton
