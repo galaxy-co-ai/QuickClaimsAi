@@ -11,6 +11,7 @@
   },
   "dependencies": {
     "@clerk/nextjs": "^6.36.7",
+    "@galaxyco/design-system": "link:C:/Users/Owner/workspace/design-system",
     "@hookform/resolvers": "^5.2.2",
     "@prisma/client": "^5.22.0",
     "@radix-ui/react-avatar": "^1.1.11",

@@ -139,7 +139,11 @@ model Contractor {
 
 model Estimator {
   id                   String   @id @default(cuid())
-  userId               String   @unique
+  userId               String?  @unique
+  firstName            String
+  lastName             String
+  email                String
+  phone                String?
   commissionPercentage Decimal  @db.Decimal(5, 4) // 0.0500 (5%)
   hireDate             DateTime?
   isActive             Boolean  @default(true)
@@ -147,22 +151,30 @@ model Estimator {
   updatedAt            DateTime @updatedAt
 
   // Relations
-  user                 User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  user                 User?    @relation(fields: [userId], references: [id], onDelete: SetNull)
   claims               Claim[]
 
   @@index([isActive])
+  @@index([lastName])
   @@map("estimators")
 }
 
 model Carrier {
   id        String   @id @default(cuid())
   name      String   @unique
+  phone     String?
+  email     String?
+  website   String?
+  notes     String?  @db.Text
+  isActive  Boolean  @default(true)
   createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
 
   // Relations
   claims    Claim[]
   adjusters Adjuster[]
 
+  @@index([isActive])
   @@map("carriers")
 }
 
@@ -172,8 +184,10 @@ model Adjuster {
   name      String
   email     String?
   phone     String?
-  type      AdjusterType?
+  type      AdjusterType  @default(desk)
+  isActive  Boolean       @default(true)
   createdAt DateTime      @default(now())
+  updatedAt DateTime      @updatedAt
 
   // Relations
   carrier   Carrier       @relation(fields: [carrierId], references: [id])
@@ -181,6 +195,7 @@ model Adjuster {
 
   @@index([carrierId])
   @@index([name])
+  @@index([isActive])
   @@map("adjusters")
 }
 

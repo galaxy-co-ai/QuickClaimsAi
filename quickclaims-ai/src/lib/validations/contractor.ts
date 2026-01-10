@@ -13,7 +13,7 @@ export const contractorInputSchema = z.object({
   email: z.string().email("Invalid email address"),
   phone: z.string().optional(),
   address: z.string().max(500).optional(),
-  billingPercentage: z.coerce
+  billingPercentage: z
     .number()
     .min(0.05, "Billing percentage must be at least 5%")
     .max(0.2, "Billing percentage cannot exceed 20%"),

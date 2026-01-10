@@ -11,7 +11,7 @@ const estimatorInputSchema = z.object({
   lastName: z.string().min(1, "Last name is required").max(100),
   email: z.string().email("Invalid email address"),
   phone: z.string().optional(),
-  commissionPercentage: z.coerce
+  commissionPercentage: z
     .number()
     .min(0.01, "Commission must be at least 1%")
     .max(0.20, "Commission cannot exceed 20%"),
