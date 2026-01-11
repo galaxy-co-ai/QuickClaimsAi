@@ -169,7 +169,7 @@ function serializeDecimalFields<T extends Record<string, unknown>>(
  * This is required when passing claims from Server Components to Client Components.
  */
 export function serializeClaim<T extends Record<string, unknown>>(claim: T): T {
-  const serialized = serializeDecimalFields(claim, CLAIM_DECIMAL_FIELDS);
+  const serialized = serializeDecimalFields(claim, CLAIM_DECIMAL_FIELDS) as Record<string, unknown>;
   
   // Also serialize nested supplements if present
   if ("supplements" in serialized && Array.isArray(serialized.supplements)) {
@@ -208,7 +208,7 @@ export function serializeClaims<T extends Record<string, unknown>>(claims: T[]):
  * Serialize a supplement object by converting Decimal fields to numbers.
  */
 export function serializeSupplement<T extends Record<string, unknown>>(supplement: T): T {
-  const serialized = serializeDecimalFields(supplement, SUPPLEMENT_DECIMAL_FIELDS);
+  const serialized = serializeDecimalFields(supplement, SUPPLEMENT_DECIMAL_FIELDS) as Record<string, unknown>;
   
   // Also serialize nested claim if present
   if ("claim" in serialized && serialized.claim && typeof serialized.claim === "object") {
