@@ -118,38 +118,31 @@ function randomDate(daysAgo: number): Date {
 
 /**
  * Generate a date that is after the given date but within maxDaysAfter days.
- * Ensures the resulting date is always:
- *   1. After afterDate
- *   2. Not in the future (before or equal to now)
+ * Guarantees the result is always:
+ *   1. Strictly after afterDate
+ *   2. Not in the future (at or before now)
  */
 function randomDateAfter(afterDate: Date, maxDaysAfter: number): Date {
   const now = new Date();
   
-  // Calculate the available time window between afterDate and now
+  // Calculate available time window in milliseconds
   const msAvailable = now.getTime() - afterDate.getTime();
   
-  // If afterDate is in the future or too close to now, return a minimal offset
+  // Edge case: afterDate is at or after now - return afterDate + 1ms (best we can do)
   if (msAvailable <= 0) {
-    // afterDate is in the future - just return now (shouldn't happen but safe fallback)
-    return now;
+    return new Date(afterDate.getTime() + 1);
   }
   
-  // Calculate max ms to add: either maxDaysAfter or time until now, whichever is smaller
-  const maxMsToAdd = Math.min(maxDaysAfter * 24 * 60 * 60 * 1000, msAvailable);
+  // Calculate max offset: either maxDaysAfter or available time, whichever is smaller
+  const maxMsOffset = Math.min(maxDaysAfter * 24 * 60 * 60 * 1000, msAvailable);
   
-  // Add at least 1 minute, up to the max available
-  const minMsToAdd = 60 * 1000; // 1 minute minimum
-  const msToAdd = randomInt(minMsToAdd, Math.max(minMsToAdd, maxMsToAdd));
+  // Minimum offset: 1 minute or available time if less than 1 minute
+  const minMsOffset = Math.min(60 * 1000, maxMsOffset);
   
-  const result = new Date(afterDate.getTime() + msToAdd);
+  // Generate random offset within the valid range
+  const msOffset = randomInt(minMsOffset, maxMsOffset);
   
-  // Final safety: clamp to now if we somehow exceeded it
-  if (result > now) {
-    // Return a date between afterDate and now (midpoint as safe fallback)
-    return new Date(afterDate.getTime() + Math.floor(msAvailable / 2));
-  }
-  
-  return result;
+  return new Date(afterDate.getTime() + msOffset);
 }
 
 function generatePhone(): string {
