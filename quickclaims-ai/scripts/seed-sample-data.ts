@@ -117,14 +117,28 @@ function randomDate(daysAgo: number): Date {
 }
 
 /**
- * Generate a date that is after the given date but within maxDaysAfter days
- * FIX for Bug 1: Ensures statusChangedAt is always after createdAt
+ * Generate a date that is after the given date but within maxDaysAfter days.
+ * FIX: Ensures the resulting date never exceeds the current time (no future dates).
  */
 function randomDateAfter(afterDate: Date, maxDaysAfter: number): Date {
+  const now = new Date();
   const date = new Date(afterDate);
-  // Add 1 hour to maxDaysAfter days after the reference date
-  const hoursToAdd = randomInt(1, maxDaysAfter * 24);
+  
+  // Calculate maximum hours we can add without going into the future
+  const msUntilNow = now.getTime() - afterDate.getTime();
+  const hoursUntilNow = Math.floor(msUntilNow / (60 * 60 * 1000));
+  
+  // Use the minimum of requested max days (in hours) or hours until now
+  const maxHoursToAdd = Math.min(maxDaysAfter * 24, Math.max(1, hoursUntilNow - 1));
+  const hoursToAdd = randomInt(1, maxHoursToAdd);
+  
   date.setTime(date.getTime() + hoursToAdd * 60 * 60 * 1000);
+  
+  // Final safety check: ensure we don't exceed current time
+  if (date > now) {
+    return new Date(now.getTime() - randomInt(1, 24) * 60 * 60 * 1000);
+  }
+  
   return date;
 }
 
@@ -241,11 +255,10 @@ async function seedClaims() {
     const daysAgo = status === "completed" ? randomInt(30, 90) : randomInt(1, 30);
     const lastActivityHours = status === "new_supplement" ? randomInt(1, 24) : randomInt(2, 72);
 
-    // FIX for Bug 1: Generate createdAt first, then derive statusChangedAt from it
+    // Generate createdAt first, then derive statusChangedAt from it
     const createdAt = randomDate(daysAgo);
-    // statusChangedAt must be after createdAt - use at most 14 days after creation
-    const maxDaysAfterCreation = Math.min(14, daysAgo);
-    const statusChangedAt = randomDateAfter(createdAt, maxDaysAfterCreation);
+    // statusChangedAt must be after createdAt - randomDateAfter now ensures no future dates
+    const statusChangedAt = randomDateAfter(createdAt, 14);
 
     const claim = await prisma.claim.create({
       data: {
@@ -314,6 +327,7 @@ async function seedNotes(claims: Awaited<ReturnType<typeof prisma.claim.create>>
     for (let i = 0; i < numNotes; i++) {
       const template = noteTemplates[randomInt(0, noteTemplates.length - 1)];
       
+      // FIX: randomDateAfter now ensures dates never exceed current time
       await prisma.note.create({
         data: {
           claimId: claim.id,
@@ -355,7 +369,7 @@ async function seedSupplements(claims: Awaited<ReturnType<typeof prisma.claim.cr
   for (const claim of claimsWithSupplements) {
     const numSupplements = randomInt(1, 2);
     
-    // FIX for Bug 2: Track running RCV to properly chain supplement values
+    // Track running RCV to properly chain supplement values
     let runningRCV = Number(claim.initialRCV);
     let previousSupplementDate = claim.createdAt;
     
@@ -376,6 +390,7 @@ async function seedSupplements(claims: Awaited<ReturnType<typeof prisma.claim.cr
         completed: "approved",
       };
 
+      // randomDateAfter now ensures dates never exceed current time
       const createdAt = randomDateAfter(previousSupplementDate, 7);
       const submittedAt = randomDateAfter(createdAt, 3);
       const isApproved = claim.status === "approved" || claim.status === "completed" || 
