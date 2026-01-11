@@ -108,6 +108,7 @@ model User {
   notes              Note[]
   supplements        Supplement[] @relation("CreatedBy")
   documents          Document[]
+  preferences        UserPreferences?
 
   @@index([role])
   @@index([clerkId])
@@ -389,4 +390,60 @@ model AuditLog {
   @@index([createdAt])
   @@index([action])
   @@map("audit_logs")
+}
+
+// ============================================================================
+// SETTINGS MODELS
+// ============================================================================
+
+model UserPreferences {
+  id                    String   @id @default(cuid())
+  userId                String   @unique
+
+  // Notification Preferences
+  emailStatusChanges    Boolean  @default(true)
+  emailSupplements      Boolean  @default(true)
+  email48HourReminders  Boolean  @default(true)
+  emailWeeklySummary    Boolean  @default(false)
+
+  // Appearance Preferences
+  theme                 String   @default("system") // light, dark, system
+  sidebarCollapsed      Boolean  @default(false)
+  dateFormat            String   @default("MM/DD/YYYY")
+  claimsPerPage         Int      @default(20)
+
+  createdAt             DateTime @default(now())
+  updatedAt             DateTime @updatedAt
+
+  // Relations
+  user                  User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@map("user_preferences")
+}
+
+model OrganizationSettings {
+  id                    String   @id @default(cuid())
+  clerkOrgId            String   @unique
+
+  // Company Information
+  companyName           String?
+  logoUrl               String?
+  primaryContactEmail   String?
+  businessAddress       String?  @db.Text
+
+  // Default Percentages
+  defaultBillingPct     Decimal  @default(0.125) @db.Decimal(5, 4)
+  defaultCommissionPct  Decimal  @default(0.05) @db.Decimal(5, 4)
+
+  // Compliance Settings
+  complianceHours       Int      @default(48)
+
+  // Report Customization
+  reportHeader          String?  @db.Text
+  reportFooter          String?  @db.Text
+
+  createdAt             DateTime @default(now())
+  updatedAt             DateTime @updatedAt
+
+  @@map("organization_settings")
 }
