@@ -8,7 +8,10 @@
     "postinstall": "prisma generate",
     "start": "next start",
     "lint": "eslint",
-    "seed:test-users": "npx tsx scripts/seed-test-users.ts"
+    "seed:test-users": "npx tsx scripts/seed-test-users.ts",
+    "seed:carriers": "npx tsx scripts/seed-carriers.ts",
+    "seed:sample-data": "npx tsx scripts/seed-sample-data.ts",
+    "seed:all": "npm run seed:carriers && npm run seed:test-users && npm run seed:sample-data"
   },
   "dependencies": {
     "@anthropic-ai/sdk": "^0.71.2",
