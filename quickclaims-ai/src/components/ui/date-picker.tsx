@@ -1,17 +1,12 @@
 "use client";
 
 import * as React from "react";
-import { format, parseISO } from "date-fns";
+import ReactDatePicker from "react-datepicker";
 import { CalendarIcon } from "lucide-react";
+import { format, parseISO } from "date-fns";
+import "react-datepicker/dist/react-datepicker.css";
 
 import { cn } from "@/lib/utils";
-import { Button } from "@/components/ui/button";
-import { Calendar } from "@/components/ui/calendar";
-import {
-  Popover,
-  PopoverContent,
-  PopoverTrigger,
-} from "@/components/ui/popover";
 
 interface DatePickerProps {
   value?: Date;
@@ -34,40 +29,32 @@ export function DatePicker({
   "aria-invalid": ariaInvalid,
   "aria-label": ariaLabel,
 }: DatePickerProps) {
-  const [open, setOpen] = React.useState(false);
-
   return (
-    <Popover open={open} onOpenChange={setOpen}>
-      <PopoverTrigger asChild>
-        <Button
-          id={id}
-          variant="outline"
-          disabled={disabled}
-          aria-invalid={ariaInvalid}
-          aria-label={ariaLabel || placeholder}
-          className={cn(
-            "h-10 w-full justify-start text-left font-normal rounded-xl border-slate-200 bg-white px-3 hover:bg-white focus:border-blue-500 focus:ring-2 focus:ring-blue-500/40",
-            !value && "text-slate-500",
-            ariaInvalid && "border-red-500",
-            className
-          )}
-        >
-          <CalendarIcon className="mr-2 h-4 w-4 text-slate-400" />
-          {value ? format(value, "PPP") : <span>{placeholder}</span>}
-        </Button>
-      </PopoverTrigger>
-      <PopoverContent className="w-auto p-0" align="start">
-        <Calendar
-          mode="single"
-          selected={value}
-          onSelect={(date) => {
-            onChange?.(date);
-            setOpen(false);
-          }}
-          initialFocus
-        />
-      </PopoverContent>
-    </Popover>
+    <div className={cn("relative w-full", className)}>
+      <ReactDatePicker
+        id={id}
+        selected={value}
+        onChange={(date) => onChange?.(date ?? undefined)}
+        placeholderText={placeholder}
+        disabled={disabled}
+        dateFormat="MMM d, yyyy"
+        aria-label={ariaLabel || placeholder}
+        aria-invalid={ariaInvalid}
+        className={cn(
+          "h-10 w-full rounded-xl border border-slate-200 bg-white pl-10 pr-3 text-sm outline-none transition-all duration-200",
+          "focus:border-blue-500 focus:ring-2 focus:ring-blue-500/40",
+          "placeholder:text-slate-500",
+          ariaInvalid && "border-red-500 focus:ring-red-500/40",
+          disabled && "cursor-not-allowed opacity-50"
+        )}
+        calendarClassName="!rounded-xl !border-slate-200/80 !shadow-lg !shadow-black/10 !font-sans"
+        dayClassName={() => "!rounded-lg hover:!bg-slate-100"}
+        popperClassName="!z-50"
+        showPopperArrow={false}
+        wrapperClassName="w-full"
+      />
+      <CalendarIcon className="pointer-events-none absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-slate-400" />
+    </div>
   );
 }
 
@@ -91,39 +78,31 @@ export function DatePickerString({
   className,
   "aria-label": ariaLabel,
 }: DatePickerStringProps) {
-  const [open, setOpen] = React.useState(false);
-
-  const dateValue = value ? parseISO(value) : undefined;
+  const dateValue = value ? parseISO(value) : null;
 
   return (
-    <Popover open={open} onOpenChange={setOpen}>
-      <PopoverTrigger asChild>
-        <Button
-          id={id}
-          variant="outline"
-          disabled={disabled}
-          aria-label={ariaLabel || placeholder}
-          className={cn(
-            "h-10 justify-start text-left font-normal rounded-xl border-slate-200 bg-white px-3 hover:bg-white focus:border-blue-500 focus:ring-2 focus:ring-blue-500/40",
-            !value && "text-slate-500",
-            className
-          )}
-        >
-          <CalendarIcon className="mr-2 h-4 w-4 text-slate-400" />
-          {dateValue ? format(dateValue, "MMM d, yyyy") : <span>{placeholder}</span>}
-        </Button>
-      </PopoverTrigger>
-      <PopoverContent className="w-auto p-0" align="start">
-        <Calendar
-          mode="single"
-          selected={dateValue}
-          onSelect={(date) => {
-            onChange?.(date ? format(date, "yyyy-MM-dd") : "");
-            setOpen(false);
-          }}
-          initialFocus
-        />
-      </PopoverContent>
-    </Popover>
+    <div className={cn("relative", className)}>
+      <ReactDatePicker
+        id={id}
+        selected={dateValue}
+        onChange={(date) => onChange?.(date ? format(date, "yyyy-MM-dd") : "")}
+        placeholderText={placeholder}
+        disabled={disabled}
+        dateFormat="MMM d, yyyy"
+        aria-label={ariaLabel || placeholder}
+        className={cn(
+          "h-10 w-full rounded-xl border border-slate-200 bg-white pl-10 pr-3 text-sm outline-none transition-all duration-200",
+          "focus:border-blue-500 focus:ring-2 focus:ring-blue-500/40",
+          "placeholder:text-slate-500",
+          disabled && "cursor-not-allowed opacity-50"
+        )}
+        calendarClassName="!rounded-xl !border-slate-200/80 !shadow-lg !shadow-black/10 !font-sans"
+        dayClassName={() => "!rounded-lg hover:!bg-slate-100"}
+        popperClassName="!z-50"
+        showPopperArrow={false}
+        wrapperClassName="w-full"
+      />
+      <CalendarIcon className="pointer-events-none absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-slate-400" />
+    </div>
   );
 }
