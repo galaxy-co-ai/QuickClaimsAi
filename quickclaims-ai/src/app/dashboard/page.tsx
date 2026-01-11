@@ -48,84 +48,75 @@ export default async function DashboardPage() {
         </Link>
       </div>
 
-      {/* Stats Grid - Compact Design */}
-      <div className="grid gap-3 md:grid-cols-2 lg:grid-cols-4">
-        <Card className="py-3 px-4">
-          <div className="flex items-center gap-3">
-            <div className="rounded-md p-1.5 bg-blue-50">
-              <FileText className="h-4 w-4 text-blue-600" aria-hidden="true" />
-            </div>
-            <div className="flex-1 min-w-0">
-              <p className="text-xs font-medium text-slate-500 truncate">Active Claims</p>
-              <div className="flex items-baseline gap-2">
-                <span className="text-xl font-semibold text-slate-900">{stats.activeClaims}</span>
-                <span className="text-xs text-slate-400">+{stats.newThisWeek} this week</span>
-              </div>
-            </div>
+      {/* Stats Grid - Floating Badge Design */}
+      <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4 pt-3">
+        <Card className="relative pt-5 pb-4 px-4">
+          <span className="absolute -top-2.5 left-1/2 -translate-x-1/2 inline-flex items-center rounded-full bg-blue-100 px-3 py-1 text-xs font-medium text-blue-700 ring-1 ring-inset ring-blue-600/20">
+            Active Claims
+          </span>
+          <div className="flex items-center justify-center gap-3">
+            <TrendingUp className="h-5 w-5 text-blue-500" aria-hidden="true" />
+            <span className="text-2xl font-bold text-slate-900">{stats.activeClaims}</span>
           </div>
+          <p className="text-center text-xs text-slate-500 mt-1 flex items-center justify-center gap-1">
+            <TrendingUp className="h-3 w-3 text-green-500" />
+            +{stats.newThisWeek} this week
+          </p>
         </Card>
 
-        <Card className="py-3 px-4">
-          <div className="flex items-center gap-3">
-            <div className="rounded-md p-1.5 bg-green-50">
-              <DollarSign className="h-4 w-4 text-green-600" aria-hidden="true" />
-            </div>
-            <div className="flex-1 min-w-0">
-              <p className="text-xs font-medium text-slate-500 truncate">Total Increase</p>
-              <div className="flex items-baseline gap-2">
-                <span className="text-xl font-semibold text-green-600">{formatCurrency(stats.totalIncreaseThisMonth)}</span>
-                <span className="text-xs text-slate-400">this month</span>
-              </div>
-            </div>
+        <Card className="relative pt-5 pb-4 px-4">
+          <span className="absolute -top-2.5 left-1/2 -translate-x-1/2 inline-flex items-center rounded-full bg-green-100 px-3 py-1 text-xs font-medium text-green-700 ring-1 ring-inset ring-green-600/20">
+            Total Increase
+          </span>
+          <div className="flex items-center justify-center gap-3">
+            <DollarSign className="h-5 w-5 text-green-500" aria-hidden="true" />
+            <span className="text-2xl font-bold text-green-600">{formatCurrency(stats.totalIncreaseThisMonth)}</span>
           </div>
+          <p className="text-center text-xs text-slate-500 mt-1">
+            This month (approved)
+          </p>
         </Card>
 
-        <Card className="py-3 px-4">
-          <div className="flex items-center gap-3">
-            <div className="rounded-md p-1.5 bg-purple-50">
-              <TrendingUp className="h-4 w-4 text-purple-600" aria-hidden="true" />
-            </div>
-            <div className="flex-1 min-w-0">
-              <p className="text-xs font-medium text-slate-500 truncate">Avg $/Square</p>
-              <div className="flex items-baseline gap-2">
-                <span className="text-xl font-semibold text-slate-900">{formatCurrency(stats.avgDollarPerSquare)}</span>
-                <span className="text-xs text-slate-400">active avg</span>
-              </div>
-            </div>
+        <Card className="relative pt-5 pb-4 px-4">
+          <span className="absolute -top-2.5 left-1/2 -translate-x-1/2 inline-flex items-center rounded-full bg-purple-100 px-3 py-1 text-xs font-medium text-purple-700 ring-1 ring-inset ring-purple-600/20">
+            Avg $/Square
+          </span>
+          <div className="flex items-center justify-center gap-3">
+            <DollarSign className="h-5 w-5 text-purple-500" aria-hidden="true" />
+            <span className="text-2xl font-bold text-slate-900">{formatCurrency(stats.avgDollarPerSquare)}</span>
           </div>
+          <p className="text-center text-xs text-slate-500 mt-1">
+            Active claims average
+          </p>
         </Card>
 
         {isManager && managerStats ? (
-          <Card className="py-3 px-4">
-            <div className="flex items-center gap-3">
-              <div className="rounded-md p-1.5 bg-emerald-50">
-                <ShieldCheck className="h-4 w-4 text-emerald-600" aria-hidden="true" />
-              </div>
-              <div className="flex-1 min-w-0">
-                <p className="text-xs font-medium text-slate-500 truncate">Compliance</p>
-                <div className="flex items-baseline gap-2">
-                  <span className={`text-xl font-semibold ${managerStats.compliancePercentage >= 90 ? "text-emerald-600" : managerStats.compliancePercentage >= 70 ? "text-yellow-600" : "text-red-600"}`}>
-                    {managerStats.compliancePercentage}%
-                  </span>
-                  <span className="text-xs text-slate-400">{managerStats.overdueCount} overdue</span>
-                </div>
-              </div>
+          <Card className="relative pt-5 pb-4 px-4">
+            <span className="absolute -top-2.5 left-1/2 -translate-x-1/2 inline-flex items-center rounded-full bg-emerald-100 px-3 py-1 text-xs font-medium text-emerald-700 ring-1 ring-inset ring-emerald-600/20">
+              Compliance
+            </span>
+            <div className="flex items-center justify-center gap-3">
+              <ShieldCheck className="h-5 w-5 text-emerald-500" aria-hidden="true" />
+              <span className={`text-2xl font-bold ${managerStats.compliancePercentage >= 90 ? "text-emerald-600" : managerStats.compliancePercentage >= 70 ? "text-yellow-600" : "text-red-600"}`}>
+                {managerStats.compliancePercentage}%
+              </span>
             </div>
+            <p className="text-center text-xs text-slate-500 mt-1">
+              {managerStats.overdueCount} overdue claims
+            </p>
           </Card>
         ) : (
-          <Card className="py-3 px-4">
-            <div className="flex items-center gap-3">
-              <div className="rounded-md p-1.5 bg-orange-50">
-                <Clock className="h-4 w-4 text-orange-600" aria-hidden="true" />
-              </div>
-              <div className="flex-1 min-w-0">
-                <p className="text-xs font-medium text-slate-500 truncate">Requires Action</p>
-                <div className="flex items-baseline gap-2">
-                  <span className="text-xl font-semibold text-orange-600">{claimsRequiringAction.length}</span>
-                  <span className="text-xs text-slate-400">48hr compliance</span>
-                </div>
-              </div>
+          <Card className="relative pt-5 pb-4 px-4">
+            <span className="absolute -top-2.5 left-1/2 -translate-x-1/2 inline-flex items-center rounded-full bg-orange-100 px-3 py-1 text-xs font-medium text-orange-700 ring-1 ring-inset ring-orange-600/20">
+              Requires Action
+            </span>
+            <div className="flex items-center justify-center gap-3">
+              <Clock className="h-5 w-5 text-orange-500" aria-hidden="true" />
+              <span className="text-2xl font-bold text-orange-600">{claimsRequiringAction.length}</span>
             </div>
+            <p className="text-center text-xs text-slate-500 mt-1">
+              48-hour compliance
+            </p>
           </Card>
         )}
       </div>
