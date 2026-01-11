@@ -222,29 +222,60 @@ export default async function DashboardPage() {
         </div>
       )}
 
-      {/* Quick Actions */}
-      <Card>
-        <CardHeader>
-          <CardTitle>Quick Actions</CardTitle>
-        </CardHeader>
-        <CardContent className="flex flex-wrap gap-3">
-          <Link href="/dashboard/claims/new">
-            <Button>+ New Claim</Button>
+      {/* Quick Actions Tab Bar */}
+      <div className="flex items-center justify-center">
+        <nav
+          className="inline-flex items-center gap-1 rounded-full bg-slate-100 p-1"
+          role="tablist"
+          aria-label="Quick actions"
+        >
+          <Link
+            href="/dashboard/claims/new"
+            className="inline-flex items-center gap-2 rounded-full bg-emerald-100 px-4 py-2 text-sm font-medium text-emerald-700 transition-colors hover:bg-emerald-200 focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:ring-offset-2"
+            role="tab"
+            aria-label="Create new claim"
+          >
+            <Plus className="h-4 w-4" aria-hidden="true" />
+            New Claim
           </Link>
-          <Link href="/dashboard/contractors">
-            <Button variant="outline">Manage Contractors</Button>
+          <Link
+            href="/dashboard/contractors"
+            className="inline-flex items-center gap-2 rounded-full px-4 py-2 text-sm font-medium text-slate-600 transition-colors hover:bg-slate-200 hover:text-slate-900 focus:outline-none focus:ring-2 focus:ring-slate-500 focus:ring-offset-2"
+            role="tab"
+            aria-label="Manage contractors"
+          >
+            <FileText className="h-4 w-4" aria-hidden="true" />
+            Contractors
           </Link>
-          <Link href="/dashboard/estimators">
-            <Button variant="outline">Manage Estimators</Button>
+          <Link
+            href="/dashboard/estimators"
+            className="inline-flex items-center gap-2 rounded-full px-4 py-2 text-sm font-medium text-slate-600 transition-colors hover:bg-slate-200 hover:text-slate-900 focus:outline-none focus:ring-2 focus:ring-slate-500 focus:ring-offset-2"
+            role="tab"
+            aria-label="Manage estimators"
+          >
+            <BarChart3 className="h-4 w-4" aria-hidden="true" />
+            Estimators
           </Link>
-          <Link href="/dashboard/carriers">
-            <Button variant="outline">Manage Carriers</Button>
+          <Link
+            href="/dashboard/carriers"
+            className="inline-flex items-center gap-2 rounded-full px-4 py-2 text-sm font-medium text-slate-600 transition-colors hover:bg-slate-200 hover:text-slate-900 focus:outline-none focus:ring-2 focus:ring-slate-500 focus:ring-offset-2"
+            role="tab"
+            aria-label="Manage carriers"
+          >
+            <ShieldCheck className="h-4 w-4" aria-hidden="true" />
+            Carriers
           </Link>
-          <Link href="/dashboard/adjusters">
-            <Button variant="outline">Manage Adjusters</Button>
+          <Link
+            href="/dashboard/adjusters"
+            className="inline-flex items-center gap-2 rounded-full px-4 py-2 text-sm font-medium text-slate-600 transition-colors hover:bg-slate-200 hover:text-slate-900 focus:outline-none focus:ring-2 focus:ring-slate-500 focus:ring-offset-2"
+            role="tab"
+            aria-label="Manage adjusters"
+          >
+            <Activity className="h-4 w-4" aria-hidden="true" />
+            Adjusters
           </Link>
-        </CardContent>
-      </Card>
+        </nav>
+      </div>
     </div>
   );
 }
