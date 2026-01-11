@@ -88,6 +88,12 @@
   border-color: hsl(var(--border));
 }
 
+html,
+body {
+  height: 100%;
+  overflow: hidden;
+}
+
 body {
   background: hsl(var(--background));
   color: hsl(var(--foreground));

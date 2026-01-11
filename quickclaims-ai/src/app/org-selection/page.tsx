@@ -4,7 +4,7 @@ import { OrganizationList } from "@clerk/nextjs";
 
 export default function OrgSelectionPage() {
   return (
-    <div className="flex min-h-screen items-center justify-center bg-slate-50">
+    <div className="flex h-screen overflow-auto items-center justify-center bg-slate-50">
       <div className="w-full max-w-md space-y-6 p-8">
         <div className="text-center">
           <h1 className="text-2xl font-bold text-slate-900">

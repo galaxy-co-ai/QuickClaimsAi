@@ -5,6 +5,13 @@ import { useRouter, useSearchParams } from "next/navigation";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
 import { CLAIM_STATUS_LABELS, CLAIM_STATUS_COLORS } from "@/lib/constants";
 import { decimalToNumber } from "@/lib/calculations";
 import { useState, useCallback, useEffect } from "react";
@@ -104,18 +111,22 @@ export function ContractorClaimsTable({
             className="pl-10"
           />
         </div>
-        <select
-          className="rounded-xl border border-slate-200 bg-white px-3 py-2 text-sm focus:border-blue-500 focus:outline-none focus:ring-2 focus:ring-blue-500/40 transition-all duration-200"
-          value={currentFilters.status || ""}
-          onChange={(e) => updateFilters({ status: e.target.value || undefined })}
+        <Select
+          value={currentFilters.status || "all"}
+          onValueChange={(value) => updateFilters({ status: value === "all" ? undefined : value })}
         >
-          <option value="">All Statuses</option>
-          {Object.entries(CLAIM_STATUS_LABELS).map(([value, label]) => (
-            <option key={value} value={value}>
-              {label}
-            </option>
-          ))}
-        </select>
+          <SelectTrigger className="w-[160px]" aria-label="Filter by status">
+            <SelectValue placeholder="All Statuses" />
+          </SelectTrigger>
+          <SelectContent>
+            <SelectItem value="all">All Statuses</SelectItem>
+            {Object.entries(CLAIM_STATUS_LABELS).map(([value, label]) => (
+              <SelectItem key={value} value={value}>
+                {label}
+              </SelectItem>
+            ))}
+          </SelectContent>
+        </Select>
       </div>
 
       {/* Table */}

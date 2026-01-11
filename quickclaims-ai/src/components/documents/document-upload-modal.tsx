@@ -17,6 +17,13 @@ import {
   DialogTitle,
   DialogTrigger,
 } from "@/components/ui/dialog";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
 import { uploadDocument } from "@/actions/documents";
 import { DOCUMENT_TYPE_LABELS } from "@/lib/constants";
 import type { DocumentTypeValue } from "@/lib/validations/document";
@@ -185,21 +192,22 @@ export function DocumentUploadModal({
             <Label htmlFor="documentType">
               Document Type <span className="text-red-500">*</span>
             </Label>
-            <select
-              id="documentType"
+            <Select
               value={documentType}
-              onChange={(e) =>
-                setDocumentType(e.target.value as DocumentTypeValue)
-              }
-              className="h-10 w-full rounded-xl border border-slate-200 bg-white px-3 text-sm focus:border-blue-500 focus:outline-none focus:ring-2 focus:ring-blue-500/40 transition-all duration-200"
+              onValueChange={(value) => setDocumentType(value as DocumentTypeValue)}
               disabled={isSubmitting}
             >
-              {Object.entries(DOCUMENT_TYPE_LABELS).map(([value, label]) => (
-                <option key={value} value={value}>
-                  {label}
-                </option>
-              ))}
-            </select>
+              <SelectTrigger id="documentType" aria-label="Select document type">
+                <SelectValue placeholder="Select type..." />
+              </SelectTrigger>
+              <SelectContent>
+                {Object.entries(DOCUMENT_TYPE_LABELS).map(([value, label]) => (
+                  <SelectItem key={value} value={value}>
+                    {label}
+                  </SelectItem>
+                ))}
+              </SelectContent>
+            </Select>
           </div>
 
           {/* Description */}

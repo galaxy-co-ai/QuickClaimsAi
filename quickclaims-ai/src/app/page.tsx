@@ -12,7 +12,7 @@ export default async function HomePage() {
 
   // Otherwise show landing page
   return (
-    <div className="flex min-h-screen flex-col bg-gradient-to-br from-slate-900 via-slate-800 to-slate-900">
+    <div className="flex h-screen overflow-auto flex-col bg-gradient-to-br from-slate-900 via-slate-800 to-slate-900">
       {/* Header */}
       <header className="container mx-auto flex items-center justify-between p-6">
         <div className="flex items-center gap-2">

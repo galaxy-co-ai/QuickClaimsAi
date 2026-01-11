@@ -5,6 +5,13 @@ import { useCallback, useState, useTransition, useEffect, useRef } from "react";
 import { Search, X, Save, Trash2, ChevronDown } from "lucide-react";
 import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
 import { CLAIM_STATUS_LABELS } from "@/lib/constants";
 
 interface ClaimsFiltersProps {
@@ -242,64 +249,80 @@ export function ClaimsFilters({
             </div>
 
             {/* Status Filter */}
-            <select
-              value={currentFilters.status || ""}
-              onChange={(e) => updateFilter("status", e.target.value)}
+            <Select
+              value={currentFilters.status || "all"}
+              onValueChange={(value) => updateFilter("status", value === "all" ? "" : value)}
               disabled={isPending}
-              className="h-10 rounded-xl border border-slate-200 bg-white px-3 text-sm outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-500/40 transition-all duration-200"
             >
-              <option value="">All Statuses</option>
-              {Object.entries(CLAIM_STATUS_LABELS).map(([value, label]) => (
-                <option key={value} value={value}>
-                  {label}
-                </option>
-              ))}
-            </select>
+              <SelectTrigger className="w-[160px]" aria-label="Filter by status">
+                <SelectValue placeholder="All Statuses" />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectItem value="all">All Statuses</SelectItem>
+                {Object.entries(CLAIM_STATUS_LABELS).map(([value, label]) => (
+                  <SelectItem key={value} value={value}>
+                    {label}
+                  </SelectItem>
+                ))}
+              </SelectContent>
+            </Select>
 
             {/* Contractor Filter */}
-            <select
-              value={currentFilters.contractor || ""}
-              onChange={(e) => updateFilter("contractor", e.target.value)}
+            <Select
+              value={currentFilters.contractor || "all"}
+              onValueChange={(value) => updateFilter("contractor", value === "all" ? "" : value)}
               disabled={isPending}
-              className="h-10 rounded-xl border border-slate-200 bg-white px-3 text-sm outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-500/40 transition-all duration-200"
             >
-              <option value="">All Contractors</option>
-              {contractors.map((contractor) => (
-                <option key={contractor.id} value={contractor.id}>
-                  {contractor.companyName}
-                </option>
-              ))}
-            </select>
+              <SelectTrigger className="w-[160px]" aria-label="Filter by contractor">
+                <SelectValue placeholder="All Contractors" />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectItem value="all">All Contractors</SelectItem>
+                {contractors.map((contractor) => (
+                  <SelectItem key={contractor.id} value={contractor.id}>
+                    {contractor.companyName}
+                  </SelectItem>
+                ))}
+              </SelectContent>
+            </Select>
 
             {/* Estimator Filter */}
-            <select
-              value={currentFilters.estimator || ""}
-              onChange={(e) => updateFilter("estimator", e.target.value)}
+            <Select
+              value={currentFilters.estimator || "all"}
+              onValueChange={(value) => updateFilter("estimator", value === "all" ? "" : value)}
               disabled={isPending}
-              className="h-10 rounded-xl border border-slate-200 bg-white px-3 text-sm outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-500/40 transition-all duration-200"
             >
-              <option value="">All Estimators</option>
-              {estimators.map((estimator) => (
-                <option key={estimator.id} value={estimator.id}>
-                  {estimator.firstName} {estimator.lastName}
-                </option>
-              ))}
-            </select>
+              <SelectTrigger className="w-[160px]" aria-label="Filter by estimator">
+                <SelectValue placeholder="All Estimators" />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectItem value="all">All Estimators</SelectItem>
+                {estimators.map((estimator) => (
+                  <SelectItem key={estimator.id} value={estimator.id}>
+                    {estimator.firstName} {estimator.lastName}
+                  </SelectItem>
+                ))}
+              </SelectContent>
+            </Select>
 
             {/* Carrier Filter */}
-            <select
-              value={currentFilters.carrier || ""}
-              onChange={(e) => updateFilter("carrier", e.target.value)}
+            <Select
+              value={currentFilters.carrier || "all"}
+              onValueChange={(value) => updateFilter("carrier", value === "all" ? "" : value)}
               disabled={isPending}
-              className="h-10 rounded-xl border border-slate-200 bg-white px-3 text-sm outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-500/40 transition-all duration-200"
             >
-              <option value="">All Carriers</option>
-              {carriers.map((carrier) => (
-                <option key={carrier.id} value={carrier.id}>
-                  {carrier.name}
-                </option>
-              ))}
-            </select>
+              <SelectTrigger className="w-[160px]" aria-label="Filter by carrier">
+                <SelectValue placeholder="All Carriers" />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectItem value="all">All Carriers</SelectItem>
+                {carriers.map((carrier) => (
+                  <SelectItem key={carrier.id} value={carrier.id}>
+                    {carrier.name}
+                  </SelectItem>
+                ))}
+              </SelectContent>
+            </Select>
           </div>
 
           {/* Second Row: Date Filters, Saved Filters, and Actions */}

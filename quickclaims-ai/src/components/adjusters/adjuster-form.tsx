@@ -1,7 +1,7 @@
 "use client";
 
 import { useRouter } from "next/navigation";
-import { useForm } from "react-hook-form";
+import { useForm, Controller } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { toast } from "sonner";
 import { Loader2 } from "lucide-react";
@@ -10,6 +10,13 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
 import { adjusterInputSchema, type AdjusterInput } from "@/lib/validations/adjuster";
 import { createAdjuster, updateAdjuster } from "@/actions/adjusters";
 
@@ -33,6 +40,7 @@ export function AdjusterForm({ adjuster, carriers, defaultCarrierId }: AdjusterF
   const {
     register,
     handleSubmit,
+    control,
     formState: { errors, isSubmitting },
   } = useForm<AdjusterInput>({
     resolver: zodResolver(adjusterInputSchema),
@@ -79,19 +87,31 @@ export function AdjusterForm({ adjuster, carriers, defaultCarrierId }: AdjusterF
             <Label htmlFor="carrierId">
               Insurance Carrier <span className="text-red-500">*</span>
             </Label>
-            <select
-              id="carrierId"
-              {...register("carrierId")}
-              className="h-10 w-full rounded-xl border border-slate-200 bg-white px-3 text-sm focus:border-blue-500 focus:outline-none focus:ring-2 focus:ring-blue-500/40 transition-all duration-200"
-              aria-invalid={!!errors.carrierId}
-            >
-              <option value="">Select carrier...</option>
-              {carriers.map((carrier) => (
-                <option key={carrier.id} value={carrier.id}>
-                  {carrier.name}
-                </option>
-              ))}
-            </select>
+            <Controller
+              name="carrierId"
+              control={control}
+              render={({ field }) => (
+                <Select
+                  value={field.value}
+                  onValueChange={field.onChange}
+                >
+                  <SelectTrigger
+                    id="carrierId"
+                    aria-invalid={!!errors.carrierId}
+                    aria-label="Select insurance carrier"
+                  >
+                    <SelectValue placeholder="Select carrier..." />
+                  </SelectTrigger>
+                  <SelectContent>
+                    {carriers.map((carrier) => (
+                      <SelectItem key={carrier.id} value={carrier.id}>
+                        {carrier.name}
+                      </SelectItem>
+                    ))}
+                  </SelectContent>
+                </Select>
+              )}
+            />
             {errors.carrierId && (
               <p className="text-sm text-red-500">{errors.carrierId.message}</p>
             )}
@@ -116,15 +136,28 @@ export function AdjusterForm({ adjuster, carriers, defaultCarrierId }: AdjusterF
           {/* Type */}
           <div className="space-y-2">
             <Label htmlFor="type">Adjuster Type</Label>
-            <select
-              id="type"
-              {...register("type")}
-              className="h-10 w-full rounded-xl border border-slate-200 bg-white px-3 text-sm focus:border-blue-500 focus:outline-none focus:ring-2 focus:ring-blue-500/40 transition-all duration-200"
-            >
-              <option value="desk">Desk Adjuster</option>
-              <option value="field">Field Adjuster</option>
-              <option value="independent">Independent Adjuster</option>
-            </select>
+            <Controller
+              name="type"
+              control={control}
+              render={({ field }) => (
+                <Select
+                  value={field.value}
+                  onValueChange={field.onChange}
+                >
+                  <SelectTrigger
+                    id="type"
+                    aria-label="Select adjuster type"
+                  >
+                    <SelectValue placeholder="Select type..." />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="desk">Desk Adjuster</SelectItem>
+                    <SelectItem value="field">Field Adjuster</SelectItem>
+                    <SelectItem value="independent">Independent Adjuster</SelectItem>
+                  </SelectContent>
+                </Select>
+              )}
+            />
           </div>
 
           {/* Email & Phone Row */}

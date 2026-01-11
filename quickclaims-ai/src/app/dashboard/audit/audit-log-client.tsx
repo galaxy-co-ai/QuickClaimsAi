@@ -6,6 +6,13 @@ import { Search, X, ChevronLeft, ChevronRight } from "lucide-react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
 import { formatDistanceToNow } from "date-fns";
 
 interface AuditLog {
@@ -132,49 +139,61 @@ export function AuditLogClient({
         <CardContent className="p-4">
           <div className="flex flex-wrap items-center gap-4">
             {/* User Filter */}
-            <select
-              value={currentFilters.userId || ""}
-              onChange={(e) => updateFilter("userId", e.target.value)}
+            <Select
+              value={currentFilters.userId || "all"}
+              onValueChange={(value) => updateFilter("userId", value === "all" ? "" : value)}
               disabled={isPending}
-              className="h-10 rounded-lg border border-slate-200 bg-white px-3 text-sm outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500"
             >
-              <option value="">All Users</option>
-              {users.map((user) => (
-                <option key={user.userId} value={user.userId}>
-                  {user.userEmail}
-                </option>
-              ))}
-            </select>
+              <SelectTrigger className="w-[180px]" aria-label="Filter by user">
+                <SelectValue placeholder="All Users" />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectItem value="all">All Users</SelectItem>
+                {users.map((user) => (
+                  <SelectItem key={user.userId} value={user.userId}>
+                    {user.userEmail}
+                  </SelectItem>
+                ))}
+              </SelectContent>
+            </Select>
 
             {/* Action Filter */}
-            <select
-              value={currentFilters.action || ""}
-              onChange={(e) => updateFilter("action", e.target.value)}
+            <Select
+              value={currentFilters.action || "all"}
+              onValueChange={(value) => updateFilter("action", value === "all" ? "" : value)}
               disabled={isPending}
-              className="h-10 rounded-lg border border-slate-200 bg-white px-3 text-sm outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500"
             >
-              <option value="">All Actions</option>
-              {Object.entries(ACTION_LABELS).map(([value, label]) => (
-                <option key={value} value={value}>
-                  {label}
-                </option>
-              ))}
-            </select>
+              <SelectTrigger className="w-[140px]" aria-label="Filter by action">
+                <SelectValue placeholder="All Actions" />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectItem value="all">All Actions</SelectItem>
+                {Object.entries(ACTION_LABELS).map(([value, label]) => (
+                  <SelectItem key={value} value={value}>
+                    {label}
+                  </SelectItem>
+                ))}
+              </SelectContent>
+            </Select>
 
             {/* Entity Type Filter */}
-            <select
-              value={currentFilters.entityType || ""}
-              onChange={(e) => updateFilter("entityType", e.target.value)}
+            <Select
+              value={currentFilters.entityType || "all"}
+              onValueChange={(value) => updateFilter("entityType", value === "all" ? "" : value)}
               disabled={isPending}
-              className="h-10 rounded-lg border border-slate-200 bg-white px-3 text-sm outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500"
             >
-              <option value="">All Entity Types</option>
-              {Object.entries(ENTITY_TYPE_LABELS).map(([value, label]) => (
-                <option key={value} value={value}>
-                  {label}
-                </option>
-              ))}
-            </select>
+              <SelectTrigger className="w-[160px]" aria-label="Filter by entity type">
+                <SelectValue placeholder="All Entity Types" />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectItem value="all">All Entity Types</SelectItem>
+                {Object.entries(ENTITY_TYPE_LABELS).map(([value, label]) => (
+                  <SelectItem key={value} value={value}>
+                    {label}
+                  </SelectItem>
+                ))}
+              </SelectContent>
+            </Select>
 
             {/* Date From */}
             <input

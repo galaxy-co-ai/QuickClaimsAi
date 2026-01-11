@@ -1,7 +1,7 @@
 "use client";
 
 import { useRouter } from "next/navigation";
-import { useForm } from "react-hook-form";
+import { useForm, Controller } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { toast } from "sonner";
 import { Loader2 } from "lucide-react";
@@ -10,6 +10,13 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
 import { ScopeUpload } from "@/components/claims/scope-upload";
 import { claimInputSchema, type ClaimInput } from "@/lib/validations/claim";
 import { createClaim, updateClaim } from "@/actions/claims";
@@ -77,6 +84,7 @@ export function ClaimForm({
     handleSubmit,
     watch,
     setValue,
+    control,
     formState: { errors, isSubmitting },
   } = useForm<ClaimInput>({
     resolver: zodResolver(claimInputSchema),
@@ -380,18 +388,31 @@ export function ClaimForm({
               <Label htmlFor="lossState">
                 State <span className="text-red-500">*</span>
               </Label>
-              <select
-                id="lossState"
-                {...register("lossState")}
-                className="h-10 w-full rounded-xl border border-slate-200 bg-white px-3 text-sm focus:border-blue-500 focus:outline-none focus:ring-2 focus:ring-blue-500/40 transition-all duration-200"
-                aria-invalid={!!errors.lossState}
-              >
-                {US_STATES.map((state) => (
-                  <option key={state.value} value={state.value}>
-                    {state.label}
-                  </option>
-                ))}
-              </select>
+              <Controller
+                name="lossState"
+                control={control}
+                render={({ field }) => (
+                  <Select
+                    value={field.value}
+                    onValueChange={field.onChange}
+                  >
+                    <SelectTrigger
+                      id="lossState"
+                      aria-invalid={!!errors.lossState}
+                      aria-label="Select state"
+                    >
+                      <SelectValue placeholder="Select state..." />
+                    </SelectTrigger>
+                    <SelectContent>
+                      {US_STATES.map((state) => (
+                        <SelectItem key={state.value} value={state.value}>
+                          {state.label}
+                        </SelectItem>
+                      ))}
+                    </SelectContent>
+                  </Select>
+                )}
+              />
               {errors.lossState && (
                 <p className="text-sm text-red-500">{errors.lossState.message}</p>
               )}
@@ -426,19 +447,31 @@ export function ClaimForm({
               <Label htmlFor="carrierId">
                 Insurance Company <span className="text-red-500">*</span>
               </Label>
-              <select
-                id="carrierId"
-                {...register("carrierId")}
-                className="h-10 w-full rounded-xl border border-slate-200 bg-white px-3 text-sm focus:border-blue-500 focus:outline-none focus:ring-2 focus:ring-blue-500/40 transition-all duration-200"
-                aria-invalid={!!errors.carrierId}
-              >
-                <option value="">Select carrier...</option>
-                {carriers.map((c) => (
-                  <option key={c.id} value={c.id}>
-                    {c.name}
-                  </option>
-                ))}
-              </select>
+              <Controller
+                name="carrierId"
+                control={control}
+                render={({ field }) => (
+                  <Select
+                    value={field.value}
+                    onValueChange={field.onChange}
+                  >
+                    <SelectTrigger
+                      id="carrierId"
+                      aria-invalid={!!errors.carrierId}
+                      aria-label="Select insurance company"
+                    >
+                      <SelectValue placeholder="Select carrier..." />
+                    </SelectTrigger>
+                    <SelectContent>
+                      {carriers.map((c) => (
+                        <SelectItem key={c.id} value={c.id}>
+                          {c.name}
+                        </SelectItem>
+                      ))}
+                    </SelectContent>
+                  </Select>
+                )}
+              />
               {errors.carrierId && (
                 <p className="text-sm text-red-500">{errors.carrierId.message}</p>
               )}
@@ -485,23 +518,37 @@ export function ClaimForm({
             {/* Adjuster Dropdown */}
             <div className="space-y-2">
               <Label htmlFor="adjusterId">Adjuster (from system)</Label>
-              <select
-                id="adjusterId"
-                {...register("adjusterId")}
-                className="h-10 w-full rounded-xl border border-slate-200 bg-white px-3 text-sm focus:border-blue-500 focus:outline-none focus:ring-2 focus:ring-blue-500/40 transition-all duration-200"
-                disabled={!selectedCarrierId}
-              >
-                <option value="">
-                  {selectedCarrierId
-                    ? "Select adjuster..."
-                    : "Select carrier first"}
-                </option>
-                {filteredAdjusters.map((adj) => (
-                  <option key={adj.id} value={adj.id}>
-                    {adj.name} ({adj.type})
-                  </option>
-                ))}
-              </select>
+              <Controller
+                name="adjusterId"
+                control={control}
+                render={({ field }) => (
+                  <Select
+                    value={field.value || ""}
+                    onValueChange={field.onChange}
+                    disabled={!selectedCarrierId}
+                  >
+                    <SelectTrigger
+                      id="adjusterId"
+                      aria-label="Select adjuster"
+                    >
+                      <SelectValue
+                        placeholder={
+                          selectedCarrierId
+                            ? "Select adjuster..."
+                            : "Select carrier first"
+                        }
+                      />
+                    </SelectTrigger>
+                    <SelectContent>
+                      {filteredAdjusters.map((adj) => (
+                        <SelectItem key={adj.id} value={adj.id}>
+                          {adj.name} ({adj.type})
+                        </SelectItem>
+                      ))}
+                    </SelectContent>
+                  </Select>
+                )}
+              />
               {!selectedCarrierId && (
                 <p className="text-xs text-slate-500">
                   Select a carrier to see available adjusters
@@ -512,18 +559,30 @@ export function ClaimForm({
             {/* Loss Type */}
             <div className="space-y-2">
               <Label htmlFor="lossType">Loss Type</Label>
-              <select
-                id="lossType"
-                {...register("lossType")}
-                className="h-10 w-full rounded-xl border border-slate-200 bg-white px-3 text-sm focus:border-blue-500 focus:outline-none focus:ring-2 focus:ring-blue-500/40 transition-all duration-200"
-              >
-                <option value="">Select type...</option>
-                {Object.entries(LOSS_TYPE_LABELS).map(([value, label]) => (
-                  <option key={value} value={value}>
-                    {label}
-                  </option>
-                ))}
-              </select>
+              <Controller
+                name="lossType"
+                control={control}
+                render={({ field }) => (
+                  <Select
+                    value={field.value || ""}
+                    onValueChange={field.onChange}
+                  >
+                    <SelectTrigger
+                      id="lossType"
+                      aria-label="Select loss type"
+                    >
+                      <SelectValue placeholder="Select type..." />
+                    </SelectTrigger>
+                    <SelectContent>
+                      {Object.entries(LOSS_TYPE_LABELS).map(([value, label]) => (
+                        <SelectItem key={value} value={value}>
+                          {label}
+                        </SelectItem>
+                      ))}
+                    </SelectContent>
+                  </Select>
+                )}
+              />
             </div>
           </div>
 
@@ -597,19 +656,31 @@ export function ClaimForm({
               <Label htmlFor="contractorId">
                 Contractor <span className="text-red-500">*</span>
               </Label>
-              <select
-                id="contractorId"
-                {...register("contractorId")}
-                className="h-10 w-full rounded-xl border border-slate-200 bg-white px-3 text-sm focus:border-blue-500 focus:outline-none focus:ring-2 focus:ring-blue-500/40 transition-all duration-200"
-                aria-invalid={!!errors.contractorId}
-              >
-                <option value="">Select contractor...</option>
-                {contractors.map((c) => (
-                  <option key={c.id} value={c.id}>
-                    {c.companyName}
-                  </option>
-                ))}
-              </select>
+              <Controller
+                name="contractorId"
+                control={control}
+                render={({ field }) => (
+                  <Select
+                    value={field.value}
+                    onValueChange={field.onChange}
+                  >
+                    <SelectTrigger
+                      id="contractorId"
+                      aria-invalid={!!errors.contractorId}
+                      aria-label="Select contractor"
+                    >
+                      <SelectValue placeholder="Select contractor..." />
+                    </SelectTrigger>
+                    <SelectContent>
+                      {contractors.map((c) => (
+                        <SelectItem key={c.id} value={c.id}>
+                          {c.companyName}
+                        </SelectItem>
+                      ))}
+                    </SelectContent>
+                  </Select>
+                )}
+              />
               {errors.contractorId && (
                 <p className="text-sm text-red-500">
                   {errors.contractorId.message}
@@ -622,19 +693,31 @@ export function ClaimForm({
               <Label htmlFor="estimatorId">
                 Salesperson <span className="text-red-500">*</span>
               </Label>
-              <select
-                id="estimatorId"
-                {...register("estimatorId")}
-                className="h-10 w-full rounded-xl border border-slate-200 bg-white px-3 text-sm focus:border-blue-500 focus:outline-none focus:ring-2 focus:ring-blue-500/40 transition-all duration-200"
-                aria-invalid={!!errors.estimatorId}
-              >
-                <option value="">Select salesperson...</option>
-                {estimators.map((e) => (
-                  <option key={e.id} value={e.id}>
-                    {e.firstName} {e.lastName}
-                  </option>
-                ))}
-              </select>
+              <Controller
+                name="estimatorId"
+                control={control}
+                render={({ field }) => (
+                  <Select
+                    value={field.value}
+                    onValueChange={field.onChange}
+                  >
+                    <SelectTrigger
+                      id="estimatorId"
+                      aria-invalid={!!errors.estimatorId}
+                      aria-label="Select salesperson"
+                    >
+                      <SelectValue placeholder="Select salesperson..." />
+                    </SelectTrigger>
+                    <SelectContent>
+                      {estimators.map((e) => (
+                        <SelectItem key={e.id} value={e.id}>
+                          {e.firstName} {e.lastName}
+                        </SelectItem>
+                      ))}
+                    </SelectContent>
+                  </Select>
+                )}
+              />
               {errors.estimatorId && (
                 <p className="text-sm text-red-500">
                   {errors.estimatorId.message}
@@ -649,16 +732,29 @@ export function ClaimForm({
               <Label htmlFor="jobType">
                 Supplement/Estimate/ReInspect <span className="text-red-500">*</span>
               </Label>
-              <select
-                id="jobType"
-                {...register("jobType")}
-                className="h-10 w-full rounded-xl border border-slate-200 bg-white px-3 text-sm focus:border-blue-500 focus:outline-none focus:ring-2 focus:ring-blue-500/40 transition-all duration-200"
-              >
-                <option value="supplement">Supplement</option>
-                <option value="reinspection">Reinspection</option>
-                <option value="estimate">Estimate</option>
-                <option value="final_invoice">Final Invoice</option>
-              </select>
+              <Controller
+                name="jobType"
+                control={control}
+                render={({ field }) => (
+                  <Select
+                    value={field.value}
+                    onValueChange={field.onChange}
+                  >
+                    <SelectTrigger
+                      id="jobType"
+                      aria-label="Select job type"
+                    >
+                      <SelectValue placeholder="Select job type..." />
+                    </SelectTrigger>
+                    <SelectContent>
+                      <SelectItem value="supplement">Supplement</SelectItem>
+                      <SelectItem value="reinspection">Reinspection</SelectItem>
+                      <SelectItem value="estimate">Estimate</SelectItem>
+                      <SelectItem value="final_invoice">Final Invoice</SelectItem>
+                    </SelectContent>
+                  </Select>
+                )}
+              />
             </div>
 
             {/* Contractor CRM */}

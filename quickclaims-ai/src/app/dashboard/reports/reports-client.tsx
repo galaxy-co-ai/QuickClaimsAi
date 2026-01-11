@@ -8,6 +8,13 @@ import { Button } from "@/components/ui/button";
 import { Label } from "@/components/ui/label";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
+import {
   generateContractorBillingReport,
   generateEstimatorCommissionReport,
   generateContractorOwnBillingReport,
@@ -151,19 +158,22 @@ function ContractorBillingReport({
           <div className="grid gap-4 md:grid-cols-4">
             <div>
               <Label htmlFor="contractor">Contractor</Label>
-              <select
-                id="contractor"
-                value={contractorId}
-                onChange={(e) => setContractorId(e.target.value)}
-                className="w-full mt-1 rounded-md border border-slate-300 px-3 py-2 text-sm"
+              <Select
+                value={contractorId || "none"}
+                onValueChange={(value) => setContractorId(value === "none" ? "" : value)}
               >
-                <option value="">Select contractor...</option>
-                {contractors.map((c) => (
-                  <option key={c.id} value={c.id}>
-                    {c.companyName}
-                  </option>
-                ))}
-              </select>
+                <SelectTrigger id="contractor" className="w-full mt-1" aria-label="Select contractor">
+                  <SelectValue placeholder="Select contractor..." />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="none">Select contractor...</SelectItem>
+                  {contractors.map((c) => (
+                    <SelectItem key={c.id} value={c.id}>
+                      {c.companyName}
+                    </SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
             </div>
             <div>
               <Label htmlFor="startDate">Start Date</Label>
@@ -376,19 +386,22 @@ function EstimatorCommissionReport({
           <div className="grid gap-4 md:grid-cols-4">
             <div>
               <Label htmlFor="estimator">Estimator</Label>
-              <select
-                id="estimator"
-                value={estimatorId}
-                onChange={(e) => setEstimatorId(e.target.value)}
-                className="w-full mt-1 rounded-md border border-slate-300 px-3 py-2 text-sm"
+              <Select
+                value={estimatorId || "none"}
+                onValueChange={(value) => setEstimatorId(value === "none" ? "" : value)}
               >
-                <option value="">Select estimator...</option>
-                {estimators.map((e) => (
-                  <option key={e.id} value={e.id}>
-                    {e.firstName} {e.lastName}
-                  </option>
-                ))}
-              </select>
+                <SelectTrigger id="estimator" className="w-full mt-1" aria-label="Select estimator">
+                  <SelectValue placeholder="Select estimator..." />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="none">Select estimator...</SelectItem>
+                  {estimators.map((e) => (
+                    <SelectItem key={e.id} value={e.id}>
+                      {e.firstName} {e.lastName}
+                    </SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
             </div>
             <div>
               <Label htmlFor="estStartDate">Start Date</Label>
