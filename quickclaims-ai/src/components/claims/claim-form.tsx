@@ -17,6 +17,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
+import { DatePicker } from "@/components/ui/date-picker";
 import { ScopeUpload } from "@/components/claims/scope-upload";
 import { claimInputSchema, type ClaimInput } from "@/lib/validations/claim";
 import { createClaim, updateClaim } from "@/actions/claims";
@@ -482,10 +483,18 @@ export function ClaimForm({
               <Label htmlFor="dateOfLoss">
                 Date of Loss <span className="text-red-500">*</span>
               </Label>
-              <Input
-                id="dateOfLoss"
-                type="date"
-                {...register("dateOfLoss", { valueAsDate: true })}
+              <Controller
+                name="dateOfLoss"
+                control={control}
+                render={({ field }) => (
+                  <DatePicker
+                    id="dateOfLoss"
+                    value={field.value}
+                    onChange={field.onChange}
+                    placeholder="Select date of loss..."
+                    aria-label="Date of loss"
+                  />
+                )}
               />
             </div>
           </div>

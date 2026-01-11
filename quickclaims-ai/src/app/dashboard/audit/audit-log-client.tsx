@@ -13,6 +13,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
+import { DatePickerString } from "@/components/ui/date-picker";
 import { formatDistanceToNow } from "date-fns";
 
 interface AuditLog {
@@ -196,23 +197,23 @@ export function AuditLogClient({
             </Select>
 
             {/* Date From */}
-            <input
-              type="date"
+            <DatePickerString
               value={currentFilters.dateFrom || ""}
-              onChange={(e) => updateFilter("dateFrom", e.target.value)}
+              onChange={(value) => updateFilter("dateFrom", value)}
               disabled={isPending}
-              className="h-10 rounded-lg border border-slate-200 bg-white px-3 text-sm outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500"
+              placeholder="From date"
               aria-label="Date from"
+              className="w-[140px]"
             />
 
             {/* Date To */}
-            <input
-              type="date"
+            <DatePickerString
               value={currentFilters.dateTo || ""}
-              onChange={(e) => updateFilter("dateTo", e.target.value)}
+              onChange={(value) => updateFilter("dateTo", value)}
               disabled={isPending}
-              className="h-10 rounded-lg border border-slate-200 bg-white px-3 text-sm outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500"
+              placeholder="To date"
               aria-label="Date to"
+              className="w-[140px]"
             />
 
             {/* Entity ID Search */}

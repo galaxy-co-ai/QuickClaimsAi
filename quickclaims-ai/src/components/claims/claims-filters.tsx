@@ -12,6 +12,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
+import { DatePickerString } from "@/components/ui/date-picker";
 import { CLAIM_STATUS_LABELS } from "@/lib/constants";
 
 interface ClaimsFiltersProps {
@@ -330,24 +331,24 @@ export function ClaimsFilters({
             {/* Date Range Filters */}
             <div className="flex items-center gap-2">
               <label className="text-sm text-slate-500">From:</label>
-              <input
-                type="date"
+              <DatePickerString
                 value={dateFrom}
-                onChange={(e) => handleDateFromChange(e.target.value)}
+                onChange={handleDateFromChange}
                 disabled={isPending}
-                className="h-10 rounded-xl border border-slate-200 bg-white px-3 text-sm outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-500/40 transition-all duration-200"
+                placeholder="Start date"
                 aria-label="Date from"
+                className="w-[140px]"
               />
             </div>
             <div className="flex items-center gap-2">
               <label className="text-sm text-slate-500">To:</label>
-              <input
-                type="date"
+              <DatePickerString
                 value={dateTo}
-                onChange={(e) => handleDateToChange(e.target.value)}
+                onChange={handleDateToChange}
                 disabled={isPending}
-                className="h-10 rounded-xl border border-slate-200 bg-white px-3 text-sm outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-500/40 transition-all duration-200"
+                placeholder="End date"
                 aria-label="Date to"
+                className="w-[140px]"
               />
             </div>
 

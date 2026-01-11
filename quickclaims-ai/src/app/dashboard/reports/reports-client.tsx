@@ -14,6 +14,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
+import { DatePickerString } from "@/components/ui/date-picker";
 import {
   generateContractorBillingReport,
   generateEstimatorCommissionReport,
@@ -177,22 +178,24 @@ function ContractorBillingReport({
             </div>
             <div>
               <Label htmlFor="startDate">Start Date</Label>
-              <input
+              <DatePickerString
                 id="startDate"
-                type="date"
                 value={startDate}
-                onChange={(e) => setStartDate(e.target.value)}
-                className="w-full mt-1 rounded-md border border-slate-300 px-3 py-2 text-sm"
+                onChange={setStartDate}
+                placeholder="Start date"
+                aria-label="Start date"
+                className="w-full mt-1"
               />
             </div>
             <div>
               <Label htmlFor="endDate">End Date</Label>
-              <input
+              <DatePickerString
                 id="endDate"
-                type="date"
                 value={endDate}
-                onChange={(e) => setEndDate(e.target.value)}
-                className="w-full mt-1 rounded-md border border-slate-300 px-3 py-2 text-sm"
+                onChange={setEndDate}
+                placeholder="End date"
+                aria-label="End date"
+                className="w-full mt-1"
               />
             </div>
             <div className="flex items-end gap-2">
@@ -405,22 +408,24 @@ function EstimatorCommissionReport({
             </div>
             <div>
               <Label htmlFor="estStartDate">Start Date</Label>
-              <input
+              <DatePickerString
                 id="estStartDate"
-                type="date"
                 value={startDate}
-                onChange={(e) => setStartDate(e.target.value)}
-                className="w-full mt-1 rounded-md border border-slate-300 px-3 py-2 text-sm"
+                onChange={setStartDate}
+                placeholder="Start date"
+                aria-label="Start date"
+                className="w-full mt-1"
               />
             </div>
             <div>
               <Label htmlFor="estEndDate">End Date</Label>
-              <input
+              <DatePickerString
                 id="estEndDate"
-                type="date"
                 value={endDate}
-                onChange={(e) => setEndDate(e.target.value)}
-                className="w-full mt-1 rounded-md border border-slate-300 px-3 py-2 text-sm"
+                onChange={setEndDate}
+                placeholder="End date"
+                aria-label="End date"
+                className="w-full mt-1"
               />
             </div>
             <div className="flex items-end gap-2">
@@ -615,22 +620,24 @@ function ContractorOwnBillingReport({
           <div className="grid gap-4 md:grid-cols-3">
             <div>
               <Label htmlFor="startDate">Start Date</Label>
-              <input
+              <DatePickerString
                 id="startDate"
-                type="date"
                 value={startDate}
-                onChange={(e) => setStartDate(e.target.value)}
-                className="w-full mt-1 rounded-md border border-slate-300 px-3 py-2 text-sm"
+                onChange={setStartDate}
+                placeholder="Start date"
+                aria-label="Start date"
+                className="w-full mt-1"
               />
             </div>
             <div>
               <Label htmlFor="endDate">End Date</Label>
-              <input
+              <DatePickerString
                 id="endDate"
-                type="date"
                 value={endDate}
-                onChange={(e) => setEndDate(e.target.value)}
-                className="w-full mt-1 rounded-md border border-slate-300 px-3 py-2 text-sm"
+                onChange={setEndDate}
+                placeholder="End date"
+                aria-label="End date"
+                className="w-full mt-1"
               />
             </div>
             <div className="flex items-end gap-2">
