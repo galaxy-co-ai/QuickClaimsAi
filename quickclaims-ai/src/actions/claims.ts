@@ -4,7 +4,7 @@ import { revalidatePath } from "next/cache";
 import { db } from "@/lib/db";
 import { claimInputSchema, claimFiltersSchema, type ClaimInput, type ClaimFilters } from "@/lib/validations/claim";
 import { requireRole } from "@/lib/auth";
-import { calculateInitialDollarPerSquare, decimalToNumber } from "@/lib/calculations";
+import { calculateInitialDollarPerSquare, decimalToNumber, serializeClaims, serializeClaim } from "@/lib/calculations";
 import { CLAIM_STATUS_LABELS, getValidNextStatuses, isValidStatusTransition } from "@/lib/constants";
 import { logAudit } from "@/actions/audit";
 import { sendStatusChangeNotification } from "@/actions/notifications";
@@ -83,7 +83,8 @@ export async function getClaims(filters?: Partial<ClaimFilters>) {
   ]);
 
   return {
-    claims,
+    // Serialize Decimal fields to numbers for client component compatibility
+    claims: serializeClaims(claims),
     pagination: {
       page,
       limit,
@@ -128,7 +129,10 @@ export async function getClaim(id: string) {
     },
   });
 
-  return claim;
+  if (!claim) return null;
+
+  // Serialize Decimal fields to numbers for client component compatibility
+  return serializeClaim(claim);
 }
 
 /**
@@ -543,7 +547,8 @@ export async function getClaimsRequiringAction(limit: number = 10) {
     },
   });
 
-  return claims;
+  // Serialize Decimal fields to numbers for client component compatibility
+  return serializeClaims(claims);
 }
 
 /**
@@ -659,7 +664,8 @@ export async function getClaimsForKanban() {
     },
   });
 
-  return claims;
+  // Serialize Decimal fields to numbers for client component compatibility
+  return serializeClaims(claims);
 }
 
 /**
@@ -795,6 +801,7 @@ export async function getManagerDashboardStats() {
     overdueCount,
     statusChartData,
     recentActivity,
-    claimsNeedingAttention,
+    // Serialize Decimal fields to numbers for client component compatibility
+    claimsNeedingAttention: serializeClaims(claimsNeedingAttention),
   };
 }

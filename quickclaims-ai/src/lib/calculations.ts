@@ -115,3 +115,115 @@ export function calculateInitialDollarPerSquare(
   if (totalSquares <= 0) return 0;
   return round(roofRCV / totalSquares);
 }
+
+// Decimal fields in different models
+const CLAIM_DECIMAL_FIELDS = [
+  "totalSquares",
+  "roofRCV",
+  "initialRCV",
+  "dollarPerSquare",
+  "finalRoofRCV",
+  "finalTotalRCV",
+  "finalDollarPerSquare",
+  "currentTotalRCV",
+  "totalIncrease",
+  "percentageIncrease",
+  "contractorBillingAmount",
+  "estimatorCommission",
+  "moneyReleasedAmount",
+];
+
+const SUPPLEMENT_DECIMAL_FIELDS = [
+  "amount",
+  "previousRCV",
+  "newRCV",
+  "previousRoofRCV",
+  "newRoofRCV",
+  "roofIncrease",
+  "approvedAmount",
+];
+
+const CONTRACTOR_DECIMAL_FIELDS = ["billingPercentage"];
+const ESTIMATOR_DECIMAL_FIELDS = ["commissionPercentage"];
+
+/**
+ * Generic serialization helper that converts Decimal fields to numbers
+ */
+function serializeDecimalFields<T extends Record<string, unknown>>(
+  obj: T, 
+  decimalFields: string[]
+): T {
+  const serialized = { ...obj } as Record<string, unknown>;
+  
+  for (const field of decimalFields) {
+    if (field in serialized && serialized[field] != null) {
+      serialized[field] = decimalToNumber(serialized[field] as Decimal | number | string);
+    }
+  }
+  
+  return serialized as T;
+}
+
+/**
+ * Serialize a claim object by converting Decimal fields to numbers.
+ * This is required when passing claims from Server Components to Client Components.
+ */
+export function serializeClaim<T extends Record<string, unknown>>(claim: T): T {
+  const serialized = serializeDecimalFields(claim, CLAIM_DECIMAL_FIELDS);
+  
+  // Also serialize nested supplements if present
+  if ("supplements" in serialized && Array.isArray(serialized.supplements)) {
+    serialized.supplements = (serialized.supplements as Record<string, unknown>[]).map(
+      (s) => serializeDecimalFields(s, SUPPLEMENT_DECIMAL_FIELDS)
+    );
+  }
+  
+  // Serialize nested contractor if present
+  if ("contractor" in serialized && serialized.contractor && typeof serialized.contractor === "object") {
+    serialized.contractor = serializeDecimalFields(
+      serialized.contractor as Record<string, unknown>,
+      CONTRACTOR_DECIMAL_FIELDS
+    );
+  }
+  
+  // Serialize nested estimator if present
+  if ("estimator" in serialized && serialized.estimator && typeof serialized.estimator === "object") {
+    serialized.estimator = serializeDecimalFields(
+      serialized.estimator as Record<string, unknown>,
+      ESTIMATOR_DECIMAL_FIELDS
+    );
+  }
+  
+  return serialized as T;
+}
+
+/**
+ * Serialize an array of claims
+ */
+export function serializeClaims<T extends Record<string, unknown>>(claims: T[]): T[] {
+  return claims.map(serializeClaim);
+}
+
+/**
+ * Serialize a supplement object by converting Decimal fields to numbers.
+ */
+export function serializeSupplement<T extends Record<string, unknown>>(supplement: T): T {
+  const serialized = serializeDecimalFields(supplement, SUPPLEMENT_DECIMAL_FIELDS);
+  
+  // Also serialize nested claim if present
+  if ("claim" in serialized && serialized.claim && typeof serialized.claim === "object") {
+    serialized.claim = serializeDecimalFields(
+      serialized.claim as Record<string, unknown>,
+      CLAIM_DECIMAL_FIELDS
+    );
+  }
+  
+  return serialized as T;
+}
+
+/**
+ * Serialize an array of supplements
+ */
+export function serializeSupplements<T extends Record<string, unknown>>(supplements: T[]): T[] {
+  return supplements.map(serializeSupplement);
+}

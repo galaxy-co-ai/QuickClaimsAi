@@ -3,7 +3,7 @@
 import { revalidatePath } from "next/cache";
 import { db } from "@/lib/db";
 import { requireContractor, getCurrentDbUserId, getCurrentUserRole } from "@/lib/auth";
-import { decimalToNumber } from "@/lib/calculations";
+import { decimalToNumber, serializeClaims, serializeClaim } from "@/lib/calculations";
 
 /**
  * Get claims for the current contractor (contractor portal)
@@ -59,7 +59,8 @@ export async function getContractorClaims(filters?: {
   ]);
 
   return {
-    claims,
+    // Serialize Decimal fields to numbers for client component compatibility
+    claims: serializeClaims(claims),
     pagination: {
       page,
       limit,
@@ -115,7 +116,8 @@ export async function getContractorClaim(id: string) {
     throw new Error("Claim not found or access denied");
   }
 
-  return claim;
+  // Serialize Decimal fields to numbers for client component compatibility
+  return serializeClaim(claim);
 }
 
 /**

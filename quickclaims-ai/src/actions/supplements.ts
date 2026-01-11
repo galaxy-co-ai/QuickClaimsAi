@@ -10,7 +10,7 @@ import {
   type SupplementApproval,
 } from "@/lib/validations/supplement";
 import { requireRole } from "@/lib/auth";
-import { calculateClaimMetrics, decimalToNumber } from "@/lib/calculations";
+import { calculateClaimMetrics, decimalToNumber, serializeSupplements, serializeSupplement } from "@/lib/calculations";
 import { logAudit } from "@/actions/audit";
 import { sendSupplementApprovedNotification } from "@/actions/notifications";
 import type { SupplementStatus } from "@prisma/client";
@@ -87,7 +87,8 @@ export async function getSupplementsForClaim(claimId: string) {
     },
   });
 
-  return supplements;
+  // Serialize Decimal fields to numbers for client component compatibility
+  return serializeSupplements(supplements);
 }
 
 /**
@@ -112,7 +113,10 @@ export async function getSupplement(id: string) {
     },
   });
 
-  return supplement;
+  if (!supplement) return null;
+
+  // Serialize Decimal fields to numbers for client component compatibility
+  return serializeSupplement(supplement);
 }
 
 /**
