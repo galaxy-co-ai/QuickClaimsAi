@@ -95,7 +95,7 @@ export function DatePicker({
       <ReactDatePicker
         id={id}
         selected={value}
-        onChange={(date) => onChange?.(date ?? undefined)}
+        onChange={(date: Date | null) => onChange?.(date ?? undefined)}
         placeholderText={placeholder}
         disabled={disabled}
         dateFormat="MMM d, yyyy"
@@ -142,7 +142,7 @@ export function DatePickerString({
       <ReactDatePicker
         id={id}
         selected={dateValue}
-        onChange={(date) => onChange?.(date ? format(date, "yyyy-MM-dd") : "")}
+        onChange={(date: Date | null) => onChange?.(date ? format(date, "yyyy-MM-dd") : "")}
         placeholderText={placeholder}
         disabled={disabled}
         dateFormat="MMM d, yyyy"
