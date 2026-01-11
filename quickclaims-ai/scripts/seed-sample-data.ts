@@ -118,25 +118,24 @@ function randomDate(daysAgo: number): Date {
 
 /**
  * Generate a date that is after the given date but within maxDaysAfter days.
- * Guarantees the result is always:
- *   1. Strictly after afterDate
- *   2. Not in the future (at or before now)
+ * Guarantees:
+ *   1. Result > afterDate (strictly after)
+ *   2. Result <= now (never in the future)
+ * If these constraints conflict (afterDate >= now), returns now.
  */
 function randomDateAfter(afterDate: Date, maxDaysAfter: number): Date {
   const now = new Date();
-  
-  // Calculate available time window in milliseconds
   const msAvailable = now.getTime() - afterDate.getTime();
   
-  // Edge case: afterDate is at or after now - return afterDate + 1ms (best we can do)
+  // Edge case: afterDate is at or after now - return now (can't satisfy "after" constraint)
   if (msAvailable <= 0) {
-    return new Date(afterDate.getTime() + 1);
+    return now;
   }
   
   // Calculate max offset: either maxDaysAfter or available time, whichever is smaller
   const maxMsOffset = Math.min(maxDaysAfter * 24 * 60 * 60 * 1000, msAvailable);
   
-  // Minimum offset: 1 minute or available time if less than 1 minute
+  // Minimum offset: 1 minute, but clamp to available time if less
   const minMsOffset = Math.min(60 * 1000, maxMsOffset);
   
   // Generate random offset within the valid range
