@@ -246,7 +246,7 @@ export function ClaimsFilters({
               value={currentFilters.status || ""}
               onChange={(e) => updateFilter("status", e.target.value)}
               disabled={isPending}
-              className="h-10 rounded-lg border border-slate-200 bg-white px-3 text-sm outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500"
+              className="h-10 rounded-xl border border-slate-200 bg-white px-3 text-sm outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-500/40 transition-all duration-200"
             >
               <option value="">All Statuses</option>
               {Object.entries(CLAIM_STATUS_LABELS).map(([value, label]) => (
@@ -261,7 +261,7 @@ export function ClaimsFilters({
               value={currentFilters.contractor || ""}
               onChange={(e) => updateFilter("contractor", e.target.value)}
               disabled={isPending}
-              className="h-10 rounded-lg border border-slate-200 bg-white px-3 text-sm outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500"
+              className="h-10 rounded-xl border border-slate-200 bg-white px-3 text-sm outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-500/40 transition-all duration-200"
             >
               <option value="">All Contractors</option>
               {contractors.map((contractor) => (
@@ -276,7 +276,7 @@ export function ClaimsFilters({
               value={currentFilters.estimator || ""}
               onChange={(e) => updateFilter("estimator", e.target.value)}
               disabled={isPending}
-              className="h-10 rounded-lg border border-slate-200 bg-white px-3 text-sm outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500"
+              className="h-10 rounded-xl border border-slate-200 bg-white px-3 text-sm outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-500/40 transition-all duration-200"
             >
               <option value="">All Estimators</option>
               {estimators.map((estimator) => (
@@ -291,7 +291,7 @@ export function ClaimsFilters({
               value={currentFilters.carrier || ""}
               onChange={(e) => updateFilter("carrier", e.target.value)}
               disabled={isPending}
-              className="h-10 rounded-lg border border-slate-200 bg-white px-3 text-sm outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500"
+              className="h-10 rounded-xl border border-slate-200 bg-white px-3 text-sm outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-500/40 transition-all duration-200"
             >
               <option value="">All Carriers</option>
               {carriers.map((carrier) => (
@@ -312,7 +312,7 @@ export function ClaimsFilters({
                 value={dateFrom}
                 onChange={(e) => handleDateFromChange(e.target.value)}
                 disabled={isPending}
-                className="h-10 rounded-lg border border-slate-200 bg-white px-3 text-sm outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500"
+                className="h-10 rounded-xl border border-slate-200 bg-white px-3 text-sm outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-500/40 transition-all duration-200"
                 aria-label="Date from"
               />
             </div>
@@ -323,7 +323,7 @@ export function ClaimsFilters({
                 value={dateTo}
                 onChange={(e) => handleDateToChange(e.target.value)}
                 disabled={isPending}
-                className="h-10 rounded-lg border border-slate-200 bg-white px-3 text-sm outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500"
+                className="h-10 rounded-xl border border-slate-200 bg-white px-3 text-sm outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-500/40 transition-all duration-200"
                 aria-label="Date to"
               />
             </div>

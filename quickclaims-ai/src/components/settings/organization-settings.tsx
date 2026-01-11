@@ -120,7 +120,7 @@ export function OrganizationSettings({ settings }: OrganizationSettingsProps) {
             onChange={handleChange}
             placeholder="123 Main Street&#10;Suite 100&#10;Austin, TX 78701"
             rows={3}
-            className="flex min-h-[80px] w-full rounded-md border border-slate-200 bg-white px-3 py-2 text-sm placeholder:text-slate-500 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50"
+            className="flex min-h-[80px] w-full rounded-xl border border-slate-200 bg-white px-3 py-2 text-sm placeholder:text-slate-400 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-500/40 focus-visible:border-blue-500 disabled:cursor-not-allowed disabled:opacity-50 transition-all duration-200"
           />
           <p className="text-xs text-slate-500">
             This address will appear on generated reports and invoices
@@ -173,7 +173,7 @@ export function OrganizationSettings({ settings }: OrganizationSettingsProps) {
             onChange={handleChange}
             placeholder="Optional header text that appears at the top of generated reports..."
             rows={2}
-            className="flex min-h-[60px] w-full rounded-md border border-slate-200 bg-white px-3 py-2 text-sm placeholder:text-slate-500 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50"
+            className="flex min-h-[60px] w-full rounded-xl border border-slate-200 bg-white px-3 py-2 text-sm placeholder:text-slate-400 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-500/40 focus-visible:border-blue-500 disabled:cursor-not-allowed disabled:opacity-50 transition-all duration-200"
           />
         </div>
 
@@ -186,7 +186,7 @@ export function OrganizationSettings({ settings }: OrganizationSettingsProps) {
             onChange={handleChange}
             placeholder="Payment terms, disclaimers, or other footer content..."
             rows={2}
-            className="flex min-h-[60px] w-full rounded-md border border-slate-200 bg-white px-3 py-2 text-sm placeholder:text-slate-500 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50"
+            className="flex min-h-[60px] w-full rounded-xl border border-slate-200 bg-white px-3 py-2 text-sm placeholder:text-slate-400 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-500/40 focus-visible:border-blue-500 disabled:cursor-not-allowed disabled:opacity-50 transition-all duration-200"
           />
           <p className="text-xs text-slate-500">
             Example: &quot;Payment due within 30 days of invoice date.&quot;

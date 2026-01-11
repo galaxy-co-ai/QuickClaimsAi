@@ -383,7 +383,7 @@ export function ClaimForm({
               <select
                 id="lossState"
                 {...register("lossState")}
-                className="h-10 w-full rounded-md border border-slate-200 bg-white px-3 text-sm focus:border-blue-500 focus:outline-none focus:ring-1 focus:ring-blue-500"
+                className="h-10 w-full rounded-xl border border-slate-200 bg-white px-3 text-sm focus:border-blue-500 focus:outline-none focus:ring-2 focus:ring-blue-500/40 transition-all duration-200"
                 aria-invalid={!!errors.lossState}
               >
                 {US_STATES.map((state) => (
@@ -429,7 +429,7 @@ export function ClaimForm({
               <select
                 id="carrierId"
                 {...register("carrierId")}
-                className="h-10 w-full rounded-md border border-slate-200 bg-white px-3 text-sm focus:border-blue-500 focus:outline-none focus:ring-1 focus:ring-blue-500"
+                className="h-10 w-full rounded-xl border border-slate-200 bg-white px-3 text-sm focus:border-blue-500 focus:outline-none focus:ring-2 focus:ring-blue-500/40 transition-all duration-200"
                 aria-invalid={!!errors.carrierId}
               >
                 <option value="">Select carrier...</option>
@@ -488,7 +488,7 @@ export function ClaimForm({
               <select
                 id="adjusterId"
                 {...register("adjusterId")}
-                className="h-10 w-full rounded-md border border-slate-200 bg-white px-3 text-sm focus:border-blue-500 focus:outline-none focus:ring-1 focus:ring-blue-500"
+                className="h-10 w-full rounded-xl border border-slate-200 bg-white px-3 text-sm focus:border-blue-500 focus:outline-none focus:ring-2 focus:ring-blue-500/40 transition-all duration-200"
                 disabled={!selectedCarrierId}
               >
                 <option value="">
@@ -515,7 +515,7 @@ export function ClaimForm({
               <select
                 id="lossType"
                 {...register("lossType")}
-                className="h-10 w-full rounded-md border border-slate-200 bg-white px-3 text-sm focus:border-blue-500 focus:outline-none focus:ring-1 focus:ring-blue-500"
+                className="h-10 w-full rounded-xl border border-slate-200 bg-white px-3 text-sm focus:border-blue-500 focus:outline-none focus:ring-2 focus:ring-blue-500/40 transition-all duration-200"
               >
                 <option value="">Select type...</option>
                 {Object.entries(LOSS_TYPE_LABELS).map(([value, label]) => (
@@ -600,7 +600,7 @@ export function ClaimForm({
               <select
                 id="contractorId"
                 {...register("contractorId")}
-                className="h-10 w-full rounded-md border border-slate-200 bg-white px-3 text-sm focus:border-blue-500 focus:outline-none focus:ring-1 focus:ring-blue-500"
+                className="h-10 w-full rounded-xl border border-slate-200 bg-white px-3 text-sm focus:border-blue-500 focus:outline-none focus:ring-2 focus:ring-blue-500/40 transition-all duration-200"
                 aria-invalid={!!errors.contractorId}
               >
                 <option value="">Select contractor...</option>
@@ -625,7 +625,7 @@ export function ClaimForm({
               <select
                 id="estimatorId"
                 {...register("estimatorId")}
-                className="h-10 w-full rounded-md border border-slate-200 bg-white px-3 text-sm focus:border-blue-500 focus:outline-none focus:ring-1 focus:ring-blue-500"
+                className="h-10 w-full rounded-xl border border-slate-200 bg-white px-3 text-sm focus:border-blue-500 focus:outline-none focus:ring-2 focus:ring-blue-500/40 transition-all duration-200"
                 aria-invalid={!!errors.estimatorId}
               >
                 <option value="">Select salesperson...</option>
@@ -652,7 +652,7 @@ export function ClaimForm({
               <select
                 id="jobType"
                 {...register("jobType")}
-                className="h-10 w-full rounded-md border border-slate-200 bg-white px-3 text-sm focus:border-blue-500 focus:outline-none focus:ring-1 focus:ring-blue-500"
+                className="h-10 w-full rounded-xl border border-slate-200 bg-white px-3 text-sm focus:border-blue-500 focus:outline-none focus:ring-2 focus:ring-blue-500/40 transition-all duration-200"
               >
                 <option value="supplement">Supplement</option>
                 <option value="reinspection">Reinspection</option>
@@ -762,7 +762,7 @@ export function ClaimForm({
             {/* Initial $ Per SQ (calculated) */}
             <div className="space-y-2">
               <Label>Initial $ Per SQ</Label>
-              <div className="h-10 flex items-center px-3 bg-slate-100 rounded-md border border-slate-200 text-sm">
+              <div className="h-10 flex items-center px-3 bg-slate-100 rounded-xl border border-slate-200 text-sm">
                 ${initialDollarPerSquare}
               </div>
               <p className="text-xs text-slate-500">Auto-calculated</p>
@@ -818,7 +818,7 @@ export function ClaimForm({
               {/* Final $ Per SQ (calculated) */}
               <div className="space-y-2">
                 <Label>Final $ Per SQ</Label>
-                <div className="h-10 flex items-center px-3 bg-slate-100 rounded-md border border-slate-200 text-sm">
+                <div className="h-10 flex items-center px-3 bg-slate-100 rounded-xl border border-slate-200 text-sm">
                   {finalDollarPerSquare ? `$${finalDollarPerSquare}` : "-"}
                 </div>
                 <p className="text-xs text-slate-500">Auto-calculated</p>
@@ -827,7 +827,7 @@ export function ClaimForm({
               {/* Total Increase (calculated) */}
               <div className="space-y-2">
                 <Label>Total Increase</Label>
-                <div className="h-10 flex items-center px-3 bg-slate-100 rounded-md border border-slate-200 text-sm">
+                <div className="h-10 flex items-center px-3 bg-slate-100 rounded-xl border border-slate-200 text-sm">
                   {totalIncrease ? `$${totalIncrease}` : "-"}
                 </div>
                 <p className="text-xs text-slate-500">Final - Initial</p>

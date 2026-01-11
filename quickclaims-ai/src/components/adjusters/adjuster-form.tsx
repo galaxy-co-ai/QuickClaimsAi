@@ -82,7 +82,7 @@ export function AdjusterForm({ adjuster, carriers, defaultCarrierId }: AdjusterF
             <select
               id="carrierId"
               {...register("carrierId")}
-              className="h-10 w-full rounded-md border border-slate-200 bg-white px-3 text-sm focus:border-blue-500 focus:outline-none focus:ring-1 focus:ring-blue-500"
+              className="h-10 w-full rounded-xl border border-slate-200 bg-white px-3 text-sm focus:border-blue-500 focus:outline-none focus:ring-2 focus:ring-blue-500/40 transition-all duration-200"
               aria-invalid={!!errors.carrierId}
             >
               <option value="">Select carrier...</option>
@@ -119,7 +119,7 @@ export function AdjusterForm({ adjuster, carriers, defaultCarrierId }: AdjusterF
             <select
               id="type"
               {...register("type")}
-              className="h-10 w-full rounded-md border border-slate-200 bg-white px-3 text-sm focus:border-blue-500 focus:outline-none focus:ring-1 focus:ring-blue-500"
+              className="h-10 w-full rounded-xl border border-slate-200 bg-white px-3 text-sm focus:border-blue-500 focus:outline-none focus:ring-2 focus:ring-blue-500/40 transition-all duration-200"
             >
               <option value="desk">Desk Adjuster</option>
               <option value="field">Field Adjuster</option>
