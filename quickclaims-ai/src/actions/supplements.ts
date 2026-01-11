@@ -364,7 +364,8 @@ export async function updateSupplementStatus(
   revalidatePath(`/dashboard/claims/${existingSupplement.claimId}`);
   revalidatePath("/dashboard/claims");
   revalidatePath("/dashboard");
-  return { success: true, supplement };
+  // Serialize Decimal fields to numbers for client component compatibility
+  return { success: true, supplement: serializeSupplement(supplement) };
 }
 
 /**

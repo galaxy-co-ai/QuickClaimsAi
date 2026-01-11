@@ -514,7 +514,8 @@ export async function updateClaimStatus(id: string, newStatus: ClaimStatus) {
   revalidatePath("/dashboard/claims");
   revalidatePath(`/dashboard/claims/${id}`);
   revalidatePath("/dashboard");
-  return { success: true, claim };
+  // Serialize Decimal fields to numbers for client component compatibility
+  return { success: true, claim: serializeClaim(claim) };
 }
 
 /**
