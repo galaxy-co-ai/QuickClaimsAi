@@ -51,10 +51,10 @@ export default async function DashboardPage() {
       {/* Stats Grid - Floating Badge Design */}
       <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4 pt-3">
         <Card className="relative pt-5 pb-4 px-4">
-          <span className="absolute -top-2.5 left-1/2 -translate-x-1/2 inline-flex items-center rounded-full bg-blue-100 px-3 py-1 text-xs font-medium text-blue-700 ring-1 ring-inset ring-blue-600/20">
+          <span className="absolute -top-2.5 left-1/2 -translate-x-1/2 whitespace-nowrap rounded-full bg-blue-100 px-3 py-1 text-xs font-medium text-blue-700 ring-1 ring-inset ring-blue-600/20">
             Active Claims
           </span>
-          <div className="flex items-center justify-center gap-3">
+          <div className="flex items-center justify-center gap-2">
             <TrendingUp className="h-5 w-5 text-blue-500" aria-hidden="true" />
             <span className="text-2xl font-bold text-slate-900">{stats.activeClaims}</span>
           </div>
@@ -65,10 +65,10 @@ export default async function DashboardPage() {
         </Card>
 
         <Card className="relative pt-5 pb-4 px-4">
-          <span className="absolute -top-2.5 left-1/2 -translate-x-1/2 inline-flex items-center rounded-full bg-green-100 px-3 py-1 text-xs font-medium text-green-700 ring-1 ring-inset ring-green-600/20">
+          <span className="absolute -top-2.5 left-1/2 -translate-x-1/2 whitespace-nowrap rounded-full bg-green-100 px-3 py-1 text-xs font-medium text-green-700 ring-1 ring-inset ring-green-600/20">
             Total Increase
           </span>
-          <div className="flex items-center justify-center gap-3">
+          <div className="flex items-center justify-center gap-2">
             <DollarSign className="h-5 w-5 text-green-500" aria-hidden="true" />
             <span className="text-2xl font-bold text-green-600">{formatCurrency(stats.totalIncreaseThisMonth)}</span>
           </div>
@@ -78,10 +78,10 @@ export default async function DashboardPage() {
         </Card>
 
         <Card className="relative pt-5 pb-4 px-4">
-          <span className="absolute -top-2.5 left-1/2 -translate-x-1/2 inline-flex items-center rounded-full bg-purple-100 px-3 py-1 text-xs font-medium text-purple-700 ring-1 ring-inset ring-purple-600/20">
+          <span className="absolute -top-2.5 left-1/2 -translate-x-1/2 whitespace-nowrap rounded-full bg-purple-100 px-3 py-1 text-xs font-medium text-purple-700 ring-1 ring-inset ring-purple-600/20">
             Avg $/Square
           </span>
-          <div className="flex items-center justify-center gap-3">
+          <div className="flex items-center justify-center gap-2">
             <DollarSign className="h-5 w-5 text-purple-500" aria-hidden="true" />
             <span className="text-2xl font-bold text-slate-900">{formatCurrency(stats.avgDollarPerSquare)}</span>
           </div>
@@ -92,10 +92,10 @@ export default async function DashboardPage() {
 
         {isManager && managerStats ? (
           <Card className="relative pt-5 pb-4 px-4">
-            <span className="absolute -top-2.5 left-1/2 -translate-x-1/2 inline-flex items-center rounded-full bg-emerald-100 px-3 py-1 text-xs font-medium text-emerald-700 ring-1 ring-inset ring-emerald-600/20">
+            <span className="absolute -top-2.5 left-1/2 -translate-x-1/2 whitespace-nowrap rounded-full bg-emerald-100 px-3 py-1 text-xs font-medium text-emerald-700 ring-1 ring-inset ring-emerald-600/20">
               Compliance
             </span>
-            <div className="flex items-center justify-center gap-3">
+            <div className="flex items-center justify-center gap-2">
               <ShieldCheck className="h-5 w-5 text-emerald-500" aria-hidden="true" />
               <span className={`text-2xl font-bold ${managerStats.compliancePercentage >= 90 ? "text-emerald-600" : managerStats.compliancePercentage >= 70 ? "text-yellow-600" : "text-red-600"}`}>
                 {managerStats.compliancePercentage}%
@@ -107,10 +107,10 @@ export default async function DashboardPage() {
           </Card>
         ) : (
           <Card className="relative pt-5 pb-4 px-4">
-            <span className="absolute -top-2.5 left-1/2 -translate-x-1/2 inline-flex items-center rounded-full bg-orange-100 px-3 py-1 text-xs font-medium text-orange-700 ring-1 ring-inset ring-orange-600/20">
+            <span className="absolute -top-2.5 left-1/2 -translate-x-1/2 whitespace-nowrap rounded-full bg-orange-100 px-3 py-1 text-xs font-medium text-orange-700 ring-1 ring-inset ring-orange-600/20">
               Requires Action
             </span>
-            <div className="flex items-center justify-center gap-3">
+            <div className="flex items-center justify-center gap-2">
               <Clock className="h-5 w-5 text-orange-500" aria-hidden="true" />
               <span className="text-2xl font-bold text-orange-600">{claimsRequiringAction.length}</span>
             </div>
