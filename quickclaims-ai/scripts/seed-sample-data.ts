@@ -116,6 +116,18 @@ function randomDate(daysAgo: number): Date {
   return date;
 }
 
+/**
+ * Generate a date that is after the given date but within maxDaysAfter days
+ * FIX for Bug 1: Ensures statusChangedAt is always after createdAt
+ */
+function randomDateAfter(afterDate: Date, maxDaysAfter: number): Date {
+  const date = new Date(afterDate);
+  // Add 1 hour to maxDaysAfter days after the reference date
+  const hoursToAdd = randomInt(1, maxDaysAfter * 24);
+  date.setTime(date.getTime() + hoursToAdd * 60 * 60 * 1000);
+  return date;
+}
+
 function generatePhone(): string {
   return `(${randomInt(200, 999)}) ${randomInt(200, 999)}-${randomInt(1000, 9999)}`;
 }
@@ -229,6 +241,12 @@ async function seedClaims() {
     const daysAgo = status === "completed" ? randomInt(30, 90) : randomInt(1, 30);
     const lastActivityHours = status === "new_supplement" ? randomInt(1, 24) : randomInt(2, 72);
 
+    // FIX for Bug 1: Generate createdAt first, then derive statusChangedAt from it
+    const createdAt = randomDate(daysAgo);
+    // statusChangedAt must be after createdAt - use at most 14 days after creation
+    const maxDaysAfterCreation = Math.min(14, daysAgo);
+    const statusChangedAt = randomDateAfter(createdAt, maxDaysAfterCreation);
+
     const claim = await prisma.claim.create({
       data: {
         policyholderName,
@@ -257,10 +275,10 @@ async function seedClaims() {
         percentageIncrease: increasePercent,
         contractorBillingAmount: totalIncrease * 0.125,
         estimatorCommission: totalIncrease * 0.05,
-        createdAt: randomDate(daysAgo),
+        createdAt,
         lastActivityAt: new Date(Date.now() - lastActivityHours * 60 * 60 * 1000),
-        statusChangedAt: randomDate(Math.min(daysAgo, 14)),
-        completedAt: status === "completed" ? randomDate(7) : null,
+        statusChangedAt,
+        completedAt: status === "completed" ? randomDateAfter(statusChangedAt, 7) : null,
       },
     });
 
@@ -303,7 +321,7 @@ async function seedNotes(claims: Awaited<ReturnType<typeof prisma.claim.create>>
           content: template.content,
           type: template.type,
           isInternal: template.type === "internal",
-          createdAt: randomDate(14),
+          createdAt: randomDateAfter(claim.createdAt, 14),
         },
       });
     }
@@ -337,10 +355,17 @@ async function seedSupplements(claims: Awaited<ReturnType<typeof prisma.claim.cr
   for (const claim of claimsWithSupplements) {
     const numSupplements = randomInt(1, 2);
     
+    // FIX for Bug 2: Track running RCV to properly chain supplement values
+    let runningRCV = Number(claim.initialRCV);
+    let previousSupplementDate = claim.createdAt;
+    
     for (let seq = 1; seq <= numSupplements; seq++) {
       const amount = randomDecimal(1500, 8000, 2);
-      const previousRCV = Number(claim.initialRCV);
+      const previousRCV = runningRCV;  // Use the running total, not always initialRCV
       const newRCV = previousRCV + amount;
+      
+      // Update running RCV for next supplement
+      runningRCV = newRCV;
       
       const statusMap: Record<string, SupplementStatus> = {
         supplement_sent: "submitted",
@@ -351,6 +376,11 @@ async function seedSupplements(claims: Awaited<ReturnType<typeof prisma.claim.cr
         completed: "approved",
       };
 
+      const createdAt = randomDateAfter(previousSupplementDate, 7);
+      const submittedAt = randomDateAfter(createdAt, 3);
+      const isApproved = claim.status === "approved" || claim.status === "completed" || 
+                         claim.status === "final_invoice_pending" || claim.status === "final_invoice_sent";
+
       await prisma.supplement.create({
         data: {
           claimId: claim.id,
@@ -360,13 +390,16 @@ async function seedSupplements(claims: Awaited<ReturnType<typeof prisma.claim.cr
           newRCV,
           description: supplementDescriptions[randomInt(0, supplementDescriptions.length - 1)],
           status: statusMap[claim.status] || "draft",
-          submittedAt: randomDate(21),
-          approvedAt: claim.status === "approved" || claim.status === "completed" ? randomDate(7) : null,
-          approvedAmount: claim.status === "approved" || claim.status === "completed" ? amount : null,
+          submittedAt,
+          approvedAt: isApproved ? randomDateAfter(submittedAt, 5) : null,
+          approvedAmount: isApproved ? amount : null,
           createdById: user.id,
-          createdAt: randomDate(28),
+          createdAt,
         },
       });
+      
+      // Update for next iteration
+      previousSupplementDate = createdAt;
     }
   }
 
