@@ -118,29 +118,28 @@ function randomDate(daysAgo: number): Date {
 
 /**
  * Generate a date that is after the given date but within maxDaysAfter days.
- * Guarantees: afterDate < result <= now
- * If afterDate >= now, returns now (best possible fallback).
+ * FIX: Ensures the resulting date never exceeds the current time (no future dates).
  */
 function randomDateAfter(afterDate: Date, maxDaysAfter: number): Date {
   const now = new Date();
-  const msAvailable = now.getTime() - afterDate.getTime();
+  const date = new Date(afterDate);
   
-  // If afterDate is at or after now, return now
-  if (msAvailable <= 0) {
-    return now;
+  // Calculate maximum hours we can add without going into the future
+  const msUntilNow = now.getTime() - afterDate.getTime();
+  const hoursUntilNow = Math.floor(msUntilNow / (60 * 60 * 1000));
+  
+  // Use the minimum of requested max days (in hours) or hours until now
+  const maxHoursToAdd = Math.min(maxDaysAfter * 24, Math.max(1, hoursUntilNow - 1));
+  const hoursToAdd = randomInt(1, maxHoursToAdd);
+  
+  date.setTime(date.getTime() + hoursToAdd * 60 * 60 * 1000);
+  
+  // Final safety check: ensure we don't exceed current time
+  if (date > now) {
+    return new Date(now.getTime() - randomInt(1, 24) * 60 * 60 * 1000);
   }
   
-  // Cap the offset to either maxDaysAfter or available time
-  const maxMsOffset = Math.min(maxDaysAfter * 24 * 60 * 60 * 1000, msAvailable);
-  
-  // Use adaptive minimum: 1 minute or less if time window is smaller
-  const minMsOffset = Math.min(60 * 1000, maxMsOffset);
-  
-  // Generate offset guaranteed to be within [minMsOffset, maxMsOffset]
-  const msOffset = randomInt(minMsOffset, maxMsOffset);
-  
-  // Result is guaranteed: afterDate < result <= now
-  return new Date(afterDate.getTime() + msOffset);
+  return date;
 }
 
 function generatePhone(): string {
@@ -313,12 +312,12 @@ async function seedNotes(claims: Awaited<ReturnType<typeof prisma.claim.create>>
   }
 
   const noteTemplates = [
-    { type: "status_change" as NoteType, content: "Claim status updated. Moving to next phase." },
-    { type: "carrier_communication" as NoteType, content: "Spoke with adjuster regarding missing line items. They will review and respond within 48 hours." },
-    { type: "general" as NoteType, content: "Reviewed scope of loss. Identified additional damage to ridge caps and pipe boots." },
-    { type: "internal" as NoteType, content: "Contractor confirmed they can schedule reinspection for next week." },
-    { type: "general" as NoteType, content: "Uploaded updated supplement with corrected measurements." },
-    { type: "carrier_communication" as NoteType, content: "Received approval notification from carrier. Increase approved at requested amount." },
+    { type: "status_change" as NoteType, content: "Claim status updated. Moving to next phase.", isInternal: false },
+    { type: "call" as NoteType, content: "Spoke with adjuster regarding missing line items. They will review and respond within 48 hours.", isInternal: false },
+    { type: "general" as NoteType, content: "Reviewed scope of loss. Identified additional damage to ridge caps and pipe boots.", isInternal: false },
+    { type: "email" as NoteType, content: "Contractor confirmed they can schedule reinspection for next week.", isInternal: true },
+    { type: "document" as NoteType, content: "Uploaded updated supplement with corrected measurements.", isInternal: false },
+    { type: "email" as NoteType, content: "Received approval notification from carrier. Increase approved at requested amount.", isInternal: false },
   ];
 
   for (const claim of claims) {
@@ -335,7 +334,7 @@ async function seedNotes(claims: Awaited<ReturnType<typeof prisma.claim.create>>
           userId: user.id,
           content: template.content,
           type: template.type,
-          isInternal: template.type === "internal",
+          isInternal: template.isInternal,
           createdAt: randomDateAfter(claim.createdAt, 14),
         },
       });

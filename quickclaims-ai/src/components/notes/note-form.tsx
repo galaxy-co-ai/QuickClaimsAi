@@ -17,13 +17,16 @@ const noteFormSchema = z.object({
 
 type NoteFormValues = z.infer<typeof noteFormSchema>;
 
+// Updated note types per client request
+type NoteTypeValue = "general" | "call" | "email" | "document";
+
 interface NoteFormProps {
   claimId: string;
 }
 
 export function NoteForm({ claimId }: NoteFormProps) {
   const [isPending, startTransition] = useTransition();
-  const [noteType, setNoteType] = useState<"general" | "carrier_communication" | "internal">("general");
+  const [noteType, setNoteType] = useState<NoteTypeValue>("general");
 
   const {
     register,
@@ -44,7 +47,7 @@ export function NoteForm({ claimId }: NoteFormProps) {
           claimId,
           content: data.content,
           type: noteType,
-          isInternal: noteType === "internal",
+          isInternal: false,
         });
         toast.success("Note added");
         reset();
@@ -56,10 +59,12 @@ export function NoteForm({ claimId }: NoteFormProps) {
     });
   };
 
-  const typeButtons = [
-    { value: "general" as const, label: "Note", color: "bg-slate-100 hover:bg-slate-200 border-slate-300" },
-    { value: "carrier_communication" as const, label: "Carrier", color: "bg-purple-100 hover:bg-purple-200 border-purple-300" },
-    { value: "internal" as const, label: "Internal", color: "bg-yellow-100 hover:bg-yellow-200 border-yellow-300" },
+  // Updated type buttons per client request: General, Call, Email, Document
+  const typeButtons: Array<{ value: NoteTypeValue; label: string; color: string }> = [
+    { value: "general", label: "General", color: "bg-slate-100 hover:bg-slate-200 border-slate-300" },
+    { value: "call", label: "Call", color: "bg-green-100 hover:bg-green-200 border-green-300" },
+    { value: "email", label: "Email", color: "bg-blue-100 hover:bg-blue-200 border-blue-300" },
+    { value: "document", label: "Document", color: "bg-amber-100 hover:bg-amber-200 border-amber-300" },
   ];
 
   return (
@@ -85,6 +90,8 @@ export function NoteForm({ claimId }: NoteFormProps) {
               key={type.value}
               type="button"
               onClick={() => setNoteType(type.value)}
+              aria-pressed={noteType === type.value}
+              aria-label={`Set note type to ${type.label}`}
               className={`px-3 py-1 text-xs font-medium rounded-full border transition-colors ${
                 noteType === type.value
                   ? `${type.color} ring-2 ring-offset-1 ring-slate-400`

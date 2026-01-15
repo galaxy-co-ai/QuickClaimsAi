@@ -1,14 +1,28 @@
 export const dynamic = "force-dynamic";
 
 import Link from "next/link";
-import { Plus, Shield, Mail, Phone, Users } from "lucide-react";
+import { Plus, Shield, Mail, Phone, Users, ChevronDown } from "lucide-react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { getCarriers } from "@/actions/carriers";
+import { CarrierListItem } from "./carrier-list-item";
 
 export default async function CarriersPage() {
   const carriers = await getCarriers();
+
+  // Group carriers alphabetically
+  const groupedCarriers: Record<string, typeof carriers> = {};
+  for (const carrier of carriers) {
+    const firstLetter = carrier.name.charAt(0).toUpperCase();
+    if (!groupedCarriers[firstLetter]) {
+      groupedCarriers[firstLetter] = [];
+    }
+    groupedCarriers[firstLetter].push(carrier);
+  }
+
+  // Sort letters
+  const sortedLetters = Object.keys(groupedCarriers).sort();
 
   return (
     <div className="space-y-6">
@@ -17,7 +31,7 @@ export default async function CarriersPage() {
         <div>
           <h1 className="text-2xl font-bold text-slate-900">Insurance Carriers</h1>
           <p className="text-slate-600">
-            Manage insurance carrier profiles and adjusters
+            Manage insurance carrier profiles and adjusters (alphabetical list)
           </p>
         </div>
         <Link href="/dashboard/carriers/new">
@@ -28,7 +42,7 @@ export default async function CarriersPage() {
         </Link>
       </div>
 
-      {/* Carriers Grid */}
+      {/* Carriers List */}
       {carriers.length === 0 ? (
         <Card>
           <CardContent className="flex flex-col items-center justify-center py-12">
@@ -45,51 +59,32 @@ export default async function CarriersPage() {
           </CardContent>
         </Card>
       ) : (
-        <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
-          {carriers.map((carrier) => (
-            <Link key={carrier.id} href={`/dashboard/carriers/${carrier.id}`}>
-              <Card className="hover:border-blue-300 hover:shadow-md transition-all cursor-pointer h-full">
-                <CardHeader className="pb-3">
-                  <div className="flex items-start justify-between">
-                    <CardTitle className="text-lg">{carrier.name}</CardTitle>
-                    <Badge variant="success">Active</Badge>
-                  </div>
-                </CardHeader>
-                <CardContent className="space-y-3">
-                  {/* Contact Info */}
-                  <div className="space-y-2 text-sm">
-                    {carrier.email && (
-                      <div className="flex items-center gap-2 text-slate-600">
-                        <Mail className="h-4 w-4" aria-hidden="true" />
-                        <span className="truncate">{carrier.email}</span>
-                      </div>
-                    )}
-                    {carrier.phone && (
-                      <div className="flex items-center gap-2 text-slate-600">
-                        <Phone className="h-4 w-4" aria-hidden="true" />
-                        <span>{carrier.phone}</span>
-                      </div>
-                    )}
-                  </div>
-
-                  {/* Stats */}
-                  <div className="flex items-center justify-between pt-3 border-t">
-                    <div className="flex items-center gap-1 text-sm">
-                      <Users className="h-4 w-4 text-slate-400" aria-hidden="true" />
-                      <span className="font-medium">
-                        {carrier._count.adjusters}
-                      </span>
-                      <span className="text-slate-500">adjusters</span>
-                    </div>
-                    <div className="text-sm text-slate-500">
-                      {carrier._count.claims} claims
-                    </div>
-                  </div>
-                </CardContent>
-              </Card>
-            </Link>
-          ))}
-        </div>
+        <Card>
+          <CardHeader>
+            <CardTitle className="flex items-center gap-2">
+              <Shield className="h-5 w-5 text-blue-500" />
+              {carriers.length} Carrier(s)
+            </CardTitle>
+          </CardHeader>
+          <CardContent className="space-y-4">
+            {sortedLetters.map((letter) => (
+              <div key={letter} className="space-y-2">
+                {/* Letter Header */}
+                <div className="sticky top-0 bg-white z-10 py-1">
+                  <span className="inline-flex items-center justify-center w-8 h-8 rounded-full bg-slate-100 text-sm font-bold text-slate-700">
+                    {letter}
+                  </span>
+                </div>
+                {/* Carriers in this letter */}
+                <div className="space-y-1 pl-2">
+                  {groupedCarriers[letter].map((carrier) => (
+                    <CarrierListItem key={carrier.id} carrier={carrier} />
+                  ))}
+                </div>
+              </div>
+            ))}
+          </CardContent>
+        </Card>
       )}
     </div>
   );

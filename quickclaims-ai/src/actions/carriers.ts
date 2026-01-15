@@ -17,7 +17,7 @@ const carrierInputSchema = z.object({
 export type CarrierInput = z.infer<typeof carrierInputSchema>;
 
 /**
- * Get all carriers
+ * Get all carriers with adjusters for list view
  */
 export async function getCarriers() {
   await requireRole(["admin", "manager", "estimator"]);
@@ -26,6 +26,17 @@ export async function getCarriers() {
     where: { isActive: true },
     orderBy: { name: "asc" },
     include: {
+      adjusters: {
+        where: { isActive: true },
+        orderBy: { name: "asc" },
+        select: {
+          id: true,
+          name: true,
+          email: true,
+          phone: true,
+          type: true,
+        },
+      },
       _count: {
         select: { claims: true, adjusters: true },
       },

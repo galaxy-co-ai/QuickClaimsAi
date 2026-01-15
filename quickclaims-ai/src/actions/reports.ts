@@ -63,35 +63,49 @@ export async function generateContractorBillingReport(
       ],
     },
     orderBy: { completedAt: "desc" },
-    select: {
-      id: true,
-      policyholderName: true,
-      lossAddress: true,
-      lossCity: true,
-      lossState: true,
-      totalIncrease: true,
-      contractorBillingAmount: true,
-      status: true,
-      completedAt: true,
+    include: {
+      supplements: {
+        orderBy: { sequenceNumber: "asc" },
+        select: {
+          id: true,
+          sequenceNumber: true,
+          amount: true,
+          description: true,
+          status: true,
+          omApproved: true,
+        },
+      },
     },
   });
 
-  // Transform claims data
+  // Transform claims data with supplements
   const claimsData = claims.map((claim) => ({
     id: claim.id,
     policyholderName: claim.policyholderName,
     lossAddress: `${claim.lossAddress}, ${claim.lossCity}, ${claim.lossState}`,
+    initialRCV: decimalToNumber(claim.initialRCV),
+    finalRCV: claim.finalTotalRCV ? decimalToNumber(claim.finalTotalRCV) : null,
     totalIncrease: decimalToNumber(claim.totalIncrease),
     billingAmount: decimalToNumber(claim.contractorBillingAmount),
     status: CLAIM_STATUS_LABELS[claim.status] || claim.status,
     completedAt: claim.completedAt,
+    supplements: claim.supplements.map((supp) => ({
+      id: supp.id,
+      sequenceNumber: supp.sequenceNumber,
+      amount: decimalToNumber(supp.amount),
+      description: supp.description,
+      status: supp.status,
+      omApproved: supp.omApproved,
+    })),
   }));
 
-  // Calculate totals
+  // Calculate totals including supplement count
+  const supplementCount = claimsData.reduce((sum, c) => sum + c.supplements.length, 0);
   const totals = {
     claimCount: claimsData.length,
     totalIncrease: claimsData.reduce((sum, c) => sum + c.totalIncrease, 0),
     totalBilling: claimsData.reduce((sum, c) => sum + c.billingAmount, 0),
+    supplementCount,
   };
 
   const reportData: ContractorBillingReportData = {
@@ -338,35 +352,49 @@ export async function generateContractorOwnBillingReport(
       ],
     },
     orderBy: { completedAt: "desc" },
-    select: {
-      id: true,
-      policyholderName: true,
-      lossAddress: true,
-      lossCity: true,
-      lossState: true,
-      totalIncrease: true,
-      contractorBillingAmount: true,
-      status: true,
-      completedAt: true,
+    include: {
+      supplements: {
+        orderBy: { sequenceNumber: "asc" },
+        select: {
+          id: true,
+          sequenceNumber: true,
+          amount: true,
+          description: true,
+          status: true,
+          omApproved: true,
+        },
+      },
     },
   });
 
-  // Transform claims data
+  // Transform claims data with supplements
   const claimsData = claims.map((claim) => ({
     id: claim.id,
     policyholderName: claim.policyholderName,
     lossAddress: `${claim.lossAddress}, ${claim.lossCity}, ${claim.lossState}`,
+    initialRCV: decimalToNumber(claim.initialRCV),
+    finalRCV: claim.finalTotalRCV ? decimalToNumber(claim.finalTotalRCV) : null,
     totalIncrease: decimalToNumber(claim.totalIncrease),
     billingAmount: decimalToNumber(claim.contractorBillingAmount),
     status: CLAIM_STATUS_LABELS[claim.status] || claim.status,
     completedAt: claim.completedAt,
+    supplements: claim.supplements.map((supp) => ({
+      id: supp.id,
+      sequenceNumber: supp.sequenceNumber,
+      amount: decimalToNumber(supp.amount),
+      description: supp.description,
+      status: supp.status,
+      omApproved: supp.omApproved,
+    })),
   }));
 
-  // Calculate totals
+  // Calculate totals including supplement count
+  const supplementCount = claimsData.reduce((sum, c) => sum + c.supplements.length, 0);
   const totals = {
     claimCount: claimsData.length,
     totalIncrease: claimsData.reduce((sum, c) => sum + c.totalIncrease, 0),
     totalBilling: claimsData.reduce((sum, c) => sum + c.billingAmount, 0),
+    supplementCount,
   };
 
   const reportData: ContractorBillingReportData = {
@@ -430,26 +458,46 @@ function generateContractorBillingCSV(data: ContractorBillingReportData): string
   lines.push(`Period,${formatDateForCSV(data.period.start)} - ${formatDateForCSV(data.period.end)}`);
   lines.push(``);
 
-  // Column headers
-  lines.push(`Policyholder,Address,Total Increase,Billing Amount,Status,Completed`);
+  // Column headers (updated per client request)
+  lines.push(`Policyholder,Initial RCV,Final RCV,Total Increase,Billing Amount,Status,Completed,Supplements`);
 
-  // Data rows
+  // Data rows with supplements
   for (const claim of data.claims) {
+    // Claim row
     lines.push(
       [
         escapeCSV(claim.policyholderName),
-        escapeCSV(claim.lossAddress),
+        claim.initialRCV.toFixed(2),
+        claim.finalRCV ? claim.finalRCV.toFixed(2) : "-",
         claim.totalIncrease.toFixed(2),
         claim.billingAmount.toFixed(2),
         claim.status,
         claim.completedAt ? formatDateForCSV(claim.completedAt) : "-",
+        claim.supplements.length.toString(),
       ].join(",")
     );
+
+    // Supplement sub-rows (indented with empty first column)
+    for (const supp of claim.supplements) {
+      lines.push(
+        [
+          `  SOL #${supp.sequenceNumber}`,
+          "",
+          "",
+          supp.amount.toFixed(2),
+          "",
+          supp.status,
+          supp.omApproved ? "O&M Yes" : "O&M No",
+          escapeCSV(supp.description.substring(0, 50) + (supp.description.length > 50 ? "..." : "")),
+        ].join(",")
+      );
+    }
   }
 
   // Totals
   lines.push(``);
   lines.push(`Total Claims,${data.totals.claimCount}`);
+  lines.push(`Total Supplements,${data.totals.supplementCount}`);
   lines.push(`Total Increase,$${data.totals.totalIncrease.toFixed(2)}`);
   lines.push(`Total Billing,$${data.totals.totalBilling.toFixed(2)}`);
 

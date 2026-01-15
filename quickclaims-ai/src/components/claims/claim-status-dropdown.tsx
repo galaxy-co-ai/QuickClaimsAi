@@ -9,10 +9,29 @@ import {
   DropdownMenuContent,
   DropdownMenuItem,
   DropdownMenuTrigger,
+  DropdownMenuSeparator,
+  DropdownMenuLabel,
 } from "@/components/ui/dropdown-menu";
-import { CLAIM_STATUS_LABELS, CLAIM_STATUS_COLORS, STATUS_TRANSITIONS } from "@/lib/constants";
+import { CLAIM_STATUS_LABELS, CLAIM_STATUS_COLORS } from "@/lib/constants";
 import { updateClaimStatus } from "@/actions/claims";
 import type { ClaimStatus } from "@prisma/client";
+
+// All possible statuses for flexible transitions
+const ALL_STATUSES: ClaimStatus[] = [
+  "new_supplement",
+  "missing_info",
+  "contractor_review",
+  "supplement_in_progress",
+  "supplement_sent",
+  "awaiting_carrier_response",
+  "reinspection_requested",
+  "reinspection_scheduled",
+  "approved",
+  "final_invoice_pending",
+  "final_invoice_sent",
+  "completed",
+  "closed_lost",
+];
 
 interface ClaimStatusDropdownProps {
   claimId: string;
@@ -26,8 +45,8 @@ export function ClaimStatusDropdown({
   const [isPending, startTransition] = useTransition();
   const [open, setOpen] = useState(false);
 
-  const availableTransitions = STATUS_TRANSITIONS[currentStatus] || [];
-  const isTerminal = availableTransitions.length === 0;
+  // Allow all status transitions (client requested full flexibility)
+  const availableTransitions = ALL_STATUSES.filter((s) => s !== currentStatus);
 
   const handleStatusChange = (newStatus: ClaimStatus) => {
     setOpen(false);
@@ -38,31 +57,35 @@ export function ClaimStatusDropdown({
       } catch (error) {
         const message = error instanceof Error ? error.message : "Failed to update status";
         toast.error(message);
-        console.error(error);
       }
     });
   };
 
   return (
     <DropdownMenu open={open} onOpenChange={setOpen}>
-      <DropdownMenuTrigger asChild disabled={isTerminal || isPending}>
+      <DropdownMenuTrigger asChild disabled={isPending}>
         <Button
           variant="outline"
           className={`gap-2 ${CLAIM_STATUS_COLORS[currentStatus]} border-0`}
+          aria-label="Change claim status"
         >
           {isPending ? (
             <Loader2 className="h-4 w-4 animate-spin" />
           ) : (
             CLAIM_STATUS_LABELS[currentStatus] || currentStatus
           )}
-          {!isTerminal && <ChevronDown className="h-4 w-4" />}
+          <ChevronDown className="h-4 w-4" />
         </Button>
       </DropdownMenuTrigger>
-      <DropdownMenuContent align="start">
+      <DropdownMenuContent align="start" className="max-h-80 overflow-y-auto">
+        <DropdownMenuLabel className="text-xs text-slate-500">
+          Change Status
+        </DropdownMenuLabel>
+        <DropdownMenuSeparator />
         {availableTransitions.map((status) => (
           <DropdownMenuItem
             key={status}
-            onClick={() => handleStatusChange(status as ClaimStatus)}
+            onClick={() => handleStatusChange(status)}
             className="cursor-pointer"
           >
             <span
@@ -72,9 +95,6 @@ export function ClaimStatusDropdown({
             </span>
           </DropdownMenuItem>
         ))}
-        {availableTransitions.length === 0 && (
-          <DropdownMenuItem disabled>No transitions available</DropdownMenuItem>
-        )}
       </DropdownMenuContent>
     </DropdownMenu>
   );

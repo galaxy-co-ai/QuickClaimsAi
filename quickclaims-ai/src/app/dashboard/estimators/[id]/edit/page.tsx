@@ -46,6 +46,10 @@ export default async function EditEstimatorPage({
           email: estimator.email,
           phone: estimator.phone,
           commissionPercentage: Number(estimator.commissionPercentage),
+          residentialRate: estimator.residentialRate ? Number(estimator.residentialRate) : null,
+          commercialRate: estimator.commercialRate ? Number(estimator.commercialRate) : null,
+          reinspectionRate: estimator.reinspectionRate ? Number(estimator.reinspectionRate) : null,
+          estimateFlatFee: estimator.estimateFlatFee ? Number(estimator.estimateFlatFee) : null,
         }}
       />
     </div>

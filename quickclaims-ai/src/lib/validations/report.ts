@@ -25,6 +25,18 @@ export const estimatorCommissionReportSchema = z.object({
 export type EstimatorCommissionReportInput = z.infer<typeof estimatorCommissionReportSchema>;
 
 /**
+ * Supplement data for report
+ */
+export type SupplementReportItem = {
+  id: string;
+  sequenceNumber: number;
+  amount: number;
+  description: string;
+  status: string;
+  omApproved: boolean;
+};
+
+/**
  * Report summary types
  */
 export type ContractorBillingReportData = {
@@ -41,15 +53,21 @@ export type ContractorBillingReportData = {
     id: string;
     policyholderName: string;
     lossAddress: string;
+    // New fields per client request
+    initialRCV: number;
+    finalRCV: number | null;
     totalIncrease: number;
     billingAmount: number;
     status: string;
     completedAt: Date | null;
+    // Individual supplements with line items
+    supplements: SupplementReportItem[];
   }[];
   totals: {
     claimCount: number;
     totalIncrease: number;
     totalBilling: number;
+    supplementCount: number;
   };
 };
 

@@ -45,6 +45,10 @@ export default async function EditContractorPage({
           phone: contractor.phone,
           address: contractor.address,
           billingPercentage: Number(contractor.billingPercentage),
+          residentialRate: contractor.residentialRate ? Number(contractor.residentialRate) : null,
+          commercialRate: contractor.commercialRate ? Number(contractor.commercialRate) : null,
+          reinspectionRate: contractor.reinspectionRate ? Number(contractor.reinspectionRate) : null,
+          estimateFlatFee: contractor.estimateFlatFee ? Number(contractor.estimateFlatFee) : null,
           paymentTerms: contractor.paymentTerms,
           notes: contractor.notes,
         }}

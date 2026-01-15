@@ -13,6 +13,19 @@ import { Label } from "@/components/ui/label";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { createEstimator, updateEstimator } from "@/actions/estimators";
 
+// Shared rate validation
+const rateSchema = z
+  .number()
+  .min(0, "Rate must be at least 0%")
+  .max(0.5, "Rate cannot exceed 50%")
+  .optional();
+
+const flatFeeSchema = z
+  .number()
+  .min(0, "Fee must be positive")
+  .max(10000, "Fee cannot exceed $10,000")
+  .optional();
+
 const estimatorFormSchema = z.object({
   firstName: z.string().min(1, "First name is required").max(100),
   lastName: z.string().min(1, "Last name is required").max(100),
@@ -22,6 +35,10 @@ const estimatorFormSchema = z.object({
     .number()
     .min(0.01, "Commission must be at least 1%")
     .max(0.20, "Commission cannot exceed 20%"),
+  residentialRate: rateSchema,
+  commercialRate: rateSchema,
+  reinspectionRate: rateSchema,
+  estimateFlatFee: flatFeeSchema,
 });
 
 type EstimatorFormData = z.infer<typeof estimatorFormSchema>;
@@ -34,6 +51,10 @@ interface EstimatorFormProps {
     email: string;
     phone: string | null;
     commissionPercentage: number | string;
+    residentialRate: number | string | null;
+    commercialRate: number | string | null;
+    reinspectionRate: number | string | null;
+    estimateFlatFee: number | string | null;
   };
 }
 
@@ -54,9 +75,17 @@ export function EstimatorForm({ estimator }: EstimatorFormProps) {
           email: estimator.email,
           phone: estimator.phone ?? undefined,
           commissionPercentage: Number(estimator.commissionPercentage),
+          residentialRate: estimator.residentialRate ? Number(estimator.residentialRate) : undefined,
+          commercialRate: estimator.commercialRate ? Number(estimator.commercialRate) : undefined,
+          reinspectionRate: estimator.reinspectionRate ? Number(estimator.reinspectionRate) : undefined,
+          estimateFlatFee: estimator.estimateFlatFee ? Number(estimator.estimateFlatFee) : undefined,
         }
       : {
           commissionPercentage: 0.05, // Default 5%
+          residentialRate: 0.05,
+          commercialRate: 0.05,
+          reinspectionRate: 0.05,
+          estimateFlatFee: 40,
         },
   });
 
@@ -151,35 +180,132 @@ export function EstimatorForm({ estimator }: EstimatorFormProps) {
           <CardTitle>Commission Settings</CardTitle>
         </CardHeader>
         <CardContent className="space-y-4">
-          {/* Commission Percentage */}
-          <div className="space-y-2">
-            <Label htmlFor="commissionPercentage">
-              Commission Percentage <span className="text-red-500">*</span>
-            </Label>
-            <div className="relative">
-              <Input
-                id="commissionPercentage"
-                type="number"
-                step="0.001"
-                min="0.01"
-                max="0.20"
-                placeholder="0.05"
-                {...register("commissionPercentage", { valueAsNumber: true })}
-                aria-invalid={!!errors.commissionPercentage}
-              />
-              <span className="absolute right-3 top-1/2 -translate-y-1/2 text-slate-500 text-sm">
-                (e.g., 0.05 = 5%)
-              </span>
+          <p className="text-sm text-slate-500 mb-4">
+            Set commission rates by job type. Enter as decimal (e.g., 0.05 = 5%).
+          </p>
+          
+          {/* Rate Grid - 2x2 */}
+          <div className="grid gap-4 md:grid-cols-2">
+            {/* Residential Rate */}
+            <div className="space-y-2">
+              <Label htmlFor="residentialRate">
+                Residential Supplement Rate
+              </Label>
+              <div className="relative">
+                <Input
+                  id="residentialRate"
+                  type="number"
+                  step="0.001"
+                  min="0"
+                  max="0.50"
+                  placeholder="0.05"
+                  {...register("residentialRate", { valueAsNumber: true })}
+                  aria-invalid={!!errors.residentialRate}
+                  aria-label="Residential supplement commission rate"
+                />
+                <span className="absolute right-3 top-1/2 -translate-y-1/2 text-slate-500 text-sm">
+                  %
+                </span>
+              </div>
+              {errors.residentialRate && (
+                <p className="text-sm text-red-500">
+                  {errors.residentialRate.message}
+                </p>
+              )}
             </div>
-            {errors.commissionPercentage && (
-              <p className="text-sm text-red-500">
-                {errors.commissionPercentage.message}
-              </p>
-            )}
-            <p className="text-xs text-slate-500">
-              Enter as decimal: 0.05 = 5%, 0.075 = 7.5%, 0.10 = 10%
-            </p>
+
+            {/* Commercial Rate */}
+            <div className="space-y-2">
+              <Label htmlFor="commercialRate">
+                Commercial Supplement Rate
+              </Label>
+              <div className="relative">
+                <Input
+                  id="commercialRate"
+                  type="number"
+                  step="0.001"
+                  min="0"
+                  max="0.50"
+                  placeholder="0.05"
+                  {...register("commercialRate", { valueAsNumber: true })}
+                  aria-invalid={!!errors.commercialRate}
+                  aria-label="Commercial supplement commission rate"
+                />
+                <span className="absolute right-3 top-1/2 -translate-y-1/2 text-slate-500 text-sm">
+                  %
+                </span>
+              </div>
+              {errors.commercialRate && (
+                <p className="text-sm text-red-500">
+                  {errors.commercialRate.message}
+                </p>
+              )}
+            </div>
+
+            {/* Reinspection Rate */}
+            <div className="space-y-2">
+              <Label htmlFor="reinspectionRate">
+                Reinspection Rate
+              </Label>
+              <div className="relative">
+                <Input
+                  id="reinspectionRate"
+                  type="number"
+                  step="0.001"
+                  min="0"
+                  max="0.50"
+                  placeholder="0.05"
+                  {...register("reinspectionRate", { valueAsNumber: true })}
+                  aria-invalid={!!errors.reinspectionRate}
+                  aria-label="Reinspection commission rate"
+                />
+                <span className="absolute right-3 top-1/2 -translate-y-1/2 text-slate-500 text-sm">
+                  %
+                </span>
+              </div>
+              {errors.reinspectionRate && (
+                <p className="text-sm text-red-500">
+                  {errors.reinspectionRate.message}
+                </p>
+              )}
+            </div>
+
+            {/* Estimate Flat Fee */}
+            <div className="space-y-2">
+              <Label htmlFor="estimateFlatFee">
+                Estimate Fee (Flat $)
+              </Label>
+              <div className="relative">
+                <span className="absolute left-3 top-1/2 -translate-y-1/2 text-slate-500">
+                  $
+                </span>
+                <Input
+                  id="estimateFlatFee"
+                  type="number"
+                  step="1"
+                  min="0"
+                  max="10000"
+                  placeholder="40"
+                  className="pl-7"
+                  {...register("estimateFlatFee", { valueAsNumber: true })}
+                  aria-invalid={!!errors.estimateFlatFee}
+                  aria-label="Estimate flat fee amount"
+                />
+              </div>
+              {errors.estimateFlatFee && (
+                <p className="text-sm text-red-500">
+                  {errors.estimateFlatFee.message}
+                </p>
+              )}
+            </div>
           </div>
+
+          {/* Legacy Default Rate - hidden but still submitted */}
+          <input
+            type="hidden"
+            {...register("commissionPercentage", { valueAsNumber: true })}
+            value={0.05}
+          />
         </CardContent>
       </Card>
 

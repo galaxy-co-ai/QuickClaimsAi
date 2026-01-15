@@ -7,7 +7,8 @@ import { z } from "zod";
 export const supplementInputSchema = z.object({
   claimId: z.string().min(1, "Claim ID is required"),
   amount: z.coerce.number().positive("Amount must be positive"),
-  description: z.string().min(1, "Description is required"),
+  description: z.string().min(1, "Line items description is required"),
+  omApproved: z.boolean().default(false), // Was O&M (Overhead & Margin) approved
   lineItems: z
     .array(
       z.object({

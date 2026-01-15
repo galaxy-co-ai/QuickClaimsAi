@@ -160,6 +160,7 @@ export async function createSupplement(data: SupplementInput) {
       newRCV,
       description: validated.description,
       lineItems: validated.lineItems ?? Prisma.JsonNull,
+      omApproved: validated.omApproved ?? false,
       status: "draft",
       createdById: user.id,
     },
@@ -364,8 +365,7 @@ export async function updateSupplementStatus(
   revalidatePath(`/dashboard/claims/${existingSupplement.claimId}`);
   revalidatePath("/dashboard/claims");
   revalidatePath("/dashboard");
-  // Serialize Decimal fields to numbers for client component compatibility
-  return { success: true, supplement: serializeSupplement(supplement) };
+  return { success: true, supplement };
 }
 
 /**

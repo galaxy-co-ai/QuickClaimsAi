@@ -120,6 +120,19 @@ export default async function DashboardPage() {
         </Card>
 
         <Card className="relative pt-5 pb-4 px-4">
+          <span className="absolute -top-2.5 left-1/2 -translate-x-1/2 inline-flex items-center whitespace-nowrap rounded-full bg-amber-100 px-3 py-1 text-xs font-medium text-amber-700 ring-1 ring-inset ring-amber-600/20">
+            Supplements
+          </span>
+          <div className="flex items-center justify-center gap-3">
+            <TrendingUp className="h-5 w-5 text-amber-500" aria-hidden="true" />
+            <span className="text-2xl font-bold text-amber-600">{stats.supplementCount}</span>
+          </div>
+          <p className="text-center text-xs text-slate-500 mt-1">
+            {formatCurrency(stats.supplementTotalAmount)} this month
+          </p>
+        </Card>
+
+        <Card className="relative pt-5 pb-4 px-4">
           <span className="absolute -top-2.5 left-1/2 -translate-x-1/2 inline-flex items-center whitespace-nowrap rounded-full bg-green-100 px-3 py-1 text-xs font-medium text-green-700 ring-1 ring-inset ring-green-600/20">
             Total Increase
           </span>
@@ -141,11 +154,14 @@ export default async function DashboardPage() {
             <span className="text-2xl font-bold text-slate-900">{formatCurrency(stats.avgDollarPerSquare)}</span>
           </div>
           <p className="text-center text-xs text-slate-500 mt-1">
-            Active claims average
+            {stats.updatesPerJob} updates/job avg
           </p>
         </Card>
+      </div>
 
-        {isManager && managerStats ? (
+      {/* Secondary Stats Row - Manager only */}
+      {isManager && managerStats && (
+        <div className="grid gap-4 md:grid-cols-2">
           <Card className="relative pt-5 pb-4 px-4">
             <span className="absolute -top-2.5 left-1/2 -translate-x-1/2 inline-flex items-center whitespace-nowrap rounded-full bg-emerald-100 px-3 py-1 text-xs font-medium text-emerald-700 ring-1 ring-inset ring-emerald-600/20">
               Compliance
@@ -160,7 +176,7 @@ export default async function DashboardPage() {
               {managerStats.overdueCount} overdue claims
             </p>
           </Card>
-        ) : (
+
           <Card className="relative pt-5 pb-4 px-4">
             <span className="absolute -top-2.5 left-1/2 -translate-x-1/2 inline-flex items-center whitespace-nowrap rounded-full bg-orange-100 px-3 py-1 text-xs font-medium text-orange-700 ring-1 ring-inset ring-orange-600/20">
               Requires Action
@@ -173,8 +189,8 @@ export default async function DashboardPage() {
               48-hour compliance
             </p>
           </Card>
-        )}
-      </div>
+        </div>
+      )}
 
       {/* Claims Requiring Action */}
       <Card>

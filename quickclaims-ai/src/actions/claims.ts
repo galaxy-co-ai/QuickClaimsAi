@@ -514,8 +514,7 @@ export async function updateClaimStatus(id: string, newStatus: ClaimStatus) {
   revalidatePath("/dashboard/claims");
   revalidatePath(`/dashboard/claims/${id}`);
   revalidatePath("/dashboard");
-  // Serialize Decimal fields to numbers for client component compatibility
-  return { success: true, claim: serializeClaim(claim) };
+  return { success: true, claim };
 }
 
 /**
@@ -568,6 +567,8 @@ export async function getDashboardStats() {
     newThisWeek,
     totalIncreaseThisMonth,
     avgDollarPerSquare,
+    supplementStats,
+    noteStats,
   ] = await Promise.all([
     // Active claims (not completed or closed)
     db.claim.count({
@@ -596,7 +597,27 @@ export async function getDashboardStats() {
       },
       _avg: { dollarPerSquare: true },
     }),
+    // Supplement stats: count and total amount this month
+    db.supplement.aggregate({
+      where: {
+        createdAt: { gte: startOfMonth },
+      },
+      _count: { id: true },
+      _sum: { amount: true },
+    }),
+    // Note stats for active claims (for updates per job calculation)
+    db.note.count({
+      where: {
+        type: { in: ["general", "call", "email", "document"] }, // Manual notes only
+        claim: {
+          status: { notIn: ["completed", "closed_lost"] },
+        },
+      },
+    }),
   ]);
+
+  // Calculate average updates per active job
+  const updatesPerJob = activeClaims > 0 ? noteStats / activeClaims : 0;
 
   return {
     activeClaims,
@@ -607,6 +628,12 @@ export async function getDashboardStats() {
     avgDollarPerSquare: avgDollarPerSquare._avg.dollarPerSquare
       ? decimalToNumber(avgDollarPerSquare._avg.dollarPerSquare)
       : 0,
+    // New KPIs per client request
+    supplementCount: supplementStats._count.id || 0,
+    supplementTotalAmount: supplementStats._sum.amount
+      ? decimalToNumber(supplementStats._sum.amount)
+      : 0,
+    updatesPerJob: Math.round(updatesPerJob * 10) / 10, // Round to 1 decimal
   };
 }
 

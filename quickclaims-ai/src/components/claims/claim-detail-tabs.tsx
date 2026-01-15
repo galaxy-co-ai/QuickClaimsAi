@@ -1,6 +1,6 @@
 "use client";
 
-import { FileText, FolderOpen, Clock, Info } from "lucide-react";
+import { FileText, FolderOpen, Clock, Info, MessageSquare, CheckCircle } from "lucide-react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
@@ -33,9 +33,20 @@ export function ClaimDetailTabs({
   notes,
   documents,
 }: ClaimDetailTabsProps) {
+  // Separate manual notes (Updates) from system-generated notes (Timeline)
+  // Updates: general, call, email, document - these are estimator-entered notes
+  // Timeline: status_change and all other activity
+  const manualNoteTypes = ["general", "call", "email", "document"];
+  const manualNotes = notes.filter((note) => manualNoteTypes.includes(note.type));
+  const allActivityNotes = notes; // Timeline shows everything
+
   return (
-    <Tabs defaultValue="supplements" className="w-full">
-      <TabsList className="grid w-full grid-cols-4">
+    <Tabs defaultValue="updates" className="w-full">
+      <TabsList className="grid w-full grid-cols-5">
+        <TabsTrigger value="updates" className="gap-2">
+          <MessageSquare className="h-4 w-4" />
+          Updates ({manualNotes.length})
+        </TabsTrigger>
         <TabsTrigger value="supplements" className="gap-2">
           <FileText className="h-4 w-4" />
           Supplements ({supplements.length})
@@ -46,13 +57,43 @@ export function ClaimDetailTabs({
         </TabsTrigger>
         <TabsTrigger value="timeline" className="gap-2">
           <Clock className="h-4 w-4" />
-          Timeline ({notes.length})
+          Timeline ({allActivityNotes.length})
         </TabsTrigger>
         <TabsTrigger value="details" className="gap-2">
           <Info className="h-4 w-4" />
           Details
         </TabsTrigger>
       </TabsList>
+
+      {/* Updates Tab - Manual notes entered by estimators */}
+      <TabsContent value="updates">
+        <Card>
+          <CardHeader>
+            <CardTitle>Updates</CardTitle>
+          </CardHeader>
+          <CardContent className="space-y-6">
+            {/* Note Input Form */}
+            <div className="p-4 rounded-lg border bg-slate-50">
+              <NoteForm claimId={claim.id} />
+            </div>
+
+            {/* Manual Notes */}
+            {manualNotes.length === 0 ? (
+              <div className="text-center py-8 text-slate-500">
+                <MessageSquare className="h-8 w-8 mx-auto mb-2 text-slate-300" />
+                <p>No updates yet</p>
+                <p className="text-sm">Add a note above to track your updates</p>
+              </div>
+            ) : (
+              <div className="space-y-4">
+                {manualNotes.map((note) => (
+                  <UpdateItem key={note.id} note={note} />
+                ))}
+              </div>
+            )}
+          </CardContent>
+        </Card>
+      </TabsContent>
 
       {/* Supplements Tab */}
       <TabsContent value="supplements">
@@ -114,28 +155,26 @@ export function ClaimDetailTabs({
         </Card>
       </TabsContent>
 
-      {/* Timeline Tab */}
+      {/* Timeline Tab - Full Activity Log */}
       <TabsContent value="timeline">
         <Card>
           <CardHeader>
             <CardTitle>Activity Timeline</CardTitle>
+            <p className="text-sm text-slate-500 mt-1">
+              Complete history of all activity including status changes, supplements, and documents
+            </p>
           </CardHeader>
           <CardContent className="space-y-6">
-            {/* Note Input Form */}
-            <div className="p-4 rounded-lg border bg-slate-50">
-              <NoteForm claimId={claim.id} />
-            </div>
-
-            {/* Timeline Entries */}
-            {notes.length === 0 ? (
+            {/* Timeline Entries - All activity */}
+            {allActivityNotes.length === 0 ? (
               <div className="text-center py-8 text-slate-500">
                 <Clock className="h-8 w-8 mx-auto mb-2 text-slate-300" />
                 <p>No activity yet</p>
-                <p className="text-sm">Add a note above to start the timeline</p>
+                <p className="text-sm">Activity will appear here as the claim progresses</p>
               </div>
             ) : (
               <div className="space-y-4">
-                {notes.map((note) => (
+                {allActivityNotes.map((note) => (
                   <TimelineItem key={note.id} note={note} />
                 ))}
               </div>
@@ -341,19 +380,20 @@ function DocumentRow({ document }: { document: Document }) {
   );
 }
 
-function TimelineItem({ note }: { note: NoteWithUser }) {
+// UpdateItem - for the Updates tab (manual notes only)
+function UpdateItem({ note }: { note: NoteWithUser }) {
   const typeColors: Record<string, string> = {
     general: "bg-slate-100 border-slate-300",
-    status_change: "bg-blue-100 border-blue-300",
-    carrier_communication: "bg-purple-100 border-purple-300",
-    internal: "bg-yellow-100 border-yellow-300",
+    call: "bg-green-100 border-green-300",
+    email: "bg-blue-100 border-blue-300",
+    document: "bg-amber-100 border-amber-300",
   };
 
   const typeLabels: Record<string, string> = {
-    general: "Note",
-    status_change: "Status Change",
-    carrier_communication: "Carrier",
-    internal: "Internal",
+    general: "General",
+    call: "Call",
+    email: "Email",
+    document: "Document",
   };
 
   return (
@@ -363,13 +403,52 @@ function TimelineItem({ note }: { note: NoteWithUser }) {
           <span className="text-sm font-medium">
             {note.user.firstName} {note.user.lastName}
           </span>
-          <span className="text-xs text-slate-500">
+          <Badge variant="outline" className="text-xs">
             {typeLabels[note.type] || note.type}
-          </span>
+          </Badge>
         </div>
         <span className="text-xs text-slate-500">{formatDateTime(note.createdAt)}</span>
       </div>
-      <p className="text-sm text-slate-700">{note.content}</p>
+      <p className="text-sm text-slate-700 whitespace-pre-wrap">{note.content}</p>
+    </div>
+  );
+}
+
+// TimelineItem - for the full activity timeline
+function TimelineItem({ note }: { note: NoteWithUser }) {
+  const typeColors: Record<string, string> = {
+    general: "bg-slate-100 border-slate-300",
+    status_change: "bg-blue-100 border-blue-300",
+    call: "bg-green-100 border-green-300",
+    email: "bg-blue-100 border-blue-300",
+    document: "bg-amber-100 border-amber-300",
+  };
+
+  const typeLabels: Record<string, string> = {
+    general: "Note",
+    status_change: "Status Change",
+    call: "Call",
+    email: "Email",
+    document: "Document",
+  };
+
+  const isSystemGenerated = note.type === "status_change";
+
+  return (
+    <div className={`p-4 rounded-lg border-l-4 ${typeColors[note.type] || typeColors.general}`}>
+      <div className="flex items-center justify-between mb-2">
+        <div className="flex items-center gap-2">
+          {isSystemGenerated && <CheckCircle className="h-4 w-4 text-blue-500" />}
+          <span className="text-sm font-medium">
+            {note.user.firstName} {note.user.lastName}
+          </span>
+          <Badge variant={isSystemGenerated ? "secondary" : "outline"} className="text-xs">
+            {typeLabels[note.type] || note.type}
+          </Badge>
+        </div>
+        <span className="text-xs text-slate-500">{formatDateTime(note.createdAt)}</span>
+      </div>
+      <p className="text-sm text-slate-700 whitespace-pre-wrap">{note.content}</p>
     </div>
   );
 }

@@ -26,7 +26,8 @@ import { createSupplement } from "@/actions/supplements";
 // Form-specific schema that uses valueAsNumber pattern
 const supplementFormSchema = z.object({
   amount: z.number().positive("Amount must be positive"),
-  description: z.string().min(1, "Description is required"),
+  description: z.string().min(1, "Line items description is required"),
+  omApproved: z.boolean(),
 });
 
 type SupplementFormData = z.infer<typeof supplementFormSchema>;
@@ -53,6 +54,7 @@ export function SupplementFormModal({
     defaultValues: {
       amount: undefined,
       description: "",
+      omApproved: false,
     },
   });
 
@@ -62,6 +64,7 @@ export function SupplementFormModal({
         claimId,
         amount: data.amount,
         description: data.description,
+        omApproved: data.omApproved,
       });
       toast.success("Supplement created successfully");
       reset();
@@ -69,7 +72,6 @@ export function SupplementFormModal({
       router.refresh();
     } catch (error) {
       toast.error("Failed to create supplement. Please try again.");
-      console.error(error);
     }
   }
 
@@ -121,23 +123,38 @@ export function SupplementFormModal({
             )}
           </div>
 
-          {/* Description */}
+          {/* Line Items (formerly Description) */}
           <div className="space-y-2">
             <Label htmlFor="description">
-              Description <span className="text-red-500">*</span>
+              Line Items <span className="text-red-500">*</span>
             </Label>
             <Textarea
               id="description"
-              placeholder="Describe the supplement items..."
+              placeholder="Enter line items for this supplement..."
               rows={3}
               {...register("description")}
               aria-invalid={!!errors.description}
+              aria-label="Line items description"
             />
             {errors.description && (
               <p className="text-sm text-red-500">
                 {errors.description.message}
               </p>
             )}
+          </div>
+
+          {/* O&M Approved Checkbox */}
+          <div className="flex items-center space-x-2">
+            <input
+              type="checkbox"
+              id="omApproved"
+              className="h-4 w-4 rounded border-slate-300 text-blue-600 focus:ring-blue-500"
+              {...register("omApproved")}
+              aria-label="O&M (Overhead & Margin) was approved"
+            />
+            <Label htmlFor="omApproved" className="text-sm font-normal cursor-pointer">
+              O&M Approved (Overhead & Margin)
+            </Label>
           </div>
 
           <DialogFooter>

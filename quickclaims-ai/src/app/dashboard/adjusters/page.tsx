@@ -1,26 +1,44 @@
 export const dynamic = "force-dynamic";
 
 import Link from "next/link";
-import { Plus, UserCheck, Mail, Phone, Shield } from "lucide-react";
+import { Plus, UserCheck, Shield } from "lucide-react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
-import { Badge } from "@/components/ui/badge";
 import { getAdjusters } from "@/actions/adjusters";
-
-const TYPE_LABELS: Record<string, string> = {
-  desk: "Desk",
-  field: "Field",
-  independent: "Independent",
-};
-
-const TYPE_COLORS: Record<string, string> = {
-  desk: "bg-blue-100 text-blue-700",
-  field: "bg-green-100 text-green-700",
-  independent: "bg-purple-100 text-purple-700",
-};
+import { AdjusterListByCarrier } from "./adjuster-list-by-carrier";
 
 export default async function AdjustersPage() {
   const { adjusters } = await getAdjusters();
+
+  // Group adjusters by carrier alphabetically
+  const carrierMap: Map<string, { id: string; name: string; adjusters: typeof adjusters }> = new Map();
+  
+  for (const adjuster of adjusters) {
+    const carrierId = adjuster.carrier.id;
+    const carrierName = adjuster.carrier.name;
+    
+    if (!carrierMap.has(carrierId)) {
+      carrierMap.set(carrierId, { id: carrierId, name: carrierName, adjusters: [] });
+    }
+    carrierMap.get(carrierId)!.adjusters.push(adjuster);
+  }
+
+  // Sort carriers alphabetically
+  const sortedCarriers = Array.from(carrierMap.values()).sort((a, b) => 
+    a.name.localeCompare(b.name)
+  );
+
+  // Group by first letter
+  const groupedByLetter: Record<string, typeof sortedCarriers> = {};
+  for (const carrier of sortedCarriers) {
+    const firstLetter = carrier.name.charAt(0).toUpperCase();
+    if (!groupedByLetter[firstLetter]) {
+      groupedByLetter[firstLetter] = [];
+    }
+    groupedByLetter[firstLetter].push(carrier);
+  }
+
+  const sortedLetters = Object.keys(groupedByLetter).sort();
 
   return (
     <div className="space-y-6">
@@ -29,7 +47,7 @@ export default async function AdjustersPage() {
         <div>
           <h1 className="text-2xl font-bold text-slate-900">Adjusters</h1>
           <p className="text-slate-600">
-            Manage insurance adjusters by carrier
+            Manage insurance adjusters grouped by carrier
           </p>
         </div>
         <Link href="/dashboard/adjusters/new">
@@ -40,7 +58,7 @@ export default async function AdjustersPage() {
         </Link>
       </div>
 
-      {/* Adjusters Grid */}
+      {/* Adjusters List */}
       {adjusters.length === 0 ? (
         <Card>
           <CardContent className="flex flex-col items-center justify-center py-12">
@@ -57,60 +75,35 @@ export default async function AdjustersPage() {
           </CardContent>
         </Card>
       ) : (
-        <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
-          {adjusters.map((adjuster) => (
-            <Link
-              key={adjuster.id}
-              href={`/dashboard/adjusters/${adjuster.id}`}
-            >
-              <Card className="hover:border-blue-300 hover:shadow-md transition-all cursor-pointer h-full">
-                <CardHeader className="pb-3">
-                  <div className="flex items-start justify-between">
-                    <div>
-                      <CardTitle className="text-lg">{adjuster.name}</CardTitle>
-                      <div className="flex items-center gap-2 mt-1">
-                        <Shield className="h-4 w-4 text-slate-400" />
-                        <span className="text-sm text-slate-500">
-                          {adjuster.carrier.name}
-                        </span>
-                      </div>
-                    </div>
-                    <Badge className={TYPE_COLORS[adjuster.type] || TYPE_COLORS.desk}>
-                      {TYPE_LABELS[adjuster.type] || adjuster.type}
-                    </Badge>
-                  </div>
-                </CardHeader>
-                <CardContent className="space-y-3">
-                  {/* Contact Info */}
-                  <div className="space-y-2 text-sm">
-                    {adjuster.email && (
-                      <div className="flex items-center gap-2 text-slate-600">
-                        <Mail className="h-4 w-4" aria-hidden="true" />
-                        <span className="truncate">{adjuster.email}</span>
-                      </div>
-                    )}
-                    {adjuster.phone && (
-                      <div className="flex items-center gap-2 text-slate-600">
-                        <Phone className="h-4 w-4" aria-hidden="true" />
-                        <span>{adjuster.phone}</span>
-                      </div>
-                    )}
-                    {!adjuster.email && !adjuster.phone && (
-                      <p className="text-slate-400 italic">No contact info</p>
-                    )}
-                  </div>
-
-                  {/* Stats */}
-                  <div className="flex items-center justify-between pt-3 border-t">
-                    <div className="text-sm text-slate-500">
-                      {adjuster._count.claims} claims
-                    </div>
-                  </div>
-                </CardContent>
-              </Card>
-            </Link>
-          ))}
-        </div>
+        <Card>
+          <CardHeader>
+            <CardTitle className="flex items-center gap-2">
+              <UserCheck className="h-5 w-5 text-green-500" />
+              {adjusters.length} Adjuster(s) across {sortedCarriers.length} Carrier(s)
+            </CardTitle>
+          </CardHeader>
+          <CardContent className="space-y-6">
+            {sortedLetters.map((letter) => (
+              <div key={letter} className="space-y-3">
+                {/* Letter Header */}
+                <div className="sticky top-0 bg-white z-10 py-1">
+                  <span className="inline-flex items-center justify-center w-8 h-8 rounded-full bg-slate-100 text-sm font-bold text-slate-700">
+                    {letter}
+                  </span>
+                </div>
+                {/* Carriers in this letter */}
+                <div className="space-y-2 pl-2">
+                  {groupedByLetter[letter].map((carrier) => (
+                    <AdjusterListByCarrier 
+                      key={carrier.id} 
+                      carrier={carrier}
+                    />
+                  ))}
+                </div>
+              </div>
+            ))}
+          </CardContent>
+        </Card>
       )}
     </div>
   );

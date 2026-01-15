@@ -23,6 +23,10 @@ interface ContractorFormProps {
     phone: string | null;
     address: string | null;
     billingPercentage: number | string;
+    residentialRate: number | string | null;
+    commercialRate: number | string | null;
+    reinspectionRate: number | string | null;
+    estimateFlatFee: number | string | null;
     paymentTerms: string | null;
     notes: string | null;
   };
@@ -46,11 +50,19 @@ export function ContractorForm({ contractor }: ContractorFormProps) {
           phone: contractor.phone ?? undefined,
           address: contractor.address ?? undefined,
           billingPercentage: Number(contractor.billingPercentage),
+          residentialRate: contractor.residentialRate ? Number(contractor.residentialRate) : undefined,
+          commercialRate: contractor.commercialRate ? Number(contractor.commercialRate) : undefined,
+          reinspectionRate: contractor.reinspectionRate ? Number(contractor.reinspectionRate) : undefined,
+          estimateFlatFee: contractor.estimateFlatFee ? Number(contractor.estimateFlatFee) : undefined,
           paymentTerms: contractor.paymentTerms ?? undefined,
           notes: contractor.notes ?? undefined,
         }
       : {
           billingPercentage: 0.125, // Default 12.5%
+          residentialRate: 0.125,
+          commercialRate: 0.125,
+          reinspectionRate: 0.10,
+          estimateFlatFee: 40,
         },
   });
 
@@ -146,37 +158,143 @@ export function ContractorForm({ contractor }: ContractorFormProps) {
 
       <Card>
         <CardHeader>
-          <CardTitle>Billing Settings</CardTitle>
+          <CardTitle>Billing Rates</CardTitle>
         </CardHeader>
         <CardContent className="space-y-4">
-          {/* Billing Percentage */}
-          <div className="space-y-2">
-            <Label htmlFor="billingPercentage">
-              Billing Percentage <span className="text-red-500">*</span>
-            </Label>
-            <div className="relative">
-              <Input
-                id="billingPercentage"
-                type="number"
-                step="0.001"
-                min="0.05"
-                max="0.20"
-                placeholder="0.125"
-                {...register("billingPercentage", { valueAsNumber: true })}
-                aria-invalid={!!errors.billingPercentage}
-              />
-              <span className="absolute right-3 top-1/2 -translate-y-1/2 text-slate-500 text-sm">
-                (e.g., 0.125 = 12.5%)
-              </span>
+          <p className="text-sm text-slate-500 mb-4">
+            Set billing rates by job type. Enter as decimal (e.g., 0.125 = 12.5%).
+          </p>
+          
+          {/* Rate Grid - 2x2 */}
+          <div className="grid gap-4 md:grid-cols-2">
+            {/* Residential Rate */}
+            <div className="space-y-2">
+              <Label htmlFor="residentialRate">
+                Residential Supplement Rate
+              </Label>
+              <div className="relative">
+                <Input
+                  id="residentialRate"
+                  type="number"
+                  step="0.001"
+                  min="0"
+                  max="0.30"
+                  placeholder="0.125"
+                  {...register("residentialRate", { valueAsNumber: true })}
+                  aria-invalid={!!errors.residentialRate}
+                  aria-label="Residential supplement billing rate"
+                />
+                <span className="absolute right-3 top-1/2 -translate-y-1/2 text-slate-500 text-sm">
+                  %
+                </span>
+              </div>
+              {errors.residentialRate && (
+                <p className="text-sm text-red-500">
+                  {errors.residentialRate.message}
+                </p>
+              )}
             </div>
-            {errors.billingPercentage && (
-              <p className="text-sm text-red-500">{errors.billingPercentage.message}</p>
-            )}
-            <p className="text-xs text-slate-500">
-              Enter as decimal: 0.10 = 10%, 0.125 = 12.5%, 0.15 = 15%
-            </p>
+
+            {/* Commercial Rate */}
+            <div className="space-y-2">
+              <Label htmlFor="commercialRate">
+                Commercial Supplement Rate
+              </Label>
+              <div className="relative">
+                <Input
+                  id="commercialRate"
+                  type="number"
+                  step="0.001"
+                  min="0"
+                  max="0.30"
+                  placeholder="0.125"
+                  {...register("commercialRate", { valueAsNumber: true })}
+                  aria-invalid={!!errors.commercialRate}
+                  aria-label="Commercial supplement billing rate"
+                />
+                <span className="absolute right-3 top-1/2 -translate-y-1/2 text-slate-500 text-sm">
+                  %
+                </span>
+              </div>
+              {errors.commercialRate && (
+                <p className="text-sm text-red-500">
+                  {errors.commercialRate.message}
+                </p>
+              )}
+            </div>
+
+            {/* Reinspection Rate */}
+            <div className="space-y-2">
+              <Label htmlFor="reinspectionRate">
+                Reinspection Rate
+              </Label>
+              <div className="relative">
+                <Input
+                  id="reinspectionRate"
+                  type="number"
+                  step="0.001"
+                  min="0"
+                  max="0.30"
+                  placeholder="0.10"
+                  {...register("reinspectionRate", { valueAsNumber: true })}
+                  aria-invalid={!!errors.reinspectionRate}
+                  aria-label="Reinspection billing rate"
+                />
+                <span className="absolute right-3 top-1/2 -translate-y-1/2 text-slate-500 text-sm">
+                  %
+                </span>
+              </div>
+              {errors.reinspectionRate && (
+                <p className="text-sm text-red-500">
+                  {errors.reinspectionRate.message}
+                </p>
+              )}
+            </div>
+
+            {/* Estimate Flat Fee */}
+            <div className="space-y-2">
+              <Label htmlFor="estimateFlatFee">
+                Estimate Fee (Flat $)
+              </Label>
+              <div className="relative">
+                <span className="absolute left-3 top-1/2 -translate-y-1/2 text-slate-500">
+                  $
+                </span>
+                <Input
+                  id="estimateFlatFee"
+                  type="number"
+                  step="1"
+                  min="0"
+                  max="10000"
+                  placeholder="40"
+                  className="pl-7"
+                  {...register("estimateFlatFee", { valueAsNumber: true })}
+                  aria-invalid={!!errors.estimateFlatFee}
+                  aria-label="Estimate flat fee amount"
+                />
+              </div>
+              {errors.estimateFlatFee && (
+                <p className="text-sm text-red-500">
+                  {errors.estimateFlatFee.message}
+                </p>
+              )}
+            </div>
           </div>
 
+          {/* Legacy Default Rate - hidden but still submitted */}
+          <input
+            type="hidden"
+            {...register("billingPercentage", { valueAsNumber: true })}
+            value={0.125}
+          />
+        </CardContent>
+      </Card>
+
+      <Card>
+        <CardHeader>
+          <CardTitle>Additional Settings</CardTitle>
+        </CardHeader>
+        <CardContent className="space-y-4">
           {/* Payment Terms */}
           <div className="space-y-2">
             <Label htmlFor="paymentTerms">Payment Terms</Label>
@@ -184,6 +302,7 @@ export function ContractorForm({ contractor }: ContractorFormProps) {
               id="paymentTerms"
               placeholder="Net 30"
               {...register("paymentTerms")}
+              aria-label="Payment terms"
             />
           </div>
 
@@ -195,6 +314,7 @@ export function ContractorForm({ contractor }: ContractorFormProps) {
               placeholder="Additional notes about this contractor..."
               rows={3}
               {...register("notes")}
+              aria-label="Additional notes"
             />
           </div>
         </CardContent>

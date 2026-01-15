@@ -4,7 +4,7 @@ import { useRouter } from "next/navigation";
 import { useForm, Controller } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { toast } from "sonner";
-import { Loader2 } from "lucide-react";
+import { Loader2, Plus } from "lucide-react";
 
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -445,9 +445,21 @@ export function ClaimForm({
           <div className="grid gap-4 md:grid-cols-2">
             {/* Carrier */}
             <div className="space-y-2">
-              <Label htmlFor="carrierId">
-                Insurance Company <span className="text-red-500">*</span>
-              </Label>
+              <div className="flex items-center justify-between">
+                <Label htmlFor="carrierId">
+                  Insurance Company <span className="text-red-500">*</span>
+                </Label>
+                <a
+                  href="/dashboard/carriers/new"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="inline-flex items-center gap-1 text-xs text-blue-600 hover:text-blue-800 hover:underline"
+                  aria-label="Add new carrier in new tab"
+                >
+                  <Plus className="h-3 w-3" />
+                  Add New
+                </a>
+              </div>
               <Controller
                 name="carrierId"
                 control={control}
@@ -526,7 +538,19 @@ export function ClaimForm({
           <div className="grid gap-4 md:grid-cols-2">
             {/* Adjuster Dropdown */}
             <div className="space-y-2">
-              <Label htmlFor="adjusterId">Adjuster (from system)</Label>
+              <div className="flex items-center justify-between">
+                <Label htmlFor="adjusterId">Adjuster (from system)</Label>
+                <a
+                  href="/dashboard/adjusters/new"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="inline-flex items-center gap-1 text-xs text-blue-600 hover:text-blue-800 hover:underline"
+                  aria-label="Add new adjuster in new tab"
+                >
+                  <Plus className="h-3 w-3" />
+                  Add New
+                </a>
+              </div>
               <Controller
                 name="adjusterId"
                 control={control}
