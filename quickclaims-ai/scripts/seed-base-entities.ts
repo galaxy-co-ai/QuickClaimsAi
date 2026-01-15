@@ -12,8 +12,10 @@ const prisma = new PrismaClient();
 async function main() {
   console.log("🏗️  Seeding base entities...\n");
 
-  // Check if contractor exists
-  const existingContractor = await prisma.contractor.findFirst();
+  // Check if specific contractor exists by email
+  const existingContractor = await prisma.contractor.findFirst({
+    where: { email: "brad@riseclaims.com" },
+  });
   if (!existingContractor) {
     const contractor = await prisma.contractor.create({
       data: {
@@ -29,8 +31,10 @@ async function main() {
     console.log("   ⏭️  Contractor already exists:", existingContractor.companyName);
   }
 
-  // Check if estimator exists
-  const existingEstimator = await prisma.estimator.findFirst();
+  // Check if specific estimator exists by email
+  const existingEstimator = await prisma.estimator.findFirst({
+    where: { email: "jason@galaxyco.ai" },
+  });
   if (!existingEstimator) {
     const estimator = await prisma.estimator.create({
       data: {
