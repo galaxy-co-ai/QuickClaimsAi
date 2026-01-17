@@ -3,7 +3,7 @@
 import { revalidatePath } from "next/cache";
 import { db } from "@/lib/db";
 import { claimInputSchema, claimFiltersSchema, type ClaimInput, type ClaimFilters } from "@/lib/validations/claim";
-import { requireRole, getCurrentUserRole, getCurrentDbUserId } from "@/lib/auth";
+import { requireRole } from "@/lib/auth";
 import { calculateInitialDollarPerSquare, decimalToNumber, serializeClaims, serializeClaim } from "@/lib/calculations";
 import { CLAIM_STATUS_LABELS, getValidNextStatuses, isValidStatusTransition } from "@/lib/constants";
 import { logAudit } from "@/actions/audit";
@@ -21,9 +21,10 @@ export async function getClaims(filters?: Partial<ClaimFilters>) {
 
   const where: Record<string, unknown> = {};
 
-  // Manager filter: only show claims from estimators assigned to this manager
+  // Manager filter: restrict to assigned estimators only
   const role = await getCurrentUserRole();
   const userId = await getCurrentDbUserId();
+  let managedEstimatorIds: string[] | null = null;
   
   if (role === "manager" && userId) {
     // Get estimators assigned to this manager
@@ -31,10 +32,9 @@ export async function getClaims(filters?: Partial<ClaimFilters>) {
       where: { managerId: userId },
       select: { id: true },
     });
+    managedEstimatorIds = managedEstimators.map(e => e.id);
     
-    if (managedEstimators.length > 0) {
-      where.estimatorId = { in: managedEstimators.map(e => e.id) };
-    } else {
+    if (managedEstimatorIds.length === 0) {
       // Manager has no estimators assigned - return empty result
       return {
         claims: [],
@@ -52,10 +52,25 @@ export async function getClaims(filters?: Partial<ClaimFilters>) {
   if (contractorId) {
     where.contractorId = contractorId;
   }
+  
+  // Estimator filter - validate against manager's scope if applicable
   if (estimatorId) {
-    // Override manager filter if specific estimator is selected
+    // If manager, validate that the requested estimator is in their scope
+    if (managedEstimatorIds !== null) {
+      if (!managedEstimatorIds.includes(estimatorId)) {
+        // Manager trying to access estimator outside their scope - deny
+        return {
+          claims: [],
+          pagination: { page, limit, total: 0, totalPages: 0 },
+        };
+      }
+    }
     where.estimatorId = estimatorId;
+  } else if (managedEstimatorIds !== null) {
+    // No specific estimator requested, but manager - filter to their estimators
+    where.estimatorId = { in: managedEstimatorIds };
   }
+  
   if (carrierId) {
     where.carrierId = carrierId;
   }
