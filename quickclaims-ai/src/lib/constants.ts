@@ -6,57 +6,59 @@ import type { ClaimStatus } from "@prisma/client";
 
 // Claim status labels for UI
 export const CLAIM_STATUS_LABELS: Record<string, string> = {
-  new_supplement: "New Supplement",
-  missing_info: "Missing Info",
+  missing_info: "Missing Info To Start",
   contractor_review: "Contractor Review",
-  supplement_in_progress: "In Progress",
-  supplement_sent: "Sent to Carrier",
-  awaiting_carrier_response: "Awaiting Response",
-  reinspection_requested: "Reinspection Requested",
-  reinspection_scheduled: "Reinspection Scheduled",
-  approved: "Approved",
-  final_invoice_pending: "Final Invoice Pending",
-  final_invoice_sent: "Final Invoice Sent",
+  supplement_sent: "Supplement Sent to Insurance",
+  supplement_received: "Supplement Received by Insurance",
+  counterargument_submitted: "Submitted Counterargument",
+  escalated: "Escalated Claim",
+  contractor_advance: "Contractor Required to Advance",
+  waiting_on_build: "Waiting On Build",
+  line_items_confirmed: "Confirm Line Items Completed",
+  rebuttal_posted: "Rebuttal Carrier Post",
+  final_invoice_sent: "Final Invoice Sent to Carrier",
+  final_invoice_received: "Final Invoice Received by Carrier",
+  money_released: "Money Released to Homeowner",
+  work_suspended: "Work Suspended",
   completed: "Completed",
-  closed_lost: "Closed - Lost",
 };
 
 // Status colors for badges
 export const CLAIM_STATUS_COLORS: Record<string, string> = {
-  new_supplement: "bg-blue-100 text-blue-800",
   missing_info: "bg-yellow-100 text-yellow-800",
   contractor_review: "bg-purple-100 text-purple-800",
-  supplement_in_progress: "bg-indigo-100 text-indigo-800",
-  supplement_sent: "bg-cyan-100 text-cyan-800",
-  awaiting_carrier_response: "bg-orange-100 text-orange-800",
-  reinspection_requested: "bg-amber-100 text-amber-800",
-  reinspection_scheduled: "bg-lime-100 text-lime-800",
-  approved: "bg-green-100 text-green-800",
-  final_invoice_pending: "bg-teal-100 text-teal-800",
-  final_invoice_sent: "bg-emerald-100 text-emerald-800",
+  supplement_sent: "bg-blue-100 text-blue-800",
+  supplement_received: "bg-cyan-100 text-cyan-800",
+  counterargument_submitted: "bg-orange-100 text-orange-800",
+  escalated: "bg-red-100 text-red-800",
+  contractor_advance: "bg-amber-100 text-amber-800",
+  waiting_on_build: "bg-indigo-100 text-indigo-800",
+  line_items_confirmed: "bg-lime-100 text-lime-800",
+  rebuttal_posted: "bg-pink-100 text-pink-800",
+  final_invoice_sent: "bg-teal-100 text-teal-800",
+  final_invoice_received: "bg-emerald-100 text-emerald-800",
+  money_released: "bg-green-100 text-green-800",
+  work_suspended: "bg-slate-100 text-slate-800",
   completed: "bg-green-200 text-green-900",
-  closed_lost: "bg-red-100 text-red-800",
 };
 
-// Valid status transitions (from -> to[])
+// Valid status transitions (from -> to[]) - allowing flexible transitions
 export const STATUS_TRANSITIONS: Record<string, string[]> = {
-  new_supplement: ["missing_info", "supplement_in_progress"],
-  missing_info: ["new_supplement", "supplement_in_progress"],
-  supplement_in_progress: ["contractor_review", "supplement_sent"],
-  contractor_review: ["supplement_sent", "supplement_in_progress"],
-  supplement_sent: ["awaiting_carrier_response"],
-  awaiting_carrier_response: [
-    "reinspection_requested",
-    "approved",
-    "closed_lost",
-  ],
-  reinspection_requested: ["reinspection_scheduled"],
-  reinspection_scheduled: ["approved", "awaiting_carrier_response"],
-  approved: ["final_invoice_pending"],
-  final_invoice_pending: ["final_invoice_sent"],
-  final_invoice_sent: ["completed"],
+  missing_info: ["contractor_review", "work_suspended"],
+  contractor_review: ["supplement_sent", "missing_info", "work_suspended"],
+  supplement_sent: ["supplement_received", "work_suspended"],
+  supplement_received: ["counterargument_submitted", "contractor_advance", "waiting_on_build", "work_suspended"],
+  counterargument_submitted: ["escalated", "supplement_received", "rebuttal_posted", "work_suspended"],
+  escalated: ["supplement_received", "rebuttal_posted", "work_suspended"],
+  contractor_advance: ["waiting_on_build", "work_suspended"],
+  waiting_on_build: ["line_items_confirmed", "work_suspended"],
+  line_items_confirmed: ["final_invoice_sent", "work_suspended"],
+  rebuttal_posted: ["supplement_received", "final_invoice_sent", "work_suspended"],
+  final_invoice_sent: ["final_invoice_received", "work_suspended"],
+  final_invoice_received: ["money_released", "work_suspended"],
+  money_released: ["completed"],
+  work_suspended: ["missing_info", "contractor_review"], // Can resume from suspended
   completed: [], // Terminal state
-  closed_lost: [], // Terminal state
 };
 
 // Document type labels

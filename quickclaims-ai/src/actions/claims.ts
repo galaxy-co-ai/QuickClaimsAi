@@ -21,28 +21,6 @@ export async function getClaims(filters?: Partial<ClaimFilters>) {
 
   const where: Record<string, unknown> = {};
 
-  // Manager filter: restrict to assigned estimators only
-  const role = await getCurrentUserRole();
-  const userId = await getCurrentDbUserId();
-  let managedEstimatorIds: string[] | null = null;
-  
-  if (role === "manager" && userId) {
-    // Get estimators assigned to this manager
-    const managedEstimators = await db.estimator.findMany({
-      where: { managerId: userId },
-      select: { id: true },
-    });
-    managedEstimatorIds = managedEstimators.map(e => e.id);
-    
-    if (managedEstimatorIds.length === 0) {
-      // Manager has no estimators assigned - return empty result
-      return {
-        claims: [],
-        pagination: { page, limit, total: 0, totalPages: 0 },
-      };
-    }
-  }
-
   // Status filter
   if (status) {
     where.status = status;
@@ -52,25 +30,9 @@ export async function getClaims(filters?: Partial<ClaimFilters>) {
   if (contractorId) {
     where.contractorId = contractorId;
   }
-  
-  // Estimator filter - validate against manager's scope if applicable
   if (estimatorId) {
-    // If manager, validate that the requested estimator is in their scope
-    if (managedEstimatorIds !== null) {
-      if (!managedEstimatorIds.includes(estimatorId)) {
-        // Manager trying to access estimator outside their scope - deny
-        return {
-          claims: [],
-          pagination: { page, limit, total: 0, totalPages: 0 },
-        };
-      }
-    }
     where.estimatorId = estimatorId;
-  } else if (managedEstimatorIds !== null) {
-    // No specific estimator requested, but manager - filter to their estimators
-    where.estimatorId = { in: managedEstimatorIds };
   }
-  
   if (carrierId) {
     where.carrierId = carrierId;
   }
@@ -624,7 +586,7 @@ export async function getDashboardStats() {
     db.claim.aggregate({
       where: {
         statusChangedAt: { gte: startOfMonth },
-        status: { in: ["approved", "final_invoice_pending", "final_invoice_sent", "completed"] },
+        status: { in: ["final_invoice_sent", "final_invoice_received", "money_released", "completed"] },
       },
       _sum: { totalIncrease: true },
     }),
@@ -787,7 +749,7 @@ export async function getManagerDashboardStats() {
     db.claim.aggregate({
       where: {
         statusChangedAt: { gte: startOfMonth },
-        status: { in: ["approved", "final_invoice_pending", "final_invoice_sent", "completed"] },
+        status: { in: ["final_invoice_sent", "final_invoice_received", "money_released", "completed"] },
       },
       _sum: { totalIncrease: true },
     }),

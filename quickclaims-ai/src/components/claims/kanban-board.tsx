@@ -48,17 +48,19 @@ interface KanbanBoardProps {
 
 // Active statuses for Kanban (exclude terminal states)
 const KANBAN_STATUSES: ClaimStatus[] = [
-  "new_supplement",
   "missing_info",
-  "supplement_in_progress",
   "contractor_review",
   "supplement_sent",
-  "awaiting_carrier_response",
-  "reinspection_requested",
-  "reinspection_scheduled",
-  "approved",
-  "final_invoice_pending",
+  "supplement_received",
+  "counterargument_submitted",
+  "escalated",
+  "contractor_advance",
+  "waiting_on_build",
+  "line_items_confirmed",
+  "rebuttal_posted",
   "final_invoice_sent",
+  "final_invoice_received",
+  "money_released",
 ];
 
 export function KanbanBoard({ initialClaims }: KanbanBoardProps) {

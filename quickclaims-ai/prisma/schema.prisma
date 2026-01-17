@@ -22,19 +22,21 @@ enum UserRole {
 }
 
 enum ClaimStatus {
-  new_supplement
-  missing_info
-  contractor_review
-  supplement_in_progress
-  supplement_sent
-  awaiting_carrier_response
-  reinspection_requested
-  reinspection_scheduled
-  approved
-  final_invoice_pending
-  final_invoice_sent
-  completed
-  closed_lost
+  missing_info              // Missing Info To Start
+  contractor_review         // Contractor Review
+  supplement_sent           // Supplement Sent to Insurance
+  supplement_received       // Supplement Received by Insurance
+  counterargument_submitted // Submitted Counterargument
+  escalated                 // Escalated Claim
+  contractor_advance        // Contractor Required to Advance
+  waiting_on_build          // Waiting On Build
+  line_items_confirmed      // Confirm Line Items Completed
+  rebuttal_posted           // Rebuttal Carrier Post
+  final_invoice_sent        // Final Invoice Sent to Carrier
+  final_invoice_received    // Final Invoice Received by Carrier
+  money_released            // Money Released to Homeowner
+  work_suspended            // Work Suspended
+  completed                 // Completed
 }
 
 enum JobType {
@@ -263,7 +265,7 @@ model Claim {
 
   // Job Classification
   jobType           JobType     @default(supplement)
-  status            ClaimStatus @default(new_supplement)
+  status            ClaimStatus @default(missing_info)
 
   // Financial - Initial (from insurance scope)
   totalSquares      Decimal     @db.Decimal(10, 2)

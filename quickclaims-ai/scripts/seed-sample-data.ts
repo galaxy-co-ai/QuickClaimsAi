@@ -58,18 +58,20 @@ const ADJUSTER_NAMES = [
 
 // Claim statuses with weights for realistic distribution
 const STATUS_DISTRIBUTION: { status: ClaimStatus; weight: number }[] = [
-  { status: "new_supplement", weight: 10 },
-  { status: "missing_info", weight: 5 },
-  { status: "contractor_review", weight: 8 },
-  { status: "supplement_in_progress", weight: 15 },
+  { status: "missing_info", weight: 8 },
+  { status: "contractor_review", weight: 10 },
   { status: "supplement_sent", weight: 12 },
-  { status: "awaiting_carrier_response", weight: 15 },
-  { status: "reinspection_requested", weight: 5 },
-  { status: "reinspection_scheduled", weight: 3 },
-  { status: "approved", weight: 10 },
-  { status: "final_invoice_pending", weight: 5 },
+  { status: "supplement_received", weight: 15 },
+  { status: "counterargument_submitted", weight: 8 },
+  { status: "escalated", weight: 3 },
+  { status: "contractor_advance", weight: 5 },
+  { status: "waiting_on_build", weight: 10 },
+  { status: "line_items_confirmed", weight: 8 },
+  { status: "rebuttal_posted", weight: 3 },
   { status: "final_invoice_sent", weight: 5 },
-  { status: "completed", weight: 7 },
+  { status: "final_invoice_received", weight: 4 },
+  { status: "money_released", weight: 4 },
+  { status: "completed", weight: 5 },
 ];
 
 function getRandomStatus(): ClaimStatus {
@@ -82,7 +84,7 @@ function getRandomStatus(): ClaimStatus {
       return item.status;
     }
   }
-  return "new_supplement";
+  return "missing_info";
 }
 
 function getRandomLossType(): LossType {
@@ -246,14 +248,14 @@ async function seedClaims() {
     const roofRCV = totalSquares * dollarPerSquare;
     const initialRCV = roofRCV * randomDecimal(1.1, 1.3, 2);
     
-    // For completed/approved claims, add increases
-    const hasIncrease = ["approved", "final_invoice_pending", "final_invoice_sent", "completed"].includes(status);
+    // For claims past build stage, add increases
+    const hasIncrease = ["line_items_confirmed", "final_invoice_sent", "final_invoice_received", "money_released", "completed"].includes(status);
     const increasePercent = hasIncrease ? randomDecimal(0.15, 0.45, 4) : 0;
     const totalIncrease = hasIncrease ? initialRCV * increasePercent : 0;
     const currentTotalRCV = initialRCV + totalIncrease;
 
     const daysAgo = status === "completed" ? randomInt(30, 90) : randomInt(1, 30);
-    const lastActivityHours = status === "new_supplement" ? randomInt(1, 24) : randomInt(2, 72);
+    const lastActivityHours = status === "missing_info" ? randomInt(1, 24) : randomInt(2, 72);
 
     // Generate createdAt first, then derive statusChangedAt from it
     const createdAt = randomDate(daysAgo);
@@ -355,7 +357,7 @@ async function seedSupplements(claims: Awaited<ReturnType<typeof prisma.claim.cr
 
   // Add supplements to claims that have progressed past initial stages
   const claimsWithSupplements = claims.filter(c => 
-    !["new_supplement", "missing_info", "contractor_review"].includes(c.status)
+    !["missing_info", "contractor_review"].includes(c.status)
   );
 
   const supplementDescriptions = [
@@ -383,18 +385,23 @@ async function seedSupplements(claims: Awaited<ReturnType<typeof prisma.claim.cr
       
       const statusMap: Record<string, SupplementStatus> = {
         supplement_sent: "submitted",
-        awaiting_carrier_response: "pending",
-        approved: "approved",
-        final_invoice_pending: "approved",
+        supplement_received: "pending",
+        counterargument_submitted: "pending",
+        escalated: "pending",
+        contractor_advance: "approved",
+        waiting_on_build: "approved",
+        line_items_confirmed: "approved",
+        rebuttal_posted: "pending",
         final_invoice_sent: "approved",
+        final_invoice_received: "approved",
+        money_released: "approved",
         completed: "approved",
       };
 
       // randomDateAfter now ensures dates never exceed current time
       const createdAt = randomDateAfter(previousSupplementDate, 7);
       const submittedAt = randomDateAfter(createdAt, 3);
-      const isApproved = claim.status === "approved" || claim.status === "completed" || 
-                         claim.status === "final_invoice_pending" || claim.status === "final_invoice_sent";
+      const isApproved = ["line_items_confirmed", "final_invoice_sent", "final_invoice_received", "money_released", "completed"].includes(claim.status);
 
       await prisma.supplement.create({
         data: {

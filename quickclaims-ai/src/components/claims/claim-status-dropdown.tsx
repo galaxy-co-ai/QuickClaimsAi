@@ -18,19 +18,21 @@ import type { ClaimStatus } from "@prisma/client";
 
 // All possible statuses for flexible transitions
 const ALL_STATUSES: ClaimStatus[] = [
-  "new_supplement",
   "missing_info",
   "contractor_review",
-  "supplement_in_progress",
   "supplement_sent",
-  "awaiting_carrier_response",
-  "reinspection_requested",
-  "reinspection_scheduled",
-  "approved",
-  "final_invoice_pending",
+  "supplement_received",
+  "counterargument_submitted",
+  "escalated",
+  "contractor_advance",
+  "waiting_on_build",
+  "line_items_confirmed",
+  "rebuttal_posted",
   "final_invoice_sent",
+  "final_invoice_received",
+  "money_released",
+  "work_suspended",
   "completed",
-  "closed_lost",
 ];
 
 interface ClaimStatusDropdownProps {

@@ -27,8 +27,8 @@ export async function getBillingClaims(filters?: Partial<BillingFilters>) {
   const { contractorId, isPaid, page, limit } = validated;
 
   const where: Record<string, unknown> = {
-    // Only include claims that are approved or completed (have billing amounts)
-    status: { in: ["approved", "final_invoice_pending", "final_invoice_sent", "completed"] },
+    // Only include claims in billing stages (final invoice sent onwards)
+    status: { in: ["final_invoice_sent", "final_invoice_received", "money_released", "completed"] },
   };
 
   if (contractorId) {

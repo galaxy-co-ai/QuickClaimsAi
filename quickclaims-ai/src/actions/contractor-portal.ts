@@ -185,7 +185,7 @@ export async function getContractorDashboardStats() {
     db.claim.count({
       where: {
         contractorId,
-        status: { notIn: ["completed", "closed_lost"] },
+        status: { notIn: ["completed", "work_suspended"] },
       },
     }),
     // Completed claims this month
@@ -200,7 +200,7 @@ export async function getContractorDashboardStats() {
       where: {
         contractorId,
         statusChangedAt: { gte: startOfMonth },
-        status: { in: ["approved", "final_invoice_pending", "final_invoice_sent", "completed"] },
+        status: { in: ["final_invoice_sent", "final_invoice_received", "money_released", "completed"] },
       },
       _sum: { totalIncrease: true },
     }),
@@ -208,7 +208,7 @@ export async function getContractorDashboardStats() {
     db.claim.aggregate({
       where: {
         contractorId,
-        status: { notIn: ["completed", "closed_lost"] },
+        status: { notIn: ["completed", "work_suspended"] },
       },
       _avg: { dollarPerSquare: true },
     }),

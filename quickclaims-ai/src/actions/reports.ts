@@ -54,7 +54,7 @@ export async function generateContractorBillingReport(
         },
         // Claims approved in the date range (for claims not yet completed)
         {
-          status: { in: ["approved", "final_invoice_pending", "final_invoice_sent", "completed"] },
+          status: { in: ["final_invoice_sent", "final_invoice_received", "money_released", "completed"] },
           statusChangedAt: {
             gte: validated.startDate,
             lte: validated.endDate,
@@ -181,7 +181,7 @@ export async function generateEstimatorCommissionReport(
           },
         },
         {
-          status: { in: ["approved", "final_invoice_pending", "final_invoice_sent", "completed"] },
+          status: { in: ["final_invoice_sent", "final_invoice_received", "money_released", "completed"] },
           statusChangedAt: {
             gte: validated.startDate,
             lte: validated.endDate,
@@ -343,7 +343,7 @@ export async function generateContractorOwnBillingReport(
           },
         },
         {
-          status: { in: ["approved", "final_invoice_pending", "final_invoice_sent", "completed"] },
+          status: { in: ["final_invoice_sent", "final_invoice_received", "money_released", "completed"] },
           statusChangedAt: {
             gte: startDate,
             lte: endDate,
