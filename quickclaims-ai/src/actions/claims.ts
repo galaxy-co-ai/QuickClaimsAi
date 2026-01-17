@@ -212,7 +212,7 @@ export async function createClaim(data: ClaimInput) {
 
       // Job Classification
       jobType: validated.jobType,
-      status: "new_supplement",
+      status: "missing_info",
 
       // Financial - Initial
       totalSquares: validated.totalSquares,
@@ -466,7 +466,7 @@ export async function updateClaimStatus(id: string, newStatus: ClaimStatus) {
   };
 
   // Set completedAt for terminal states
-  if (newStatus === "completed" || newStatus === "closed_lost") {
+  if (newStatus === "completed") {
     updateData.completedAt = new Date();
   }
 
@@ -529,7 +529,7 @@ export async function getClaimsRequiringAction(limit: number = 10) {
   const claims = await db.claim.findMany({
     where: {
       status: {
-        notIn: ["completed", "closed_lost"],
+        notIn: ["completed", "work_suspended"],
       },
       lastActivityAt: {
         lt: warningThreshold,
@@ -573,7 +573,7 @@ export async function getDashboardStats() {
     // Active claims (not completed or closed)
     db.claim.count({
       where: {
-        status: { notIn: ["completed", "closed_lost"] },
+        status: { notIn: ["completed", "work_suspended"] },
       },
     }),
     // New claims this week
@@ -593,7 +593,7 @@ export async function getDashboardStats() {
     // Average dollar per square across all active claims
     db.claim.aggregate({
       where: {
-        status: { notIn: ["completed", "closed_lost"] },
+        status: { notIn: ["completed", "work_suspended"] },
       },
       _avg: { dollarPerSquare: true },
     }),
@@ -610,7 +610,7 @@ export async function getDashboardStats() {
       where: {
         type: { in: ["general", "call", "email", "document"] }, // Manual notes only
         claim: {
-          status: { notIn: ["completed", "closed_lost"] },
+          status: { notIn: ["completed", "work_suspended"] },
         },
       },
     }),
@@ -678,7 +678,7 @@ export async function getClaimsForKanban() {
   const claims = await db.claim.findMany({
     where: {
       status: {
-        notIn: ["completed", "closed_lost"],
+        notIn: ["completed", "work_suspended"],
       },
     },
     orderBy: { lastActivityAt: "desc" },
@@ -729,7 +729,7 @@ export async function getManagerDashboardStats() {
   ] = await Promise.all([
     // Active claims
     db.claim.count({
-      where: { status: { notIn: ["completed", "closed_lost"] } },
+      where: { status: { notIn: ["completed", "work_suspended"] } },
     }),
     // Completed this month
     db.claim.count({
@@ -755,25 +755,25 @@ export async function getManagerDashboardStats() {
     }),
     // Average dollar per square
     db.claim.aggregate({
-      where: { status: { notIn: ["completed", "closed_lost"] } },
+      where: { status: { notIn: ["completed", "work_suspended"] } },
       _avg: { dollarPerSquare: true },
     }),
     // Claims grouped by status
     db.claim.groupBy({
       by: ["status"],
       _count: { _all: true },
-      where: { status: { notIn: ["completed", "closed_lost"] } },
+      where: { status: { notIn: ["completed", "work_suspended"] } },
     }),
     // Overdue claims (more than 48 hours since last activity)
     db.claim.count({
       where: {
-        status: { notIn: ["completed", "closed_lost"] },
+        status: { notIn: ["completed", "work_suspended"] },
         lastActivityAt: { lt: complianceThreshold },
       },
     }),
     // Total active claims for compliance calculation
     db.claim.count({
-      where: { status: { notIn: ["completed", "closed_lost"] } },
+      where: { status: { notIn: ["completed", "work_suspended"] } },
     }),
     // Recent activity
     db.note.findMany({
@@ -792,7 +792,7 @@ export async function getManagerDashboardStats() {
     // Claims requiring attention (overdue)
     db.claim.findMany({
       where: {
-        status: { notIn: ["completed", "closed_lost"] },
+        status: { notIn: ["completed", "work_suspended"] },
         lastActivityAt: { lt: complianceThreshold },
       },
       orderBy: { lastActivityAt: "asc" },
