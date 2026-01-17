@@ -5,7 +5,7 @@ import Link from "next/link";
 import { ArrowLeft } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { EstimatorForm } from "@/components/estimators/estimator-form";
-import { getEstimator } from "@/actions/estimators";
+import { getEstimator, getManagers } from "@/actions/estimators";
 
 interface EditEstimatorPageProps {
   params: Promise<{ id: string }>;
@@ -15,7 +15,10 @@ export default async function EditEstimatorPage({
   params,
 }: EditEstimatorPageProps) {
   const { id } = await params;
-  const estimator = await getEstimator(id);
+  const [estimator, managers] = await Promise.all([
+    getEstimator(id),
+    getManagers(),
+  ]);
 
   if (!estimator) {
     notFound();
@@ -45,12 +48,14 @@ export default async function EditEstimatorPage({
           lastName: estimator.lastName,
           email: estimator.email,
           phone: estimator.phone,
+          managerId: estimator.managerId,
           commissionPercentage: Number(estimator.commissionPercentage),
           residentialRate: estimator.residentialRate ? Number(estimator.residentialRate) : null,
           commercialRate: estimator.commercialRate ? Number(estimator.commercialRate) : null,
           reinspectionRate: estimator.reinspectionRate ? Number(estimator.reinspectionRate) : null,
           estimateFlatFee: estimator.estimateFlatFee ? Number(estimator.estimateFlatFee) : null,
         }}
+        managers={managers}
       />
     </div>
   );

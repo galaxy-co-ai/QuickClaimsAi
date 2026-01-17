@@ -3,7 +3,7 @@
 import { revalidatePath } from "next/cache";
 import { db } from "@/lib/db";
 import { claimInputSchema, claimFiltersSchema, type ClaimInput, type ClaimFilters } from "@/lib/validations/claim";
-import { requireRole } from "@/lib/auth";
+import { requireRole, getCurrentUserRole, getCurrentDbUserId } from "@/lib/auth";
 import { calculateInitialDollarPerSquare, decimalToNumber, serializeClaims, serializeClaim } from "@/lib/calculations";
 import { CLAIM_STATUS_LABELS, getValidNextStatuses, isValidStatusTransition } from "@/lib/constants";
 import { logAudit } from "@/actions/audit";
@@ -21,6 +21,28 @@ export async function getClaims(filters?: Partial<ClaimFilters>) {
 
   const where: Record<string, unknown> = {};
 
+  // Manager filter: only show claims from estimators assigned to this manager
+  const role = await getCurrentUserRole();
+  const userId = await getCurrentDbUserId();
+  
+  if (role === "manager" && userId) {
+    // Get estimators assigned to this manager
+    const managedEstimators = await db.estimator.findMany({
+      where: { managerId: userId },
+      select: { id: true },
+    });
+    
+    if (managedEstimators.length > 0) {
+      where.estimatorId = { in: managedEstimators.map(e => e.id) };
+    } else {
+      // Manager has no estimators assigned - return empty result
+      return {
+        claims: [],
+        pagination: { page, limit, total: 0, totalPages: 0 },
+      };
+    }
+  }
+
   // Status filter
   if (status) {
     where.status = status;
@@ -31,6 +53,7 @@ export async function getClaims(filters?: Partial<ClaimFilters>) {
     where.contractorId = contractorId;
   }
   if (estimatorId) {
+    // Override manager filter if specific estimator is selected
     where.estimatorId = estimatorId;
   }
   if (carrierId) {

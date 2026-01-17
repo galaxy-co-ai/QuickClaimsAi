@@ -1,8 +1,11 @@
 export const dynamic = "force-dynamic";
 
 import { EstimatorForm } from "@/components/estimators/estimator-form";
+import { getManagers } from "@/actions/estimators";
 
-export default function NewEstimatorPage() {
+export default async function NewEstimatorPage() {
+  const managers = await getManagers();
+
   return (
     <div className="max-w-2xl mx-auto space-y-6">
       {/* Page Header */}
@@ -13,7 +16,7 @@ export default function NewEstimatorPage() {
         </p>
       </div>
 
-      <EstimatorForm />
+      <EstimatorForm managers={managers} />
     </div>
   );
 }

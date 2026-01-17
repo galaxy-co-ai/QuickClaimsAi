@@ -1,7 +1,7 @@
 "use client";
 
 import { useRouter } from "next/navigation";
-import { useForm } from "react-hook-form";
+import { useForm, Controller } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { toast } from "sonner";
 import { Loader2 } from "lucide-react";
@@ -11,6 +11,13 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
 import { createEstimator, updateEstimator } from "@/actions/estimators";
 
 // Shared rate validation
@@ -31,6 +38,7 @@ const estimatorFormSchema = z.object({
   lastName: z.string().min(1, "Last name is required").max(100),
   email: z.string().email("Invalid email address"),
   phone: z.string().optional(),
+  managerId: z.string().optional().nullable(),
   commissionPercentage: z
     .number()
     .min(0.01, "Commission must be at least 1%")
@@ -43,6 +51,13 @@ const estimatorFormSchema = z.object({
 
 type EstimatorFormData = z.infer<typeof estimatorFormSchema>;
 
+interface Manager {
+  id: string;
+  firstName: string;
+  lastName: string;
+  email: string;
+}
+
 interface EstimatorFormProps {
   estimator?: {
     id: string;
@@ -50,21 +65,24 @@ interface EstimatorFormProps {
     lastName: string;
     email: string;
     phone: string | null;
+    managerId: string | null;
     commissionPercentage: number | string;
     residentialRate: number | string | null;
     commercialRate: number | string | null;
     reinspectionRate: number | string | null;
     estimateFlatFee: number | string | null;
   };
+  managers?: Manager[];
 }
 
-export function EstimatorForm({ estimator }: EstimatorFormProps) {
+export function EstimatorForm({ estimator, managers = [] }: EstimatorFormProps) {
   const router = useRouter();
   const isEditing = !!estimator;
 
   const {
     register,
     handleSubmit,
+    control,
     formState: { errors, isSubmitting },
   } = useForm<EstimatorFormData>({
     resolver: zodResolver(estimatorFormSchema),
@@ -74,6 +92,7 @@ export function EstimatorForm({ estimator }: EstimatorFormProps) {
           lastName: estimator.lastName,
           email: estimator.email,
           phone: estimator.phone ?? undefined,
+          managerId: estimator.managerId ?? undefined,
           commissionPercentage: Number(estimator.commissionPercentage),
           residentialRate: estimator.residentialRate ? Number(estimator.residentialRate) : undefined,
           commercialRate: estimator.commercialRate ? Number(estimator.commercialRate) : undefined,
@@ -172,6 +191,38 @@ export function EstimatorForm({ estimator }: EstimatorFormProps) {
               />
             </div>
           </div>
+
+          {/* Manager Assignment */}
+          {managers.length > 0 && (
+            <div className="space-y-2">
+              <Label htmlFor="managerId">Assigned Manager</Label>
+              <Controller
+                name="managerId"
+                control={control}
+                render={({ field }) => (
+                  <Select
+                    value={field.value || "none"}
+                    onValueChange={(value) => field.onChange(value === "none" ? null : value)}
+                  >
+                    <SelectTrigger id="managerId" className="w-full" aria-label="Select manager">
+                      <SelectValue placeholder="Select a manager..." />
+                    </SelectTrigger>
+                    <SelectContent>
+                      <SelectItem value="none">No manager assigned</SelectItem>
+                      {managers.map((manager) => (
+                        <SelectItem key={manager.id} value={manager.id}>
+                          {manager.firstName} {manager.lastName}
+                        </SelectItem>
+                      ))}
+                    </SelectContent>
+                  </Select>
+                )}
+              />
+              <p className="text-xs text-slate-500">
+                The manager who oversees this estimator
+              </p>
+            </div>
+          )}
         </CardContent>
       </Card>
 

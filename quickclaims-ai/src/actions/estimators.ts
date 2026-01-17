@@ -2,7 +2,7 @@
 
 import { revalidatePath } from "next/cache";
 import { db } from "@/lib/db";
-import { requireRole } from "@/lib/auth";
+import { requireRole, getCurrentUserRole, getCurrentDbUserId } from "@/lib/auth";
 import { z } from "zod";
 
 // Shared rate validation (optional, 0-50% stored as decimal)
@@ -26,6 +26,9 @@ const estimatorInputSchema = z.object({
   email: z.string().email("Invalid email address"),
   phone: z.string().optional(),
   
+  // Manager assignment (User ID of manager)
+  managerId: z.string().optional().nullable(),
+  
   // Legacy/default commission percentage (required for backwards compatibility)
   commissionPercentage: z
     .number()
@@ -42,15 +45,55 @@ const estimatorInputSchema = z.object({
 export type EstimatorInput = z.infer<typeof estimatorInputSchema>;
 
 /**
- * Get all estimators
+ * Get all users with manager role (for dropdown)
+ */
+export async function getManagers() {
+  await requireRole(["admin", "manager"]);
+
+  const managers = await db.user.findMany({
+    where: { 
+      role: "manager",
+      isActive: true,
+    },
+    orderBy: { lastName: "asc" },
+    select: {
+      id: true,
+      firstName: true,
+      lastName: true,
+      email: true,
+    },
+  });
+
+  return managers;
+}
+
+/**
+ * Get all estimators (filtered by manager if user is a manager)
  */
 export async function getEstimators() {
   await requireRole(["admin", "manager", "estimator"]);
 
+  const role = await getCurrentUserRole();
+  const userId = await getCurrentDbUserId();
+
+  // Build where clause - managers only see their assigned estimators
+  const where: { isActive: boolean; managerId?: string } = { isActive: true };
+  
+  if (role === "manager" && userId) {
+    where.managerId = userId;
+  }
+
   const estimators = await db.estimator.findMany({
-    where: { isActive: true },
+    where,
     orderBy: { lastName: "asc" },
     include: {
+      manager: {
+        select: {
+          id: true,
+          firstName: true,
+          lastName: true,
+        },
+      },
       _count: {
         select: { claims: true },
       },
@@ -69,6 +112,14 @@ export async function getEstimator(id: string) {
   const estimator = await db.estimator.findUnique({
     where: { id },
     include: {
+      manager: {
+        select: {
+          id: true,
+          firstName: true,
+          lastName: true,
+          email: true,
+        },
+      },
       claims: {
         take: 10,
         orderBy: { createdAt: "desc" },
@@ -103,6 +154,7 @@ export async function createEstimator(data: EstimatorInput) {
       lastName: validated.lastName,
       email: validated.email,
       phone: validated.phone,
+      managerId: validated.managerId || null,
       commissionPercentage: validated.commissionPercentage,
       residentialRate: validated.residentialRate,
       commercialRate: validated.commercialRate,
@@ -130,6 +182,7 @@ export async function updateEstimator(id: string, data: EstimatorInput) {
       lastName: validated.lastName,
       email: validated.email,
       phone: validated.phone,
+      managerId: validated.managerId || null,
       commissionPercentage: validated.commissionPercentage,
       residentialRate: validated.residentialRate,
       commercialRate: validated.commercialRate,

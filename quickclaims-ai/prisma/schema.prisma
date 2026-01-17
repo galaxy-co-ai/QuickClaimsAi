@@ -103,7 +103,8 @@ model User {
   lastLoginAt        DateTime?
 
   // Relations
-  estimatorProfile   Estimator?
+  estimatorProfile   Estimator? @relation("EstimatorProfile")
+  managedEstimators  Estimator[] @relation("ManagedEstimators") // Estimators this manager oversees
   contractor         Contractor? @relation(fields: [contractorId], references: [id])
   contractorId       String?
   notes              Note[]
@@ -154,6 +155,9 @@ model Estimator {
   email                String
   phone                String?
   
+  // Manager assignment (User with role='manager')
+  managerId            String?
+  
   // Commission rate fields by job type
   commissionPercentage Decimal  @db.Decimal(5, 4) // Legacy/default: 0.0500 (5%)
   residentialRate      Decimal? @db.Decimal(5, 4) // Residential supplement commission rate
@@ -167,11 +171,13 @@ model Estimator {
   updatedAt            DateTime @updatedAt
 
   // Relations
-  user                 User?    @relation(fields: [userId], references: [id], onDelete: SetNull)
+  user                 User?    @relation("EstimatorProfile", fields: [userId], references: [id], onDelete: SetNull)
+  manager              User?    @relation("ManagedEstimators", fields: [managerId], references: [id], onDelete: SetNull)
   claims               Claim[]
 
   @@index([isActive])
   @@index([lastName])
+  @@index([managerId])
   @@map("estimators")
 }
 
