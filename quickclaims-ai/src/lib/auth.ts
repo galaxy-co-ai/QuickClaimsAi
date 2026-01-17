@@ -6,7 +6,7 @@ export type UserRole = "admin" | "manager" | "estimator" | "contractor";
 
 /**
  * Map Clerk organization roles to app roles
- * Clerk roles: org:admin, org:contractor, org:estimator, org:member
+ * Clerk roles: org:admin, org:manager, org:estimator, org:contractor
  */
 function mapOrgRoleToAppRole(orgRole: string | null | undefined): UserRole {
   if (!orgRole) return "estimator";
@@ -17,12 +17,15 @@ function mapOrgRoleToAppRole(orgRole: string | null | undefined): UserRole {
   switch (role) {
     case "admin":
       return "admin";
-    case "contractor":
-      return "contractor";
+    case "manager":
+      return "manager";
     case "estimator":
       return "estimator";
+    case "contractor":
+      return "contractor";
+    // Legacy: map old "member" role to manager
     case "member":
-      return "estimator"; // Members default to estimator
+      return "manager";
     default:
       return "estimator";
   }

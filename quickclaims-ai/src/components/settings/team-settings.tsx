@@ -141,7 +141,7 @@ export function TeamSettings() {
               </span>
             </div>
             <p className="text-sm text-slate-600 mt-1">
-              Can view all claims, generate reports, and manage billing defaults
+              Oversees assigned estimators, can view all claims, generate reports, and manage billing
             </p>
           </div>
           <div className="p-3 rounded-lg border border-slate-200 bg-white">
