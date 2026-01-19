@@ -1,0 +1,225 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Rise Roofing - Supplement Tracking Workflow</title>
+    <script src="https://cdn.jsdelivr.net/npm/mermaid@10/dist/mermaid.min.js"></script>
+    <style>
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+            margin: 0;
+            padding: 20px;
+            background: #f5f5f5;
+        }
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            background: white;
+            padding: 30px;
+            border-radius: 8px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+        }
+        h1 {
+            color: #1a73e8;
+            margin-bottom: 10px;
+        }
+        .subtitle {
+            color: #666;
+            margin-bottom: 30px;
+            font-size: 14px;
+        }
+        .legend {
+            background: #f8f9fa;
+            padding: 20px;
+            border-radius: 6px;
+            margin-bottom: 30px;
+        }
+        .legend h3 {
+            margin-top: 0;
+            color: #333;
+        }
+        .legend-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 15px;
+            margin-top: 15px;
+        }
+        .legend-item {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        .legend-box {
+            width: 20px;
+            height: 20px;
+            border-radius: 4px;
+            flex-shrink: 0;
+        }
+        .data-entry { background: #e3f2fd; border: 2px solid #1976d2; }
+        .auto-calc { background: #fff3e0; border: 2px solid #f57c00; }
+        .commission { background: #e8f5e9; border: 2px solid #388e3c; }
+        .status { background: #f3e5f5; border: 2px solid #7b1fa2; }
+        .notes {
+            background: #fff8e1;
+            padding: 15px;
+            border-left: 4px solid #ffa726;
+            margin-top: 20px;
+            border-radius: 4px;
+        }
+        .notes h4 {
+            margin-top: 0;
+            color: #e65100;
+        }
+        .mermaid {
+            display: flex;
+            justify-content: center;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Rise Roofing Supplement Tracking System</h1>
+        <p class="subtitle">Complete workflow from job initiation to final invoice with automated calculations</p>
+        
+        <div class="legend">
+            <h3>Workflow Legend</h3>
+            <div class="legend-grid">
+                <div class="legend-item">
+                    <div class="legend-box data-entry"></div>
+                    <span><strong>Data Entry Point</strong> - Manual input required</span>
+                </div>
+                <div class="legend-item">
+                    <div class="legend-box auto-calc"></div>
+                    <span><strong>Auto-Calculation</strong> - System computes values</span>
+                </div>
+                <div class="legend-item">
+                    <div class="legend-box commission"></div>
+                    <span><strong>Commission Event</strong> - Triggers payment calculation</span>
+                </div>
+                <div class="legend-item">
+                    <div class="legend-box status"></div>
+                    <span><strong>Status Gate</strong> - Workflow progression point</span>
+                </div>
+            </div>
+        </div>
+
+        <div class="mermaid">
+graph TD
+    Start([New Supplement Request]) --> DataEntry1[📝 DATA ENTRY<br/>Policyholder Name<br/>Contractor/Location<br/>Initial RCV<br/>Total Squares]
+    
+    DataEntry1 --> AutoCalc1[⚡ AUTO-CALC<br/>Dollar Per Square<br/>Initial RCV ÷ Squares]
+    
+    AutoCalc1 --> Status1{Missing Info<br/>to Start?}
+    
+    Status1 -->|Yes| WaitInfo[Notify Contractor<br/>Missing Docs/Photos]
+    WaitInfo --> Status1
+    
+    Status1 -->|No| CreateEst[Create Supplement<br/>Estimate in Xactimate]
+    
+    CreateEst --> Status2[📋 STATUS: Contractor Review<br/>Upload to both CRMs<br/>Request approval]
+    
+    Status2 --> Status3{Approved?}
+    
+    Status3 -->|Revisions| CreateEst
+    Status3 -->|Yes| Status4[📋 STATUS: Sent to Insurance<br/>Email carrier, adjuster,<br/>3rd party, homeowner]
+    
+    Status4 --> Status5[📋 STATUS: Received by Insurance<br/>Call to confirm receipt<br/>Get adjuster direct contact]
+    
+    Status5 --> Status6{Approved or<br/>Denied Items?}
+    
+    Status6 -->|Partial Denial| DataEntry2[📝 DATA ENTRY<br/>New RCV from SOL 1]
+    
+    DataEntry2 --> AutoCalc2[⚡ AUTO-CALC<br/>Increase Value = New RCV - Initial RCV<br/>New $/sq = New RCV ÷ Squares]
+    
+    AutoCalc2 --> Commission1[💰 COMMISSION EVENT: SOL 1<br/>Estimator: 5% of increase<br/>Contractor: 10-15% of increase]
+    
+    Commission1 --> Status7[📋 STATUS: Counter-Argument<br/>Submit evidence for denials<br/>Building code, photos, etc.]
+    
+    Status7 --> Status8{Escalate?}
+    
+    Status8 -->|Yes| Status9[📋 STATUS: Escalated Claim<br/>Contact supervisor/manager<br/>Progress escalation]
+    Status9 --> Status6
+    
+    Status8 -->|No| Status6
+    
+    Status6 -->|Full Approval| Status10{Pre-Build or<br/>Post-Build?}
+    
+    Status10 -->|Pre-Build| Status11[📋 STATUS: Waiting on Build<br/>Follow up bi-weekly<br/>Update both CRMs]
+    
+    Status11 --> BuildComplete{Build<br/>Complete?}
+    
+    BuildComplete -->|No| Status11
+    BuildComplete -->|Yes| DataEntry3[📝 DATA ENTRY<br/>Day-of-build findings<br/>Material invoices<br/>Additional photos]
+    
+    Status10 -->|Post-Build| DataEntry3
+    
+    DataEntry3 --> Status12[📋 STATUS: Confirm Work Completed<br/>Get line items completed<br/>from contractor]
+    
+    Status12 --> FinalCalc[⚡ AUTO-CALC FINAL NUMBERS<br/>Total increase from all SOLs<br/>Final $/sq calculation<br/>All commission totals]
+    
+    FinalCalc --> Commission2[💰 FINAL COMMISSION EVENT<br/>Calculate remaining payments<br/>Estimator: 5% total increase<br/>Contractor: 10-15% total increase]
+    
+    Commission2 --> Status13[📋 STATUS: Final Invoice Sent<br/>Request depreciation/PWI release<br/>Call to confirm receipt]
+    
+    Status13 --> Status14[📋 STATUS: Final Invoice Received<br/>Confirm carrier has invoice<br/>Track adjuster contact]
+    
+    Status14 --> Status15[📋 STATUS: Money Released<br/>Confirm funds released<br/>Document final dollar amount]
+    
+    Status15 --> Status16[📋 STATUS: COMPLETED<br/>Enter all final RCV numbers<br/>Lock all commissions<br/>Ready to bill]
+    
+    Status16 --> End([Job Complete])
+    
+    %% Styling
+    classDef dataEntry fill:#e3f2fd,stroke:#1976d2,stroke-width:3px
+    classDef autoCalc fill:#fff3e0,stroke:#f57c00,stroke-width:3px
+    classDef commission fill:#e8f5e9,stroke:#388e3c,stroke-width:3px
+    classDef status fill:#f3e5f5,stroke:#7b1fa2,stroke-width:2px
+    
+    class DataEntry1,DataEntry2,DataEntry3 dataEntry
+    class AutoCalc1,AutoCalc2,FinalCalc autoCalc
+    class Commission1,Commission2 commission
+    class Status2,Status4,Status5,Status7,Status9,Status11,Status12,Status13,Status14,Status15,Status16 status
+        </div>
+
+        <div class="notes">
+            <h4>🔑 Key Auto-Calculations</h4>
+            <ul>
+                <li><strong>Dollar Per Square:</strong> Roof RCV ÷ Total Squares (primary success metric)</li>
+                <li><strong>Increase Value:</strong> New RCV - Previous RCV (tracks supplement value)</li>
+                <li><strong>Estimator Commission:</strong> 5% of total increase value</li>
+                <li><strong>Contractor Billing:</strong> 10-15% of total increase value</li>
+            </ul>
+            
+            <h4>📊 Reporting Touchpoints</h4>
+            <ul>
+                <li><strong>After each SOL approval:</strong> Generate contractor increase report</li>
+                <li><strong>Daily:</strong> Estimator commission dashboard (live running total)</li>
+                <li><strong>Every other day:</strong> Status update notifications to contractor</li>
+                <li><strong>Final invoice:</strong> Complete financial summary with all increases</li>
+            </ul>
+            
+            <h4>🎯 Phase 1 Priorities</h4>
+            <ul>
+                <li>Focus on standard supplement workflow (90% of business)</li>
+                <li>Desktop/dashboard only (no mobile yet)</li>
+                <li>Single role view initially (add role-based views later)</li>
+                <li>Auto-calculate metrics to eliminate Excel work</li>
+                <li>Status board with drag-and-drop progression</li>
+            </ul>
+        </div>
+    </div>
+
+    <script>
+        mermaid.initialize({ 
+            startOnLoad: true,
+            theme: 'default',
+            flowchart: {
+                useMaxWidth: true,
+                htmlLabels: true,
+                curve: 'basis'
+            }
+        });
+    </script>
+</body>
+</html>

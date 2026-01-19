@@ -1,0 +1,103 @@
+# Roofing Line Items
+
+## Code - Description - Unit Price
+
+- LABRFG - Roofer - per hour - $127.28 HR
+- LABRFG-M - Membrane Roofing Installer - per hour - $98.95 HR
+- RFGDRIP - Drip edge - $3.14 LF
+- RFGDRIP+ - Drip edge - copper apron - $3.41 LF
+- RFGSTEP - Step flashing - $10.41 LF
+- RFGRL - Roll roofing - $164.78 SQ
+- RFGRL+ - Roll roofing - 50% overlap - $270.39 SQ
+- RFG300 - 3 tab - 25 yr - comp. shingle rfg - w/ felt - $357.24 SQ
+- RFGVMTL - Valley metal - $6.79 LF
+- RFGLAB - Roofer - per hour - $127.28 HR
+- RFGMTL - Metal roofing - $7.50 SF
+- RFG300S - Laminated - comp. shingle rfg - w/out felt - $321.04 SQ
+- RFGIWS - Ice & water barrier - $1.63 SF
+- RFGVENTECS - Rain cap - 4 to 5" - $55.90 EA
+- RFGVENTEC6 - Rain cap - 6" - $62.92 EA
+- RFGVENTEC8 - Rain cap - 8" - $69.72 EA
+- RFGVENTRAS - Roof vent - Detach & reset - $82.67 EA
+- RFGVENTRC - Laminated - 30 yr - shingle rfg (per SHINGLE) - $23.94 EA
+- RFGPAVC - Power attic vent cover only - metal - $111.91 EA
+- RFGASTR - Asphalt starter - peel and stick - $1.86 LF
+- RFGASTR+ - Asphalt starter - universal starter course - $1.78 LF
+- RFGFL14 - Flashing - 14" - $5.44 LF
+- RFGFLCH - Chimney flashing - average (32" x 36") - $448.99 EA
+- RFGFLCH+ - Chimney flashing - small (24" x 24") - $345.07 EA
+- RFGFLCH++ - Chimney flashing - large (41" x 60") - $568.09 EA
+- RFGFLPIPE - Flashing - pipe jack - $59.51 EA
+- RFGFLRD - Flashing - rain diverter - $54.72 EA
+- RFGHIGH+ - Additional charge for high roof (2 stories or greater) - $25.76 SQ
+- RFGSH+ - Sheathing - 1/2 - 12" O/C - $3.02 SF
+- RFGVENTA - Continuous ridge vent - aluminum - $10.30 LF
+- RFGVENTB - Roof vent - turbine type - $164.50 EA
+- RFGVENTE - Exhaust cap - through roof - 6" to 8" - $112.96 EA
+- RFGVENTE+ - Exhaust cap - through roof - up to 4" - $101.31 EA
+- RFGVENTR - Continuous ridge vent - shingle-over style - $11.00 LF
+- RFGVENTT - Roof vent - turtle type - $76.85 EA
+- RFGVENTT+ - Roof vent - turtle type - Plastic - $66.97 EA
+- RFGVMTLW - Valley metal - (W) profile - $7.58 LF
+- RFGFELT15 - Roofing felt - 15 lb. - $35.62 SQ
+- RFGFELT30 - Roofing felt - 30 lb. - $44.20 SQ
+- RFGFLPIPEL - Flashing - pipe jack - lead - $93.18 EA
+- RFGFLPJSB - Flashing - pipe jack - split boot - $96.08 EA
+- RFGSTEEP - Additional charge for steep roof - 7/12 to 9/12 slope - $56.27 SQ
+- RFGSTEEP+ - Additional charge for steep roof - 10/12 - 12/12 slope - $88.44 SQ
+- RFGSTEEP++ - Additional charge for steep roof greater than 12/12 slope - $114.88 SQ
+- RFGVENTRAS - Roof vent - turtle type - Detach & reset - $58.04 EA
+- RFGARMW - Tear off haul and dispose - Comp. shingles - 3 tab - $59.40 SQ
+- RFGARMW+ - Tear off haul and dispose of comp. shingles - Laminated - $61.20 SQ
+- RFGDISHRS - Digital satellite system - Detach & reset - $53.42 EA
+- RFGDISH - TV Dish set - metal collar - $9.67 LF
+- RFGADDRMV - Add. layer of comp. shingles remove & disp. - 3 tab - $37.16 SQ
+- RFGARMVN - Tear off composition shingles - 3 tab (no haul off) - $41.05 SQ
+- RFGARMVN+ - Tear off composition shingles - Laminated (no haul off) - $41.05 SQ
+- RFGARMVN++ - Tear off composition shingles - Laminated (premium) - $41.05 SQ
+- RFG240E - 3 tab - 25 yr. - composition shingle roofing (per SHINGLE) - $23.60 EA
+- RFGRIDGC - Hip / Ridge cap - cut from 3 tab - composition shingle - $7.26 LF
+- RFG240 - 3 tab - 25 yr. - composition shingle roofing - incl. felt - $328.33 SQ
+- RFG240S - 3 tab - 25 yr - comp. shingle roofing - w/out felt - $294.42 SQ
+- RFGGSTOP - Gravel stop - $2.94 LF
+- RFGFB1 - Fiberboard - 1" - $1.97 SF
+- RFGFB1/2 - Fiberboard - 1/2" - $1.79 SF
+- RFGCUP - Cupola - Wood - $1,285.11 EA
+- RFGCUP+ - Cupola - Vinyl - $1,513.22 EA
+- RFGCUP++ - Cupola - Copper - $4,315.60 EA
+- RFGFIN - Roof finial - $465.64 EA
+- RFGFLCAP - Cap flashing - $21.71 LF
+- RFGFLCAP+ - Cap flashing - large - $28.94 LF
+- RFGBI - Modified bitumen roof - $501.57 SQ
+- RFGDRIPC - Drip edge - copper - $10.31 LF
+- RFGSNOW - Snow guard/stop - $29.20 EA
+- RFGFB2 - Fiberboard - 2" - $2.44 SF
+- RFGFB3 - Fiberboard - 3" - $3.27 SF
+- RFGISO1+ - Insulation - ISO board, 1" - $270.40 SQ
+- RFGISO2 - Insulation - ISO board, 2" - $340.57 SQ
+- RFGSHW1/2 - Sheathing - OSB - 1/2" - $2.61 SF
+- RFGSHW5/8 - Sheathing - OSB - 5/8" - $3.05 SF
+- RFGTILAR - Tile roofing - Detach & reset - $901.96 SQ
+- RFGVENTG - Gravity roof vent/louver - $850.04 EA
+- RFG400E - Laminated - High grade - comp. shingle rfg. (per SHINGLE) - $25.08 EA
+- RFGFL14C - Flashing 14" wide - copper - $23.94 LF
+- RFGFLJL - Flashing - J-L flashing - color finish - $5.80 LF
+- RFGFLJL+ - Flashing - L flashing - color finish - $6.31 LF
+- RFGFLRIG - Hip / Ridge flashing - $8.87 LF
+- RFGGCR300 - Gable cornice return - laminated - $94.23 EA
+- RFGGCS300 - Gable cornice return - 3 tab - $16.04 LF
+- RFGSCUP - Roof scupper - aluminum - $291.63 EA
+- RFGSH5/8 - Sheathing - plywood - 5/8" CDX - $3.10 SF
+- RFGSNTAV - Snow guard - commercial riveted - $143.01 EA
+- RFGVMTLP - Valley metal - painted - $7.21 LF
+- RFGALPNT - Aluminum coating - without fiber - $0.95 SF
+- RFGALPNT+ - Aluminum coating - with fiber - $1.00 SF
+- RFGFL20 - Flashing - 20" - $5.71 LF
+- RFGSH3/8 - Sheathing - plywood - 3/8" CDX - $2.94 SF
+- RFGSTEPC - Step flashing - copper - $22.42 LF
+- RFGBU3 - Built-up 3 ply roofing - in place - $418.99 SQ
+- RFGCOPF - Copper panel - flat seam - 16 oz - $35.99 SF
+- RFGDRIPP - Drip edge - PVC/TPO clad metal - $7.62 LF
+- RFGPAV - Roof mount power attic vent - $272.39 EA
+- RFGTIL - Tile roofing - Clay - "S" or flat tile - $1,135.35 SQ
+- RFGTILE - Tile roofing - Clay - "S" or flat (per TILE) - $42.11 EA

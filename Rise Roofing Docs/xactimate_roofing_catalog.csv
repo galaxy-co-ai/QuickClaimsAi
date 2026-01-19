@@ -1,0 +1,100 @@
+code,description,unit_price,unit,unit_normalized,category
+LABRFG,Roofer - per hour,127.28,HR,hour,roofing
+LABRFG,M - Membrane Roofing Installer - per hour,98.95,HR,hour,roofing
+RFGDRIP,Drip edge,3.14,LF,linear_foot,roofing
+RFGDRIP+,Drip edge - copper apron,3.41,LF,linear_foot,roofing
+RFGSTEP,Step flashing,10.41,LF,linear_foot,roofing
+RFGRL,Roll roofing,164.78,SQ,square,roofing
+RFGRL+,Roll roofing - 50% overlap,270.39,SQ,square,roofing
+RFG300,3 tab - 25 yr - comp. shingle rfg - w/ felt,357.24,SQ,square,roofing
+RFGVMTL,Valley metal,6.79,LF,linear_foot,roofing
+RFGLAB,Roofer - per hour,127.28,HR,hour,roofing
+RFGMTL,Metal roofing,7.5,SF,sqft,roofing
+RFG300S,Laminated - comp. shingle rfg - w/out felt,321.04,SQ,square,roofing
+RFGIWS,Ice & water barrier,1.63,SF,sqft,roofing
+RFGVENTECS,"Rain cap - 4 to 5""",55.9,EA,each,roofing
+RFGVENTEC6,"Rain cap - 6""",62.92,EA,each,roofing
+RFGVENTEC8,"Rain cap - 8""",69.72,EA,each,roofing
+RFGVENTRAS,Roof vent - Detach & reset,82.67,EA,each,roofing
+RFGVENTRC,Laminated - 30 yr - shingle rfg (per SHINGLE),23.94,EA,each,roofing
+RFGPAVC,Power attic vent cover only - metal,111.91,EA,each,roofing
+RFGASTR,Asphalt starter - peel and stick,1.86,LF,linear_foot,roofing
+RFGASTR+,Asphalt starter - universal starter course,1.78,LF,linear_foot,roofing
+RFGFL14,"Flashing - 14""",5.44,LF,linear_foot,roofing
+RFGFLCH,"Chimney flashing - average (32"" x 36"")",448.99,EA,each,roofing
+RFGFLCH+,"Chimney flashing - small (24"" x 24"")",345.07,EA,each,roofing
+RFGFLCH++,"Chimney flashing - large (41"" x 60"")",568.09,EA,each,roofing
+RFGFLPIPE,Flashing - pipe jack,59.51,EA,each,roofing
+RFGFLRD,Flashing - rain diverter,54.72,EA,each,roofing
+RFGHIGH+,Additional charge for high roof (2 stories or greater),25.76,SQ,square,roofing
+RFGSH+,"Sheathing - 1/2 - 12"" O/C",3.02,SF,sqft,roofing
+RFGVENTA,Continuous ridge vent - aluminum,10.3,LF,linear_foot,roofing
+RFGVENTB,Roof vent - turbine type,164.5,EA,each,roofing
+RFGVENTE,"Exhaust cap - through roof - 6"" to 8""",112.96,EA,each,roofing
+RFGVENTE+,"Exhaust cap - through roof - up to 4""",101.31,EA,each,roofing
+RFGVENTR,Continuous ridge vent - shingle-over style,11.0,LF,linear_foot,roofing
+RFGVENTT,Roof vent - turtle type,76.85,EA,each,roofing
+RFGVENTT+,Roof vent - turtle type - Plastic,66.97,EA,each,roofing
+RFGVMTLW,Valley metal - (W) profile,7.58,LF,linear_foot,roofing
+RFGFELT15,Roofing felt - 15 lb.,35.62,SQ,square,roofing
+RFGFELT30,Roofing felt - 30 lb.,44.2,SQ,square,roofing
+RFGFLPIPEL,Flashing - pipe jack - lead,93.18,EA,each,roofing
+RFGFLPJSB,Flashing - pipe jack - split boot,96.08,EA,each,roofing
+RFGSTEEP,Additional charge for steep roof - 7/12 to 9/12 slope,56.27,SQ,square,roofing
+RFGSTEEP+,Additional charge for steep roof - 10/12 - 12/12 slope,88.44,SQ,square,roofing
+RFGSTEEP++,Additional charge for steep roof greater than 12/12 slope,114.88,SQ,square,roofing
+RFGVENTRAS,Roof vent - turtle type - Detach & reset,58.04,EA,each,roofing
+RFGARMW,Tear off haul and dispose - Comp. shingles - 3 tab,59.4,SQ,square,roofing
+RFGARMW+,Tear off haul and dispose of comp. shingles - Laminated,61.2,SQ,square,roofing
+RFGDISHRS,Digital satellite system - Detach & reset,53.42,EA,each,roofing
+RFGDISH,TV Dish set - metal collar,9.67,LF,linear_foot,roofing
+RFGADDRMV,Add. layer of comp. shingles remove & disp. - 3 tab,37.16,SQ,square,roofing
+RFGARMVN,Tear off composition shingles - 3 tab (no haul off),41.05,SQ,square,roofing
+RFGARMVN+,Tear off composition shingles - Laminated (no haul off),41.05,SQ,square,roofing
+RFGARMVN++,Tear off composition shingles - Laminated (premium),41.05,SQ,square,roofing
+RFG240E,3 tab - 25 yr. - composition shingle roofing (per SHINGLE),23.6,EA,each,roofing
+RFGRIDGC,Hip / Ridge cap - cut from 3 tab - composition shingle,7.26,LF,linear_foot,roofing
+RFG240,3 tab - 25 yr. - composition shingle roofing - incl. felt,328.33,SQ,square,roofing
+RFG240S,3 tab - 25 yr - comp. shingle roofing - w/out felt,294.42,SQ,square,roofing
+RFGGSTOP,Gravel stop,2.94,LF,linear_foot,roofing
+RFGFB1,"Fiberboard - 1""",1.97,SF,sqft,roofing
+RFGFB1/2,"Fiberboard - 1/2""",1.79,SF,sqft,roofing
+RFGCUP,Cupola - Wood,1285.11,EA,each,roofing
+RFGCUP+,Cupola - Vinyl,1513.22,EA,each,roofing
+RFGCUP++,Cupola - Copper,4315.6,EA,each,roofing
+RFGFIN,Roof finial,465.64,EA,each,roofing
+RFGFLCAP,Cap flashing,21.71,LF,linear_foot,roofing
+RFGFLCAP+,Cap flashing - large,28.94,LF,linear_foot,roofing
+RFGBI,Modified bitumen roof,501.57,SQ,square,roofing
+RFGDRIPC,Drip edge - copper,10.31,LF,linear_foot,roofing
+RFGSNOW,Snow guard/stop,29.2,EA,each,roofing
+RFGFB2,"Fiberboard - 2""",2.44,SF,sqft,roofing
+RFGFB3,"Fiberboard - 3""",3.27,SF,sqft,roofing
+RFGISO1+,"Insulation - ISO board, 1""",270.4,SQ,square,roofing
+RFGISO2,"Insulation - ISO board, 2""",340.57,SQ,square,roofing
+RFGSHW1/2,"Sheathing - OSB - 1/2""",2.61,SF,sqft,roofing
+RFGSHW5/8,"Sheathing - OSB - 5/8""",3.05,SF,sqft,roofing
+RFGTILAR,Tile roofing - Detach & reset,901.96,SQ,square,roofing
+RFGVENTG,Gravity roof vent/louver,850.04,EA,each,roofing
+RFG400E,Laminated - High grade - comp. shingle rfg. (per SHINGLE),25.08,EA,each,roofing
+RFGFL14C,"Flashing 14"" wide - copper",23.94,LF,linear_foot,roofing
+RFGFLJL,Flashing - J-L flashing - color finish,5.8,LF,linear_foot,roofing
+RFGFLJL+,Flashing - L flashing - color finish,6.31,LF,linear_foot,roofing
+RFGFLRIG,Hip / Ridge flashing,8.87,LF,linear_foot,roofing
+RFGGCR300,Gable cornice return - laminated,94.23,EA,each,roofing
+RFGGCS300,Gable cornice return - 3 tab,16.04,LF,linear_foot,roofing
+RFGSCUP,Roof scupper - aluminum,291.63,EA,each,roofing
+RFGSH5/8,"Sheathing - plywood - 5/8"" CDX",3.1,SF,sqft,roofing
+RFGSNTAV,Snow guard - commercial riveted,143.01,EA,each,roofing
+RFGVMTLP,Valley metal - painted,7.21,LF,linear_foot,roofing
+RFGALPNT,Aluminum coating - without fiber,0.95,SF,sqft,roofing
+RFGALPNT+,Aluminum coating - with fiber,1.0,SF,sqft,roofing
+RFGFL20,"Flashing - 20""",5.71,LF,linear_foot,roofing
+RFGSH3/8,"Sheathing - plywood - 3/8"" CDX",2.94,SF,sqft,roofing
+RFGSTEPC,Step flashing - copper,22.42,LF,linear_foot,roofing
+RFGBU3,Built-up 3 ply roofing - in place,418.99,SQ,square,roofing
+RFGCOPF,Copper panel - flat seam - 16 oz,35.99,SF,sqft,roofing
+RFGDRIPP,Drip edge - PVC/TPO clad metal,7.62,LF,linear_foot,roofing
+RFGPAV,Roof mount power attic vent,272.39,EA,each,roofing
+RFGTIL,"Tile roofing - Clay - ""S"" or flat tile",1135.35,SQ,square,roofing
+RFGTILE,"Tile roofing - Clay - ""S"" or flat (per TILE)",42.11,EA,each,roofing
