@@ -48,149 +48,154 @@ export default async function DashboardPage() {
         </Link>
       </div>
 
-      {/* Quick Actions Tab Bar */}
-      <div className="flex items-center justify-center">
-        <nav
-          className="inline-flex items-center gap-1 rounded-full bg-slate-100 p-1"
-          role="tablist"
-          aria-label="Quick actions"
-        >
-          <Link
-            href="/dashboard/claims/new"
-            className="inline-flex items-center gap-2 rounded-full bg-emerald-100 px-4 py-2 text-sm font-medium text-emerald-700 transition-colors hover:bg-emerald-200 focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:ring-offset-2"
-            role="tab"
-            aria-label="Create new claim"
-          >
-            <Plus className="h-4 w-4" aria-hidden="true" />
-            New Claim
-          </Link>
-          <Link
-            href="/dashboard/contractors"
-            className="inline-flex items-center gap-2 rounded-full px-4 py-2 text-sm font-medium text-slate-600 transition-colors hover:bg-slate-200 hover:text-slate-900 focus:outline-none focus:ring-2 focus:ring-slate-500 focus:ring-offset-2"
-            role="tab"
-            aria-label="Manage contractors"
-          >
-            <FileText className="h-4 w-4" aria-hidden="true" />
-            Contractors
-          </Link>
-          <Link
-            href="/dashboard/estimators"
-            className="inline-flex items-center gap-2 rounded-full px-4 py-2 text-sm font-medium text-slate-600 transition-colors hover:bg-slate-200 hover:text-slate-900 focus:outline-none focus:ring-2 focus:ring-slate-500 focus:ring-offset-2"
-            role="tab"
-            aria-label="Manage estimators"
-          >
-            <BarChart3 className="h-4 w-4" aria-hidden="true" />
-            Estimators
-          </Link>
-          <Link
-            href="/dashboard/carriers"
-            className="inline-flex items-center gap-2 rounded-full px-4 py-2 text-sm font-medium text-slate-600 transition-colors hover:bg-slate-200 hover:text-slate-900 focus:outline-none focus:ring-2 focus:ring-slate-500 focus:ring-offset-2"
-            role="tab"
-            aria-label="Manage carriers"
-          >
-            <ShieldCheck className="h-4 w-4" aria-hidden="true" />
-            Carriers
-          </Link>
-          <Link
-            href="/dashboard/adjusters"
-            className="inline-flex items-center gap-2 rounded-full px-4 py-2 text-sm font-medium text-slate-600 transition-colors hover:bg-slate-200 hover:text-slate-900 focus:outline-none focus:ring-2 focus:ring-slate-500 focus:ring-offset-2"
-            role="tab"
-            aria-label="Manage adjusters"
-          >
-            <Activity className="h-4 w-4" aria-hidden="true" />
-            Adjusters
-          </Link>
-        </nav>
-      </div>
-
-      {/* Stats Grid - Floating Badge Design */}
-      <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4 pt-3">
-        <Card className="relative pt-5 pb-4 px-4">
-          <span className="absolute -top-2.5 left-1/2 -translate-x-1/2 inline-flex items-center whitespace-nowrap rounded-full bg-blue-100 px-3 py-1 text-xs font-medium text-blue-700 ring-1 ring-inset ring-blue-600/20">
-            Active Claims
-          </span>
-          <div className="flex items-center justify-center gap-3">
-            <FileText className="h-5 w-5 text-blue-500" aria-hidden="true" />
-            <span className="text-2xl font-bold text-slate-900">{stats.activeClaims}</span>
-          </div>
-          <p className="text-center text-xs text-slate-500 mt-1 flex items-center justify-center gap-1">
-            <TrendingUp className="h-3 w-3 text-green-500" aria-hidden="true" />
-            +{stats.newThisWeek} this week
-          </p>
-        </Card>
-
-        <Card className="relative pt-5 pb-4 px-4">
-          <span className="absolute -top-2.5 left-1/2 -translate-x-1/2 inline-flex items-center whitespace-nowrap rounded-full bg-amber-100 px-3 py-1 text-xs font-medium text-amber-700 ring-1 ring-inset ring-amber-600/20">
-            Supplements
-          </span>
-          <div className="flex items-center justify-center gap-3">
-            <TrendingUp className="h-5 w-5 text-amber-500" aria-hidden="true" />
-            <span className="text-2xl font-bold text-amber-600">{stats.supplementCount}</span>
-          </div>
-          <p className="text-center text-xs text-slate-500 mt-1">
-            {formatCurrency(stats.supplementTotalAmount)} this month
-          </p>
-        </Card>
-
-        <Card className="relative pt-5 pb-4 px-4">
-          <span className="absolute -top-2.5 left-1/2 -translate-x-1/2 inline-flex items-center whitespace-nowrap rounded-full bg-green-100 px-3 py-1 text-xs font-medium text-green-700 ring-1 ring-inset ring-green-600/20">
-            Total Increase
-          </span>
-          <div className="flex items-center justify-center gap-3">
-            <DollarSign className="h-5 w-5 text-green-500" aria-hidden="true" />
-            <span className="text-2xl font-bold text-green-600">{formatCurrency(stats.totalIncreaseThisMonth)}</span>
-          </div>
-          <p className="text-center text-xs text-slate-500 mt-1">
-            This month (approved)
-          </p>
-        </Card>
-
-        <Card className="relative pt-5 pb-4 px-4">
-          <span className="absolute -top-2.5 left-1/2 -translate-x-1/2 inline-flex items-center whitespace-nowrap rounded-full bg-purple-100 px-3 py-1 text-xs font-medium text-purple-700 ring-1 ring-inset ring-purple-600/20">
-            Avg $/Square
-          </span>
-          <div className="flex items-center justify-center gap-3">
-            <TrendingUp className="h-5 w-5 text-purple-500" aria-hidden="true" />
-            <span className="text-2xl font-bold text-slate-900">{formatCurrency(stats.avgDollarPerSquare)}</span>
-          </div>
-          <p className="text-center text-xs text-slate-500 mt-1">
-            {stats.updatesPerJob} updates/job avg
-          </p>
-        </Card>
-      </div>
-
-      {/* Secondary Stats Row - Manager only */}
-      {isManager && managerStats && (
-        <div className="grid gap-4 md:grid-cols-2">
-          <Card className="relative pt-5 pb-4 px-4">
-            <span className="absolute -top-2.5 left-1/2 -translate-x-1/2 inline-flex items-center whitespace-nowrap rounded-full bg-emerald-100 px-3 py-1 text-xs font-medium text-emerald-700 ring-1 ring-inset ring-emerald-600/20">
-              Compliance
-            </span>
-            <div className="flex items-center justify-center gap-3">
-              <ShieldCheck className="h-5 w-5 text-emerald-500" aria-hidden="true" />
-              <span className={`text-2xl font-bold ${managerStats.compliancePercentage >= 90 ? "text-emerald-600" : managerStats.compliancePercentage >= 70 ? "text-yellow-600" : "text-red-600"}`}>
-                {managerStats.compliancePercentage}%
-              </span>
+      {/* Alert Banner - Show if there are overdue claims */}
+      {isManager && managerStats && (managerStats.overdueCount > 0 || claimsRequiringAction.length > 0) && (
+        <div className="rounded-lg border-l-4 border-orange-500 bg-orange-50 p-4">
+          <div className="flex items-center gap-3">
+            <AlertCircle className="h-5 w-5 text-orange-500 flex-shrink-0" />
+            <div className="flex-1">
+              <p className="font-medium text-orange-800">
+                {claimsRequiringAction.length} claim{claimsRequiringAction.length !== 1 ? 's' : ''} need attention
+              </p>
+              <p className="text-sm text-orange-600">
+                {managerStats.overdueCount > 0 && `${managerStats.overdueCount} overdue for 48-hour compliance. `}
+                Review and update to maintain compliance.
+              </p>
             </div>
-            <p className="text-center text-xs text-slate-500 mt-1">
-              {managerStats.overdueCount} overdue claims
-            </p>
-          </Card>
-
-          <Card className="relative pt-5 pb-4 px-4">
-            <span className="absolute -top-2.5 left-1/2 -translate-x-1/2 inline-flex items-center whitespace-nowrap rounded-full bg-orange-100 px-3 py-1 text-xs font-medium text-orange-700 ring-1 ring-inset ring-orange-600/20">
-              Requires Action
-            </span>
-            <div className="flex items-center justify-center gap-3">
-              <Clock className="h-5 w-5 text-orange-500" aria-hidden="true" />
-              <span className="text-2xl font-bold text-orange-600">{claimsRequiringAction.length}</span>
-            </div>
-            <p className="text-center text-xs text-slate-500 mt-1">
-              48-hour compliance
-            </p>
-          </Card>
+            <Link href="/dashboard/claims?filter=action" className="flex-shrink-0">
+              <Button size="sm" variant="outline" className="border-orange-300 text-orange-700 hover:bg-orange-100">
+                View All
+              </Button>
+            </Link>
+          </div>
         </div>
       )}
+
+      {/* Primary Metrics - The numbers that matter most */}
+      <div className="grid gap-6 md:grid-cols-3">
+        {/* Active Claims - Large featured card */}
+        <Card className="bg-gradient-to-br from-slate-900 to-slate-800 text-white">
+          <CardContent className="p-6">
+            <div className="flex items-center justify-between">
+              <div>
+                <p className="text-slate-300 text-sm font-medium">Active Claims</p>
+                <p className="text-4xl font-bold mt-1">{stats.activeClaims}</p>
+                <p className="text-slate-400 text-sm mt-2 flex items-center gap-1">
+                  <TrendingUp className="h-3.5 w-3.5 text-emerald-400" />
+                  <span className="text-emerald-400">+{stats.newThisWeek}</span> this week
+                </p>
+              </div>
+              <div className="h-14 w-14 rounded-full bg-white/10 flex items-center justify-center">
+                <FileText className="h-7 w-7 text-white" />
+              </div>
+            </div>
+          </CardContent>
+        </Card>
+
+        {/* Total Increase - Money earned */}
+        <Card className="bg-gradient-to-br from-emerald-600 to-emerald-700 text-white">
+          <CardContent className="p-6">
+            <div className="flex items-center justify-between">
+              <div>
+                <p className="text-emerald-100 text-sm font-medium">Revenue This Month</p>
+                <p className="text-4xl font-bold mt-1">{formatCurrency(stats.totalIncreaseThisMonth)}</p>
+                <p className="text-emerald-200 text-sm mt-2">
+                  From approved supplements
+                </p>
+              </div>
+              <div className="h-14 w-14 rounded-full bg-white/10 flex items-center justify-center">
+                <DollarSign className="h-7 w-7 text-white" />
+              </div>
+            </div>
+          </CardContent>
+        </Card>
+
+        {/* Compliance Score - Manager only, else show Avg $/SQ */}
+        {isManager && managerStats ? (
+          <Card className={`bg-gradient-to-br ${
+            managerStats.compliancePercentage >= 90 
+              ? 'from-emerald-500 to-teal-600' 
+              : managerStats.compliancePercentage >= 70 
+                ? 'from-amber-500 to-orange-600' 
+                : 'from-red-500 to-rose-600'
+          } text-white`}>
+            <CardContent className="p-6">
+              <div className="flex items-center justify-between">
+                <div>
+                  <p className="text-white/80 text-sm font-medium">48hr Compliance</p>
+                  <p className="text-4xl font-bold mt-1">{managerStats.compliancePercentage}%</p>
+                  <p className="text-white/70 text-sm mt-2">
+                    {managerStats.overdueCount === 0 ? 'All claims on track' : `${managerStats.overdueCount} overdue`}
+                  </p>
+                </div>
+                <div className="h-14 w-14 rounded-full bg-white/10 flex items-center justify-center">
+                  <ShieldCheck className="h-7 w-7 text-white" />
+                </div>
+              </div>
+            </CardContent>
+          </Card>
+        ) : (
+          <Card className="bg-gradient-to-br from-violet-600 to-purple-700 text-white">
+            <CardContent className="p-6">
+              <div className="flex items-center justify-between">
+                <div>
+                  <p className="text-violet-100 text-sm font-medium">Avg $/Square</p>
+                  <p className="text-4xl font-bold mt-1">{formatCurrency(stats.avgDollarPerSquare)}</p>
+                  <p className="text-violet-200 text-sm mt-2">
+                    {stats.updatesPerJob} updates/job avg
+                  </p>
+                </div>
+                <div className="h-14 w-14 rounded-full bg-white/10 flex items-center justify-center">
+                  <TrendingUp className="h-7 w-7 text-white" />
+                </div>
+              </div>
+            </CardContent>
+          </Card>
+        )}
+      </div>
+
+      {/* Secondary Stats - Compact row for additional context */}
+      <div className="grid gap-4 grid-cols-2 md:grid-cols-4">
+        <div className="flex items-center gap-3 p-4 rounded-lg bg-white border">
+          <div className="h-10 w-10 rounded-lg bg-amber-100 flex items-center justify-center">
+            <TrendingUp className="h-5 w-5 text-amber-600" />
+          </div>
+          <div>
+            <p className="text-2xl font-bold text-slate-900">{stats.supplementCount}</p>
+            <p className="text-xs text-slate-500">Supplements</p>
+          </div>
+        </div>
+
+        <div className="flex items-center gap-3 p-4 rounded-lg bg-white border">
+          <div className="h-10 w-10 rounded-lg bg-green-100 flex items-center justify-center">
+            <DollarSign className="h-5 w-5 text-green-600" />
+          </div>
+          <div>
+            <p className="text-2xl font-bold text-slate-900">{formatCurrency(stats.supplementTotalAmount)}</p>
+            <p className="text-xs text-slate-500">Supplement Value</p>
+          </div>
+        </div>
+
+        <div className="flex items-center gap-3 p-4 rounded-lg bg-white border">
+          <div className="h-10 w-10 rounded-lg bg-purple-100 flex items-center justify-center">
+            <BarChart3 className="h-5 w-5 text-purple-600" />
+          </div>
+          <div>
+            <p className="text-2xl font-bold text-slate-900">{formatCurrency(stats.avgDollarPerSquare)}</p>
+            <p className="text-xs text-slate-500">Avg $/Square</p>
+          </div>
+        </div>
+
+        <div className="flex items-center gap-3 p-4 rounded-lg bg-white border">
+          <div className="h-10 w-10 rounded-lg bg-blue-100 flex items-center justify-center">
+            <Activity className="h-5 w-5 text-blue-600" />
+          </div>
+          <div>
+            <p className="text-2xl font-bold text-slate-900">{stats.updatesPerJob}</p>
+            <p className="text-xs text-slate-500">Updates/Job</p>
+          </div>
+        </div>
+      </div>
 
       {/* Claims Requiring Action */}
       <Card>
