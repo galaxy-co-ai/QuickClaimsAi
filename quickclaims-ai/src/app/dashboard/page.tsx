@@ -71,130 +71,92 @@ export default async function DashboardPage() {
         </div>
       )}
 
-      {/* Primary Metrics - The numbers that matter most */}
-      <div className="grid gap-6 md:grid-cols-3">
-        {/* Active Claims - Large featured card */}
-        <Card className="bg-gradient-to-br from-slate-900 to-slate-800 text-white">
-          <CardContent className="p-6">
-            <div className="flex items-center justify-between">
-              <div>
-                <p className="text-slate-300 text-sm font-medium">Active Claims</p>
-                <p className="text-4xl font-bold mt-1">{stats.activeClaims}</p>
-                <p className="text-slate-400 text-sm mt-2 flex items-center gap-1">
-                  <TrendingUp className="h-3.5 w-3.5 text-emerald-400" />
-                  <span className="text-emerald-400">+{stats.newThisWeek}</span> this week
-                </p>
-              </div>
-              <div className="h-14 w-14 rounded-full bg-white/10 flex items-center justify-center">
-                <FileText className="h-7 w-7 text-white" />
-              </div>
+      {/* Stats Grid - Clean compact design */}
+      <div className="grid gap-3 grid-cols-2 lg:grid-cols-4">
+        {/* Active Claims */}
+        <Card className="p-4">
+          <div className="flex items-center gap-3">
+            <div className="h-9 w-9 rounded-lg bg-slate-100 flex items-center justify-center flex-shrink-0">
+              <FileText className="h-4 w-4 text-slate-600" />
             </div>
-          </CardContent>
+            <div className="min-w-0">
+              <p className="text-xs text-slate-500">Active Claims</p>
+              <p className="text-xl font-semibold text-slate-900">{stats.activeClaims}</p>
+            </div>
+          </div>
+          <p className="text-xs text-slate-400 mt-2 flex items-center gap-1">
+            <TrendingUp className="h-3 w-3 text-green-500" />
+            +{stats.newThisWeek} this week
+          </p>
         </Card>
 
-        {/* Total Increase - Money earned */}
-        <Card className="bg-gradient-to-br from-emerald-600 to-emerald-700 text-white">
-          <CardContent className="p-6">
-            <div className="flex items-center justify-between">
-              <div>
-                <p className="text-emerald-100 text-sm font-medium">Revenue This Month</p>
-                <p className="text-4xl font-bold mt-1">{formatCurrency(stats.totalIncreaseThisMonth)}</p>
-                <p className="text-emerald-200 text-sm mt-2">
-                  From approved supplements
-                </p>
-              </div>
-              <div className="h-14 w-14 rounded-full bg-white/10 flex items-center justify-center">
-                <DollarSign className="h-7 w-7 text-white" />
-              </div>
+        {/* Revenue This Month */}
+        <Card className="p-4">
+          <div className="flex items-center gap-3">
+            <div className="h-9 w-9 rounded-lg bg-green-50 flex items-center justify-center flex-shrink-0">
+              <DollarSign className="h-4 w-4 text-green-600" />
             </div>
-          </CardContent>
+            <div className="min-w-0">
+              <p className="text-xs text-slate-500">Revenue</p>
+              <p className="text-xl font-semibold text-green-600">{formatCurrency(stats.totalIncreaseThisMonth)}</p>
+            </div>
+          </div>
+          <p className="text-xs text-slate-400 mt-2">Approved this month</p>
         </Card>
 
-        {/* Compliance Score - Manager only, else show Avg $/SQ */}
+        {/* Supplements */}
+        <Card className="p-4">
+          <div className="flex items-center gap-3">
+            <div className="h-9 w-9 rounded-lg bg-amber-50 flex items-center justify-center flex-shrink-0">
+              <TrendingUp className="h-4 w-4 text-amber-600" />
+            </div>
+            <div className="min-w-0">
+              <p className="text-xs text-slate-500">Supplements</p>
+              <p className="text-xl font-semibold text-slate-900">{stats.supplementCount}</p>
+            </div>
+          </div>
+          <p className="text-xs text-slate-400 mt-2">{formatCurrency(stats.supplementTotalAmount)} total</p>
+        </Card>
+
+        {/* Compliance or Avg $/SQ */}
         {isManager && managerStats ? (
-          <Card className={`bg-gradient-to-br ${
-            managerStats.compliancePercentage >= 90 
-              ? 'from-emerald-500 to-teal-600' 
-              : managerStats.compliancePercentage >= 70 
-                ? 'from-amber-500 to-orange-600' 
-                : 'from-red-500 to-rose-600'
-          } text-white`}>
-            <CardContent className="p-6">
-              <div className="flex items-center justify-between">
-                <div>
-                  <p className="text-white/80 text-sm font-medium">48hr Compliance</p>
-                  <p className="text-4xl font-bold mt-1">{managerStats.compliancePercentage}%</p>
-                  <p className="text-white/70 text-sm mt-2">
-                    {managerStats.overdueCount === 0 ? 'All claims on track' : `${managerStats.overdueCount} overdue`}
-                  </p>
-                </div>
-                <div className="h-14 w-14 rounded-full bg-white/10 flex items-center justify-center">
-                  <ShieldCheck className="h-7 w-7 text-white" />
-                </div>
+          <Card className={`p-4 ${managerStats.compliancePercentage < 70 ? 'border-red-200 bg-red-50/30' : ''}`}>
+            <div className="flex items-center gap-3">
+              <div className={`h-9 w-9 rounded-lg flex items-center justify-center flex-shrink-0 ${
+                managerStats.compliancePercentage >= 90 ? 'bg-green-50' : 
+                managerStats.compliancePercentage >= 70 ? 'bg-amber-50' : 'bg-red-50'
+              }`}>
+                <ShieldCheck className={`h-4 w-4 ${
+                  managerStats.compliancePercentage >= 90 ? 'text-green-600' : 
+                  managerStats.compliancePercentage >= 70 ? 'text-amber-600' : 'text-red-600'
+                }`} />
               </div>
-            </CardContent>
+              <div className="min-w-0">
+                <p className="text-xs text-slate-500">Compliance</p>
+                <p className={`text-xl font-semibold ${
+                  managerStats.compliancePercentage >= 90 ? 'text-green-600' : 
+                  managerStats.compliancePercentage >= 70 ? 'text-amber-600' : 'text-red-600'
+                }`}>{managerStats.compliancePercentage}%</p>
+              </div>
+            </div>
+            <p className="text-xs text-slate-400 mt-2">
+              {managerStats.overdueCount === 0 ? 'All on track' : `${managerStats.overdueCount} overdue`}
+            </p>
           </Card>
         ) : (
-          <Card className="bg-gradient-to-br from-violet-600 to-purple-700 text-white">
-            <CardContent className="p-6">
-              <div className="flex items-center justify-between">
-                <div>
-                  <p className="text-violet-100 text-sm font-medium">Avg $/Square</p>
-                  <p className="text-4xl font-bold mt-1">{formatCurrency(stats.avgDollarPerSquare)}</p>
-                  <p className="text-violet-200 text-sm mt-2">
-                    {stats.updatesPerJob} updates/job avg
-                  </p>
-                </div>
-                <div className="h-14 w-14 rounded-full bg-white/10 flex items-center justify-center">
-                  <TrendingUp className="h-7 w-7 text-white" />
-                </div>
+          <Card className="p-4">
+            <div className="flex items-center gap-3">
+              <div className="h-9 w-9 rounded-lg bg-purple-50 flex items-center justify-center flex-shrink-0">
+                <BarChart3 className="h-4 w-4 text-purple-600" />
               </div>
-            </CardContent>
+              <div className="min-w-0">
+                <p className="text-xs text-slate-500">Avg $/Square</p>
+                <p className="text-xl font-semibold text-slate-900">{formatCurrency(stats.avgDollarPerSquare)}</p>
+              </div>
+            </div>
+            <p className="text-xs text-slate-400 mt-2">{stats.updatesPerJob} updates/job</p>
           </Card>
         )}
-      </div>
-
-      {/* Secondary Stats - Compact row for additional context */}
-      <div className="grid gap-4 grid-cols-2 md:grid-cols-4">
-        <div className="flex items-center gap-3 p-4 rounded-lg bg-white border">
-          <div className="h-10 w-10 rounded-lg bg-amber-100 flex items-center justify-center">
-            <TrendingUp className="h-5 w-5 text-amber-600" />
-          </div>
-          <div>
-            <p className="text-2xl font-bold text-slate-900">{stats.supplementCount}</p>
-            <p className="text-xs text-slate-500">Supplements</p>
-          </div>
-        </div>
-
-        <div className="flex items-center gap-3 p-4 rounded-lg bg-white border">
-          <div className="h-10 w-10 rounded-lg bg-green-100 flex items-center justify-center">
-            <DollarSign className="h-5 w-5 text-green-600" />
-          </div>
-          <div>
-            <p className="text-2xl font-bold text-slate-900">{formatCurrency(stats.supplementTotalAmount)}</p>
-            <p className="text-xs text-slate-500">Supplement Value</p>
-          </div>
-        </div>
-
-        <div className="flex items-center gap-3 p-4 rounded-lg bg-white border">
-          <div className="h-10 w-10 rounded-lg bg-purple-100 flex items-center justify-center">
-            <BarChart3 className="h-5 w-5 text-purple-600" />
-          </div>
-          <div>
-            <p className="text-2xl font-bold text-slate-900">{formatCurrency(stats.avgDollarPerSquare)}</p>
-            <p className="text-xs text-slate-500">Avg $/Square</p>
-          </div>
-        </div>
-
-        <div className="flex items-center gap-3 p-4 rounded-lg bg-white border">
-          <div className="h-10 w-10 rounded-lg bg-blue-100 flex items-center justify-center">
-            <Activity className="h-5 w-5 text-blue-600" />
-          </div>
-          <div>
-            <p className="text-2xl font-bold text-slate-900">{stats.updatesPerJob}</p>
-            <p className="text-xs text-slate-500">Updates/Job</p>
-          </div>
-        </div>
       </div>
 
       {/* Claims Requiring Action */}
