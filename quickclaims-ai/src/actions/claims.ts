@@ -187,7 +187,8 @@ export async function createClaim(data: ClaimInput) {
   const estimatorRates = buildRateProfile(estimator);
 
   // For new claims, calculate initial commission if this is an estimate-only job
-  const propertyType: PropertyType = (validated.propertyType as PropertyType) || "residential";
+  // propertyType is guaranteed by Zod schema default
+  const propertyType: PropertyType = validated.propertyType as PropertyType;
   const initialCommission = calculateCommission({
     jobType: validated.jobType,
     propertyType,
@@ -241,7 +242,7 @@ export async function createClaim(data: ClaimInput) {
 
       // Job Classification
       jobType: validated.jobType,
-      propertyType: validated.propertyType || "residential",
+      propertyType: validated.propertyType, // Guaranteed by Zod schema default
       status: "missing_info",
 
       // Financial - Initial
