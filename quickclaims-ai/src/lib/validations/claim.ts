@@ -53,6 +53,9 @@ export const claimInputSchema = z.object({
   // Job Type
   jobType: z.enum(["supplement", "reinspection", "estimate", "final_invoice"]),
 
+  // Property Type (affects commission rates)
+  propertyType: z.enum(["residential", "commercial"]).default("residential"),
+
   // Financial - Initial (required on creation)
   totalSquares: z.number().positive("Total squares must be positive"),
   roofRCV: z.number().nonnegative("Roof RCV cannot be negative"),

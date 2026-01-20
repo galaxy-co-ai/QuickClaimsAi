@@ -11,25 +11,54 @@ import {
 } from "@/lib/validations/supplement";
 import { requireRole } from "@/lib/auth";
 import { calculateClaimMetrics, decimalToNumber, serializeSupplements, serializeSupplement } from "@/lib/calculations";
+import {
+  calculateCommission,
+  buildRateProfile,
+  determineCommissionType,
+  type PropertyType,
+} from "@/lib/commission-engine";
 import { logAudit } from "@/actions/audit";
 import { sendSupplementApprovedNotification } from "@/actions/notifications";
 import type { SupplementStatus } from "@prisma/client";
 
 /**
  * Recalculate claim totals based on approved supplements
+ * Uses commission engine for proper rate selection based on job type
  */
 async function recalculateClaimTotals(claimId: string) {
-  // Get claim with contractor and estimator for percentages
+  // Get claim with contractor and estimator including all rate fields
   const claim = await db.claim.findUnique({
     where: { id: claimId },
     include: {
-      contractor: { select: { billingPercentage: true } },
-      estimator: { select: { commissionPercentage: true } },
+      contractor: {
+        select: {
+          billingPercentage: true,
+          residentialRate: true,
+          commercialRate: true,
+          reinspectionRate: true,
+          estimateFlatFee: true,
+        },
+      },
+      estimator: {
+        select: {
+          commissionPercentage: true,
+          residentialRate: true,
+          commercialRate: true,
+          reinspectionRate: true,
+          estimateFlatFee: true,
+        },
+      },
       supplements: {
         where: {
           status: { in: ["approved", "partial"] },
         },
-        select: { approvedAmount: true, amount: true, status: true },
+        select: {
+          approvedAmount: true,
+          amount: true,
+          status: true,
+          previousRoofSquares: true,
+          newRoofSquares: true,
+        },
       },
     },
   });
@@ -46,17 +75,44 @@ async function recalculateClaimTotals(claimId: string) {
     return decimalToNumber(s.amount);
   });
 
-  // Calculate new metrics
+  // Calculate basic metrics (currentTotalRCV, totalIncrease, etc.)
   const metrics = calculateClaimMetrics({
     initialRCV: decimalToNumber(claim.initialRCV),
     roofRCV: decimalToNumber(claim.roofRCV),
     totalSquares: decimalToNumber(claim.totalSquares),
     supplementAmounts,
+    // Pass legacy rates for backwards compatibility - commission engine will override
     contractorBillingPercentage: decimalToNumber(claim.contractor.billingPercentage),
     estimatorCommissionPercentage: decimalToNumber(claim.estimator.commissionPercentage),
   });
 
-  // Update claim with new totals
+  // Determine roof squares change from supplements (use the most recent change)
+  let previousRoofSquares: number | null = decimalToNumber(claim.totalSquares);
+  let newRoofSquares: number | null = null;
+
+  // Check if any approved supplement changed roof squares
+  for (const supplement of claim.supplements) {
+    if (supplement.newRoofSquares) {
+      newRoofSquares = decimalToNumber(supplement.newRoofSquares);
+      if (supplement.previousRoofSquares) {
+        previousRoofSquares = decimalToNumber(supplement.previousRoofSquares);
+      }
+    }
+  }
+
+  // Use commission engine for proper rate-based calculation
+  const propertyType = (claim.propertyType as PropertyType) || "residential";
+  const commissionResult = calculateCommission({
+    jobType: claim.jobType,
+    propertyType,
+    previousRoofSquares,
+    newRoofSquares,
+    commissionableAmount: metrics.totalIncrease,
+    contractorRates: buildRateProfile(claim.contractor),
+    estimatorRates: buildRateProfile(claim.estimator),
+  });
+
+  // Update claim with new totals using commission engine results
   await db.claim.update({
     where: { id: claimId },
     data: {
@@ -64,8 +120,9 @@ async function recalculateClaimTotals(claimId: string) {
       totalIncrease: metrics.totalIncrease,
       percentageIncrease: metrics.percentageIncrease,
       dollarPerSquare: metrics.dollarPerSquare,
-      contractorBillingAmount: metrics.contractorBillingAmount,
-      estimatorCommission: metrics.estimatorCommission,
+      // Use commission engine results instead of legacy calculation
+      contractorBillingAmount: commissionResult.contractorAmount,
+      estimatorCommission: commissionResult.estimatorAmount,
       lastActivityAt: new Date(),
     },
   });
@@ -128,10 +185,14 @@ export async function createSupplement(data: SupplementInput) {
   // Validate input
   const validated = supplementInputSchema.parse(data);
 
-  // Get current claim RCV for previousRCV/newRCV tracking
+  // Get current claim RCV and squares for tracking
   const claim = await db.claim.findUnique({
     where: { id: validated.claimId },
-    select: { currentTotalRCV: true },
+    select: {
+      currentTotalRCV: true,
+      totalSquares: true,
+      jobType: true,
+    },
   });
 
   if (!claim) {
@@ -140,6 +201,17 @@ export async function createSupplement(data: SupplementInput) {
 
   const previousRCV = decimalToNumber(claim.currentTotalRCV);
   const newRCV = previousRCV + validated.amount;
+
+  // For roof squares tracking (reinspection detection)
+  const previousRoofSquares = validated.previousRoofSquares ?? decimalToNumber(claim.totalSquares);
+  const newRoofSquares = validated.newRoofSquares ?? null;
+
+  // Determine commission type based on squares change
+  const commissionType = determineCommissionType(
+    claim.jobType,
+    previousRoofSquares,
+    newRoofSquares
+  );
 
   // Get user's internal ID from Clerk ID
   const user = await db.user.findFirst({
@@ -163,6 +235,15 @@ export async function createSupplement(data: SupplementInput) {
       omApproved: validated.omApproved ?? false,
       status: "draft",
       createdById: user.id,
+      // Roof squares for reinspection detection
+      previousRoofSquares,
+      newRoofSquares,
+      // Roof RCV tracking
+      previousRoofRCV: validated.previousRoofRCV ?? null,
+      newRoofRCV: validated.newRoofRCV ?? null,
+      roofIncrease: validated.roofIncrease ?? null,
+      // Commission type determined from squares change
+      commissionType,
     },
   });
 

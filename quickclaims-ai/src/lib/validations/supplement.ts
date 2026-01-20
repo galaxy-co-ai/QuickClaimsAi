@@ -22,6 +22,13 @@ export const supplementInputSchema = z.object({
       })
     )
     .optional(),
+  // Roof squares (for reinspection detection)
+  previousRoofSquares: z.coerce.number().nonnegative().optional(),
+  newRoofSquares: z.coerce.number().nonnegative().optional(),
+  // Roof RCV fields
+  previousRoofRCV: z.coerce.number().nonnegative().optional(),
+  newRoofRCV: z.coerce.number().nonnegative().optional(),
+  roofIncrease: z.coerce.number().nonnegative().optional(),
 });
 
 export type SupplementInput = z.infer<typeof supplementInputSchema>;

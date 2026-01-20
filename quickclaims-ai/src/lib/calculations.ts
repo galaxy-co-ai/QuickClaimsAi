@@ -141,10 +141,24 @@ const SUPPLEMENT_DECIMAL_FIELDS = [
   "newRoofRCV",
   "roofIncrease",
   "approvedAmount",
+  "previousRoofSquares",
+  "newRoofSquares",
 ];
 
-const CONTRACTOR_DECIMAL_FIELDS = ["billingPercentage"];
-const ESTIMATOR_DECIMAL_FIELDS = ["commissionPercentage"];
+const CONTRACTOR_DECIMAL_FIELDS = [
+  "billingPercentage",
+  "residentialRate",
+  "commercialRate",
+  "reinspectionRate",
+  "estimateFlatFee",
+];
+const ESTIMATOR_DECIMAL_FIELDS = [
+  "commissionPercentage",
+  "residentialRate",
+  "commercialRate",
+  "reinspectionRate",
+  "estimateFlatFee",
+];
 
 /**
  * Generic serialization helper that converts Decimal fields to numbers

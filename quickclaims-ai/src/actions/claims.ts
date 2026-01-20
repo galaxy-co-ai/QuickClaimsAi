@@ -5,6 +5,7 @@ import { db } from "@/lib/db";
 import { claimInputSchema, claimFiltersSchema, type ClaimInput, type ClaimFilters } from "@/lib/validations/claim";
 import { requireRole } from "@/lib/auth";
 import { calculateInitialDollarPerSquare, decimalToNumber, serializeClaims, serializeClaim } from "@/lib/calculations";
+import { buildRateProfile, calculateCommission, type PropertyType } from "@/lib/commission-engine";
 import { CLAIM_STATUS_LABELS, getValidNextStatuses, isValidStatusTransition } from "@/lib/constants";
 import { logAudit } from "@/actions/audit";
 import { sendStatusChangeNotification } from "@/actions/notifications";
@@ -150,15 +151,27 @@ export async function createClaim(data: ClaimInput) {
     validated.totalSquares
   );
 
-  // Get contractor billing % and estimator commission % for calculations
+  // Get contractor and estimator with all rate fields for commission calculations
   const [contractor, estimator] = await Promise.all([
     db.contractor.findUnique({
       where: { id: validated.contractorId },
-      select: { billingPercentage: true },
+      select: {
+        billingPercentage: true,
+        residentialRate: true,
+        commercialRate: true,
+        reinspectionRate: true,
+        estimateFlatFee: true,
+      },
     }),
     db.estimator.findUnique({
       where: { id: validated.estimatorId },
-      select: { commissionPercentage: true },
+      select: {
+        commissionPercentage: true,
+        residentialRate: true,
+        commercialRate: true,
+        reinspectionRate: true,
+        estimateFlatFee: true,
+      },
     }),
   ]);
 
@@ -168,6 +181,22 @@ export async function createClaim(data: ClaimInput) {
   if (!estimator) {
     throw new Error("Estimator not found");
   }
+
+  // Build rate profiles for commission engine
+  const contractorRates = buildRateProfile(contractor);
+  const estimatorRates = buildRateProfile(estimator);
+
+  // For new claims, calculate initial commission if this is an estimate-only job
+  const propertyType: PropertyType = (validated.propertyType as PropertyType) || "residential";
+  const initialCommission = calculateCommission({
+    jobType: validated.jobType,
+    propertyType,
+    previousRoofSquares: null,
+    newRoofSquares: null,
+    commissionableAmount: 0, // No increase yet for new claims
+    contractorRates,
+    estimatorRates,
+  });
 
   const claim = await db.claim.create({
     data: {
@@ -212,6 +241,7 @@ export async function createClaim(data: ClaimInput) {
 
       // Job Classification
       jobType: validated.jobType,
+      propertyType: validated.propertyType || "residential",
       status: "missing_info",
 
       // Financial - Initial
@@ -224,8 +254,13 @@ export async function createClaim(data: ClaimInput) {
       currentTotalRCV: validated.initialRCV,
       totalIncrease: 0,
       percentageIncrease: 0,
-      contractorBillingAmount: 0,
-      estimatorCommission: 0,
+      // For estimate-only jobs, apply flat fees immediately; otherwise start at 0
+      contractorBillingAmount: initialCommission.commissionType === "estimate"
+        ? initialCommission.contractorAmount
+        : 0,
+      estimatorCommission: initialCommission.commissionType === "estimate"
+        ? initialCommission.estimatorAmount
+        : 0,
 
       // Money Released
       moneyReleasedAmount: validated.moneyReleasedAmount || null,

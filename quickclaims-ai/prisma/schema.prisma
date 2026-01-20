@@ -265,6 +265,7 @@ model Claim {
 
   // Job Classification
   jobType           JobType     @default(supplement)
+  propertyType      String      @default("residential") // "residential" | "commercial"
   status            ClaimStatus @default(missing_info)
 
   // Financial - Initial (from insurance scope)
@@ -333,6 +334,13 @@ model Supplement {
   previousRoofRCV Decimal?        @db.Decimal(12, 2)  // Previous Roof RCV
   newRoofRCV      Decimal?        @db.Decimal(12, 2)  // New Roof RCV
   roofIncrease    Decimal?        @db.Decimal(12, 2)  // Roof-specific increase
+
+  // Roof Squares (for reinspection detection)
+  previousRoofSquares Decimal?    @db.Decimal(10, 2)  // Previous roof squares
+  newRoofSquares      Decimal?    @db.Decimal(10, 2)  // New roof squares (if changed)
+
+  // Commission tracking
+  commissionType      String?     // "reinspection" | "supplement" | "final_invoice" | "estimate"
 
   // Details (description contains line items info)
   description    String           @db.Text
