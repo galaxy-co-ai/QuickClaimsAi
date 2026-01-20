@@ -71,90 +71,84 @@ export default async function DashboardPage() {
         </div>
       )}
 
-      {/* Stats Grid - Clean compact design */}
+      {/* Stats Grid - Compact horizontal layout */}
       <div className="grid gap-3 grid-cols-2 lg:grid-cols-4">
         {/* Active Claims */}
-        <Card className="p-4">
-          <div className="flex items-center gap-3">
-            <div className="h-9 w-9 rounded-lg bg-slate-100 flex items-center justify-center flex-shrink-0">
-              <FileText className="h-4 w-4 text-slate-600" />
+        <Card className="px-4 py-3">
+          <div className="flex items-center justify-between">
+            <div className="flex items-center gap-2">
+              <FileText className="h-4 w-4 text-slate-400" />
+              <span className="text-sm text-slate-600">Active</span>
             </div>
-            <div className="min-w-0">
-              <p className="text-xs text-slate-500">Active Claims</p>
-              <p className="text-xl font-semibold text-slate-900">{stats.activeClaims}</p>
+            <div className="text-right">
+              <p className="text-lg font-semibold text-slate-900">{stats.activeClaims}</p>
+              <p className="text-xs text-green-600">+{stats.newThisWeek} this week</p>
             </div>
           </div>
-          <p className="text-xs text-slate-400 mt-2 flex items-center gap-1">
-            <TrendingUp className="h-3 w-3 text-green-500" />
-            +{stats.newThisWeek} this week
-          </p>
         </Card>
 
         {/* Revenue This Month */}
-        <Card className="p-4">
-          <div className="flex items-center gap-3">
-            <div className="h-9 w-9 rounded-lg bg-green-50 flex items-center justify-center flex-shrink-0">
-              <DollarSign className="h-4 w-4 text-green-600" />
+        <Card className="px-4 py-3">
+          <div className="flex items-center justify-between">
+            <div className="flex items-center gap-2">
+              <DollarSign className="h-4 w-4 text-green-500" />
+              <span className="text-sm text-slate-600">Revenue</span>
             </div>
-            <div className="min-w-0">
-              <p className="text-xs text-slate-500">Revenue</p>
-              <p className="text-xl font-semibold text-green-600">{formatCurrency(stats.totalIncreaseThisMonth)}</p>
+            <div className="text-right">
+              <p className="text-lg font-semibold text-green-600">{formatCurrency(stats.totalIncreaseThisMonth)}</p>
+              <p className="text-xs text-slate-400">this month</p>
             </div>
           </div>
-          <p className="text-xs text-slate-400 mt-2">Approved this month</p>
         </Card>
 
         {/* Supplements */}
-        <Card className="p-4">
-          <div className="flex items-center gap-3">
-            <div className="h-9 w-9 rounded-lg bg-amber-50 flex items-center justify-center flex-shrink-0">
-              <TrendingUp className="h-4 w-4 text-amber-600" />
+        <Card className="px-4 py-3">
+          <div className="flex items-center justify-between">
+            <div className="flex items-center gap-2">
+              <TrendingUp className="h-4 w-4 text-amber-500" />
+              <span className="text-sm text-slate-600">Supplements</span>
             </div>
-            <div className="min-w-0">
-              <p className="text-xs text-slate-500">Supplements</p>
-              <p className="text-xl font-semibold text-slate-900">{stats.supplementCount}</p>
+            <div className="text-right">
+              <p className="text-lg font-semibold text-slate-900">{stats.supplementCount}</p>
+              <p className="text-xs text-slate-400">{formatCurrency(stats.supplementTotalAmount)}</p>
             </div>
           </div>
-          <p className="text-xs text-slate-400 mt-2">{formatCurrency(stats.supplementTotalAmount)} total</p>
         </Card>
 
         {/* Compliance or Avg $/SQ */}
         {isManager && managerStats ? (
-          <Card className={`p-4 ${managerStats.compliancePercentage < 70 ? 'border-red-200 bg-red-50/30' : ''}`}>
-            <div className="flex items-center gap-3">
-              <div className={`h-9 w-9 rounded-lg flex items-center justify-center flex-shrink-0 ${
-                managerStats.compliancePercentage >= 90 ? 'bg-green-50' : 
-                managerStats.compliancePercentage >= 70 ? 'bg-amber-50' : 'bg-red-50'
-              }`}>
+          <Card className={`px-4 py-3 ${managerStats.compliancePercentage < 70 ? 'border-red-200 bg-red-50/30' : ''}`}>
+            <div className="flex items-center justify-between">
+              <div className="flex items-center gap-2">
                 <ShieldCheck className={`h-4 w-4 ${
-                  managerStats.compliancePercentage >= 90 ? 'text-green-600' : 
-                  managerStats.compliancePercentage >= 70 ? 'text-amber-600' : 'text-red-600'
+                  managerStats.compliancePercentage >= 90 ? 'text-green-500' : 
+                  managerStats.compliancePercentage >= 70 ? 'text-amber-500' : 'text-red-500'
                 }`} />
+                <span className="text-sm text-slate-600">Compliance</span>
               </div>
-              <div className="min-w-0">
-                <p className="text-xs text-slate-500">Compliance</p>
-                <p className={`text-xl font-semibold ${
+              <div className="text-right">
+                <p className={`text-lg font-semibold ${
                   managerStats.compliancePercentage >= 90 ? 'text-green-600' : 
                   managerStats.compliancePercentage >= 70 ? 'text-amber-600' : 'text-red-600'
                 }`}>{managerStats.compliancePercentage}%</p>
+                <p className="text-xs text-slate-400">
+                  {managerStats.overdueCount === 0 ? 'on track' : `${managerStats.overdueCount} overdue`}
+                </p>
               </div>
             </div>
-            <p className="text-xs text-slate-400 mt-2">
-              {managerStats.overdueCount === 0 ? 'All on track' : `${managerStats.overdueCount} overdue`}
-            </p>
           </Card>
         ) : (
-          <Card className="p-4">
-            <div className="flex items-center gap-3">
-              <div className="h-9 w-9 rounded-lg bg-purple-50 flex items-center justify-center flex-shrink-0">
-                <BarChart3 className="h-4 w-4 text-purple-600" />
+          <Card className="px-4 py-3">
+            <div className="flex items-center justify-between">
+              <div className="flex items-center gap-2">
+                <BarChart3 className="h-4 w-4 text-purple-500" />
+                <span className="text-sm text-slate-600">Avg $/SQ</span>
               </div>
-              <div className="min-w-0">
-                <p className="text-xs text-slate-500">Avg $/Square</p>
-                <p className="text-xl font-semibold text-slate-900">{formatCurrency(stats.avgDollarPerSquare)}</p>
+              <div className="text-right">
+                <p className="text-lg font-semibold text-slate-900">{formatCurrency(stats.avgDollarPerSquare)}</p>
+                <p className="text-xs text-slate-400">{stats.updatesPerJob} updates/job</p>
               </div>
             </div>
-            <p className="text-xs text-slate-400 mt-2">{stats.updatesPerJob} updates/job</p>
           </Card>
         )}
       </div>
