@@ -1,0 +1,87 @@
+{
+  "state": "NE",
+  "stateName": "Nebraska",
+  "ircVersion": "2018",
+  "ircEdition": "2018 IRC with State Amendments",
+  "adoptionDate": "2019-07-01",
+  "enforceAuthority": "Nebraska State Fire Marshal",
+  "notes": "Nebraska uses 2018 IRC. Some municipalities have adopted more recent versions locally.",
+  
+  "stateWideRequirements": {
+    "iceBarrierRequired": true,
+    "iceBarrierNotes": "Required in all areas - entire state is below 25°F January average",
+    "windZone": "Zone I and Zone II",
+    "seismicDesignCategory": "A/B"
+  },
+  
+  "amendments": [
+    {
+      "section": "R905.2.7.1",
+      "description": "Ice barrier requirement",
+      "localRequirement": "Ice barrier required statewide",
+      "effectiveDate": "2019-07-01"
+    }
+  ],
+  
+  "majorCities": [
+    {
+      "city": "Omaha",
+      "county": "Douglas",
+      "localIrcVersion": "2018",
+      "localAmendments": false,
+      "matchingRequired": false,
+      "notes": "Follows state code"
+    },
+    {
+      "city": "Lincoln",
+      "county": "Lancaster", 
+      "localIrcVersion": "2018",
+      "localAmendments": false,
+      "matchingRequired": false,
+      "notes": "Follows state code"
+    },
+    {
+      "city": "Bellevue",
+      "county": "Sarpy",
+      "localIrcVersion": "2018",
+      "localAmendments": false,
+      "matchingRequired": false,
+      "notes": "Follows state code"
+    },
+    {
+      "city": "Grand Island",
+      "county": "Hall",
+      "localIrcVersion": "2018",
+      "localAmendments": false,
+      "matchingRequired": false,
+      "notes": "Follows state code"
+    }
+  ],
+  
+  "counties": [
+    {
+      "county": "Douglas",
+      "ircVersion": "2018",
+      "matchingRequired": false
+    },
+    {
+      "county": "Lancaster",
+      "ircVersion": "2018",
+      "matchingRequired": false
+    },
+    {
+      "county": "Sarpy",
+      "ircVersion": "2018",
+      "matchingRequired": false
+    }
+  ],
+  
+  "resources": {
+    "stateBuildingCode": "https://sfm.nebraska.gov/building-construction",
+    "codeEnforcement": "Nebraska State Fire Marshal",
+    "contact": "402-471-2027"
+  },
+  
+  "lastUpdated": "2026-01-19",
+  "updatedBy": "Dalton Cox"
+}

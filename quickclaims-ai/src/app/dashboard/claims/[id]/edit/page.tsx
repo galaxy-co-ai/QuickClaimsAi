@@ -56,8 +56,9 @@ export default async function EditClaimPage({ params }: EditClaimPageProps) {
     // External References
     contractorCrmId: claim.contractorCrmId,
     externalJobNumber: claim.externalJobNumber,
-    // Job Type
+    // Job Type & Property Type
     jobType: claim.jobType,
+    propertyType: claim.propertyType,
     // Financial - Initial
     totalSquares: decimalToNumber(claim.totalSquares),
     roofRCV: decimalToNumber(claim.roofRCV),

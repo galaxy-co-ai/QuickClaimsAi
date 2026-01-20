@@ -103,6 +103,7 @@ export function ClaimDetailTabs({
             <SupplementFormModal
               claimId={claim.id}
               policyholderName={claim.policyholderName}
+              currentRoofSquares={decimalToNumber(claim.totalSquares)}
             />
           </CardHeader>
           <CardContent>

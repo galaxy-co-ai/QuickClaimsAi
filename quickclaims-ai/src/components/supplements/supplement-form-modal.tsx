@@ -28,6 +28,9 @@ const supplementFormSchema = z.object({
   amount: z.number().positive("Amount must be positive"),
   description: z.string().min(1, "Line items description is required"),
   omApproved: z.boolean(),
+  // Roof squares for reinspection detection
+  previousRoofSquares: z.number().nonnegative().optional(),
+  newRoofSquares: z.number().nonnegative().optional(),
 });
 
 type SupplementFormData = z.infer<typeof supplementFormSchema>;
@@ -35,11 +38,14 @@ type SupplementFormData = z.infer<typeof supplementFormSchema>;
 interface SupplementFormModalProps {
   claimId: string;
   policyholderName: string;
+  // Current claim's roof squares (to pre-populate previous)
+  currentRoofSquares?: number;
 }
 
 export function SupplementFormModal({
   claimId,
   policyholderName,
+  currentRoofSquares,
 }: SupplementFormModalProps) {
   const router = useRouter();
   const [open, setOpen] = useState(false);
@@ -48,6 +54,7 @@ export function SupplementFormModal({
     register,
     handleSubmit,
     reset,
+    watch,
     formState: { errors, isSubmitting },
   } = useForm<SupplementFormData>({
     resolver: zodResolver(supplementFormSchema),
@@ -55,8 +62,15 @@ export function SupplementFormModal({
       amount: undefined,
       description: "",
       omApproved: false,
+      previousRoofSquares: currentRoofSquares,
+      newRoofSquares: undefined,
     },
   });
+
+  // Watch for roof squares changes to show reinspection indicator
+  const previousSquares = watch("previousRoofSquares");
+  const newSquares = watch("newRoofSquares");
+  const isReinspection = newSquares !== undefined && previousSquares !== undefined && newSquares > previousSquares;
 
   async function onSubmit(data: SupplementFormData) {
     try {
@@ -65,8 +79,13 @@ export function SupplementFormModal({
         amount: data.amount,
         description: data.description,
         omApproved: data.omApproved,
+        previousRoofSquares: data.previousRoofSquares,
+        newRoofSquares: data.newRoofSquares,
       });
-      toast.success("Supplement created successfully");
+      const message = isReinspection 
+        ? "Reinspection supplement created (roof squares increased)"
+        : "Supplement created successfully";
+      toast.success(message);
       reset();
       setOpen(false);
       router.refresh();
@@ -155,6 +174,51 @@ export function SupplementFormModal({
             <Label htmlFor="omApproved" className="text-sm font-normal cursor-pointer">
               O&M Approved (Overhead & Margin)
             </Label>
+          </div>
+
+          {/* Roof Squares Section */}
+          <div className="border-t pt-4 mt-2">
+            <p className="text-sm font-medium text-slate-700 mb-3">
+              Roof Squares (optional - enter if squares changed)
+            </p>
+            <div className="grid gap-4 grid-cols-2">
+              <div className="space-y-2">
+                <Label htmlFor="previousRoofSquares">Previous Squares</Label>
+                <Input
+                  id="previousRoofSquares"
+                  type="number"
+                  step="0.01"
+                  min="0"
+                  placeholder="e.g., 25.5"
+                  {...register("previousRoofSquares", { valueAsNumber: true })}
+                  aria-label="Previous roof squares from original scope"
+                />
+                <p className="text-xs text-slate-500">From original scope</p>
+              </div>
+              <div className="space-y-2">
+                <Label htmlFor="newRoofSquares">New Squares</Label>
+                <Input
+                  id="newRoofSquares"
+                  type="number"
+                  step="0.01"
+                  min="0"
+                  placeholder="e.g., 28.0"
+                  {...register("newRoofSquares", { valueAsNumber: true })}
+                  aria-label="New roof squares after reinspection"
+                />
+                <p className="text-xs text-slate-500">After reinspection</p>
+              </div>
+            </div>
+            {isReinspection && (
+              <div className="mt-3 p-2 bg-amber-50 border border-amber-200 rounded-lg">
+                <p className="text-sm text-amber-800 font-medium">
+                  Reinspection Detected: Squares increased from {previousSquares} to {newSquares}
+                </p>
+                <p className="text-xs text-amber-600 mt-1">
+                  This supplement will use reinspection commission rates (5% contractor, 1% estimator)
+                </p>
+              </div>
+            )}
           </div>
 
           <DialogFooter>

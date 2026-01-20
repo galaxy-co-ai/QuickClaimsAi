@@ -21,7 +21,7 @@ import { DatePicker } from "@/components/ui/date-picker";
 import { ScopeUpload } from "@/components/claims/scope-upload";
 import { claimInputSchema, type ClaimInput } from "@/lib/validations/claim";
 import { createClaim, updateClaim } from "@/actions/claims";
-import { US_STATES, LOSS_TYPE_LABELS } from "@/lib/constants";
+import { US_STATES, LOSS_TYPE_LABELS, PROPERTY_TYPE_LABELS } from "@/lib/constants";
 import type { ExtractedScopeData } from "@/actions/scope-parser";
 import type { AdjusterType } from "@prisma/client";
 import type { Decimal } from "@prisma/client/runtime/library";
@@ -55,6 +55,7 @@ interface ClaimFormProps {
     contractorCrmId: string | null;
     externalJobNumber: string | null;
     jobType: string;
+    propertyType: string;
     totalSquares: number | string | Decimal;
     roofRCV: number | string | Decimal;
     initialRCV: number | string | Decimal;
@@ -117,6 +118,7 @@ export function ClaimForm({
           contractorCrmId: claim.contractorCrmId ?? "",
           externalJobNumber: claim.externalJobNumber ?? "",
           jobType: claim.jobType as ClaimInput["jobType"],
+          propertyType: claim.propertyType as ClaimInput["propertyType"],
           totalSquares: Number(claim.totalSquares),
           roofRCV: Number(claim.roofRCV),
           initialRCV: Number(claim.initialRCV),
@@ -126,6 +128,7 @@ export function ClaimForm({
         }
       : {
           jobType: "supplement",
+          propertyType: "residential",
           lossState: "TX",
         },
   });
@@ -759,11 +762,11 @@ export function ClaimForm({
             </div>
           </div>
 
-          <div className="grid gap-4 md:grid-cols-3">
+          <div className="grid gap-4 md:grid-cols-4">
             {/* Job Type */}
             <div className="space-y-2">
               <Label htmlFor="jobType">
-                Supplement/Estimate/ReInspect <span className="text-red-500">*</span>
+                Job Type <span className="text-red-500">*</span>
               </Label>
               <Controller
                 name="jobType"
@@ -782,8 +785,39 @@ export function ClaimForm({
                     <SelectContent>
                       <SelectItem value="supplement">Supplement</SelectItem>
                       <SelectItem value="reinspection">Reinspection</SelectItem>
-                      <SelectItem value="estimate">Estimate</SelectItem>
+                      <SelectItem value="estimate">Estimate Only</SelectItem>
                       <SelectItem value="final_invoice">Final Invoice</SelectItem>
+                    </SelectContent>
+                  </Select>
+                )}
+              />
+            </div>
+
+            {/* Property Type */}
+            <div className="space-y-2">
+              <Label htmlFor="propertyType">
+                Property Type <span className="text-red-500">*</span>
+              </Label>
+              <Controller
+                name="propertyType"
+                control={control}
+                render={({ field }) => (
+                  <Select
+                    value={field.value}
+                    onValueChange={field.onChange}
+                  >
+                    <SelectTrigger
+                      id="propertyType"
+                      aria-label="Select property type"
+                    >
+                      <SelectValue placeholder="Select property type..." />
+                    </SelectTrigger>
+                    <SelectContent>
+                      {Object.entries(PROPERTY_TYPE_LABELS).map(([value, label]) => (
+                        <SelectItem key={value} value={value}>
+                          {label}
+                        </SelectItem>
+                      ))}
                     </SelectContent>
                   </Select>
                 )}

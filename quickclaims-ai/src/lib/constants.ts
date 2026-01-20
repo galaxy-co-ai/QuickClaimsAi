@@ -82,6 +82,20 @@ export const LOSS_TYPE_LABELS: Record<string, string> = {
   other: "Other",
 };
 
+// Job type labels
+export const JOB_TYPE_LABELS: Record<string, string> = {
+  supplement: "Supplement",
+  reinspection: "Reinspection",
+  estimate: "Estimate Only",
+  final_invoice: "Final Invoice",
+};
+
+// Property type labels
+export const PROPERTY_TYPE_LABELS: Record<string, string> = {
+  residential: "Residential",
+  commercial: "Commercial",
+};
+
 // US States
 export const US_STATES = [
   { value: "AL", label: "Alabama" },

@@ -6,14 +6,19 @@ import { FileText, AlertCircle, Clock, CheckCircle2 } from "lucide-react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { formatCurrency, getComplianceStatus, hoursSince } from "@/lib/utils";
-import { CLAIM_STATUS_LABELS, CLAIM_STATUS_COLORS } from "@/lib/constants";
-import type { Claim, Contractor, Estimator, Carrier } from "@prisma/client";
+import { CLAIM_STATUS_LABELS, CLAIM_STATUS_COLORS, JOB_TYPE_LABELS } from "@/lib/constants";
+import type { Claim, Contractor, Estimator, Carrier, JobType } from "@prisma/client";
+import type { Decimal } from "@prisma/client/runtime/library";
 
 type ClaimWithRelations = Claim & {
   contractor: Pick<Contractor, "id" | "companyName">;
   estimator: Pick<Estimator, "id" | "firstName" | "lastName">;
   carrier: Pick<Carrier, "id" | "name">;
   _count: { supplements: number };
+  // Commission fields
+  jobType: JobType;
+  estimatorCommission: Decimal;
+  statusChangedAt: Date;
 };
 
 interface ClaimsTableProps {
@@ -71,11 +76,11 @@ export function ClaimsTable({ claims, pagination }: ClaimsTableProps) {
                 <th className="pb-3 font-medium w-8"></th>
                 <th className="pb-3 font-medium">Status</th>
                 <th className="pb-3 font-medium">Policyholder</th>
-                <th className="pb-3 font-medium">Contractor</th>
+                <th className="pb-3 font-medium">Job Type</th>
                 <th className="pb-3 font-medium">Estimator</th>
                 <th className="pb-3 font-medium text-right">Increase</th>
-                <th className="pb-3 font-medium text-right">$/SQ</th>
-                <th className="pb-3 font-medium text-right">Last Activity</th>
+                <th className="pb-3 font-medium text-right">Commission</th>
+                <th className="pb-3 font-medium text-right">Days in Status</th>
               </tr>
             </thead>
             <tbody>
@@ -161,7 +166,12 @@ function ClaimRow({ claim }: { claim: ClaimWithRelations }) {
   }[complianceStatus];
 
   const totalIncrease = Number(claim.totalIncrease);
-  const dollarPerSquare = Number(claim.dollarPerSquare);
+  const estimatorCommission = Number(claim.estimatorCommission);
+  
+  // Calculate days in current status
+  const daysInStatus = Math.floor(
+    (Date.now() - new Date(claim.statusChangedAt).getTime()) / (1000 * 60 * 60 * 24)
+  );
 
   return (
     <tr className="border-b last:border-0 hover:bg-slate-50 cursor-pointer">
@@ -193,26 +203,26 @@ function ClaimRow({ claim }: { claim: ClaimWithRelations }) {
           </div>
         </Link>
       </td>
-      <td className="py-4 text-slate-700">{claim.contractor.companyName}</td>
+      <td className="py-4">
+        <span className="inline-flex rounded-md bg-slate-100 px-2 py-1 text-xs font-medium text-slate-700">
+          {JOB_TYPE_LABELS[claim.jobType] || claim.jobType}
+        </span>
+      </td>
       <td className="py-4 text-slate-700">
         {claim.estimator.firstName} {claim.estimator.lastName}
       </td>
       <td className="py-4 text-right font-medium text-green-600">
         {totalIncrease > 0 ? formatCurrency(totalIncrease) : "-"}
       </td>
-      <td className="py-4 text-right text-slate-700 font-mono">
-        {dollarPerSquare > 0 ? formatCurrency(dollarPerSquare) : "-"}
+      <td className="py-4 text-right font-medium text-blue-600">
+        {estimatorCommission > 0 ? formatCurrency(estimatorCommission) : "-"}
       </td>
-      <td className="py-4 text-right text-sm text-slate-500">
-        {formatTimeAgo(hours)}
+      <td className="py-4 text-right text-sm">
+        <span className={daysInStatus > 3 ? "text-red-500 font-medium" : "text-slate-500"}>
+          {daysInStatus === 0 ? "Today" : daysInStatus === 1 ? "1 day" : `${daysInStatus} days`}
+        </span>
       </td>
     </tr>
   );
 }
 
-function formatTimeAgo(hours: number): string {
-  if (hours < 1) return "< 1h ago";
-  if (hours < 24) return `${hours}h ago`;
-  const days = Math.floor(hours / 24);
-  return `${days}d ago`;
-}
