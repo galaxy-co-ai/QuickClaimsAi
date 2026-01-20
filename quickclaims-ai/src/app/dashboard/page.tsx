@@ -250,21 +250,21 @@ export default async function DashboardPage() {
           </Card>
 
           {/* Recent Activity Feed */}
-          <Card>
+          <Card className="flex flex-col">
             <CardHeader>
               <CardTitle className="flex items-center gap-2">
                 <Activity className="h-5 w-5 text-blue-500" />
                 Recent Activity
               </CardTitle>
             </CardHeader>
-            <CardContent>
+            <CardContent className="flex-1 overflow-hidden">
               {managerStats.recentActivity.length === 0 ? (
                 <div className="text-center py-8">
                   <Activity className="h-12 w-12 mx-auto text-slate-300 mb-3" />
                   <p className="text-slate-500">No recent activity</p>
                 </div>
               ) : (
-                <div className="space-y-3">
+                <div className="space-y-3 max-h-80 overflow-y-auto pr-2">
                   {managerStats.recentActivity.map((activity) => (
                     <Link
                       key={activity.id}
