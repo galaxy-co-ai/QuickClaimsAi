@@ -241,7 +241,9 @@ export async function createSupplement(data: SupplementInput) {
       // Roof RCV tracking
       previousRoofRCV: validated.previousRoofRCV ?? null,
       newRoofRCV: validated.newRoofRCV ?? null,
-      roofIncrease: validated.roofIncrease ?? null,
+      // Increase breakdown for price per square calculation
+      roofingIncrease: validated.roofingIncrease ?? null,
+      nonRoofingIncrease: validated.nonRoofingIncrease ?? null,
       // Commission type determined from squares change
       commissionType,
     },

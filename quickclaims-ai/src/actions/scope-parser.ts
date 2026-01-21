@@ -77,8 +77,19 @@ export async function parseInsuranceScope(formData: FormData): Promise<{
 
   try {
     // Convert file to base64
-    const arrayBuffer = await file.arrayBuffer();
+    let arrayBuffer: ArrayBuffer;
+    try {
+      arrayBuffer = await file.arrayBuffer();
+    } catch (bufferError) {
+      console.error("[ScopeParser] Failed to read file buffer:", bufferError);
+      return {
+        success: false,
+        error: "Failed to read PDF file. The file may be corrupted or unreadable."
+      };
+    }
+
     const base64 = Buffer.from(arrayBuffer).toString("base64");
+    console.log(`[ScopeParser] Processing PDF: ${file.name}, size: ${file.size} bytes, base64 length: ${base64.length}`);
 
     // Initialize Anthropic client
     const anthropic = new Anthropic({
@@ -162,11 +173,16 @@ Example output format:
       ],
     });
 
+    console.log(`[ScopeParser] API response received, stop_reason: ${response.stop_reason}`);
+
     // Extract the text content from the response
     const textBlock = response.content.find((block) => block.type === "text");
     if (!textBlock || textBlock.type !== "text") {
-      return { success: false, error: "No text response from AI" };
+      console.error("[ScopeParser] No text block in response:", JSON.stringify(response.content));
+      return { success: false, error: "No text response from AI. The PDF may not have been processed correctly." };
     }
+
+    console.log(`[ScopeParser] Response text length: ${textBlock.text.length}`);
 
     // Parse the JSON response
     let extractedData: ExtractedScopeData;
@@ -181,11 +197,12 @@ Example output format:
       }
 
       extractedData = JSON.parse(jsonStr.trim());
+      console.log(`[ScopeParser] Successfully parsed JSON, confidence: ${extractedData.confidence}`);
     } catch (parseError) {
-      console.error("Failed to parse AI response:", textBlock.text);
+      console.error("[ScopeParser] Failed to parse AI response:", textBlock.text.substring(0, 500));
       return {
         success: false,
-        error: "Failed to parse extracted data. The AI response was not valid JSON."
+        error: "Failed to parse extracted data. The AI response was not valid JSON. Please try again."
       };
     }
 
@@ -215,21 +232,36 @@ Example output format:
 
     return { success: true, data: sanitizedData };
   } catch (error) {
-    console.error("Error parsing insurance scope:", error);
+    console.error("[ScopeParser] Error parsing insurance scope:", error);
 
     if (error instanceof Anthropic.APIError) {
+      console.error(`[ScopeParser] API Error - Status: ${error.status}, Message: ${error.message}`);
       if (error.status === 401) {
-        return { success: false, error: "Invalid API key. Please check your ANTHROPIC_API_KEY." };
+        return { success: false, error: "Invalid API key. Please check your ANTHROPIC_API_KEY configuration." };
       }
       if (error.status === 429) {
-        return { success: false, error: "Rate limited. Please try again in a moment." };
+        return { success: false, error: "Rate limited by AI service. Please wait a moment and try again." };
       }
-      return { success: false, error: `API error: ${error.message}` };
+      if (error.status === 400) {
+        return { success: false, error: "Invalid request. The PDF may be encrypted, password-protected, or in an unsupported format." };
+      }
+      if (error.status === 413) {
+        return { success: false, error: "PDF file is too large for processing. Try a smaller file." };
+      }
+      return { success: false, error: `AI service error (${error.status}): ${error.message}` };
+    }
+
+    // Check for network errors
+    if (error instanceof Error) {
+      if (error.message.includes("fetch") || error.message.includes("network")) {
+        return { success: false, error: "Network error connecting to AI service. Please check your internet connection and try again." };
+      }
+      return { success: false, error: `Error: ${error.message}` };
     }
 
     return {
       success: false,
-      error: error instanceof Error ? error.message : "Unknown error occurred"
+      error: "An unexpected error occurred while processing the PDF. Please try again."
     };
   }
 }

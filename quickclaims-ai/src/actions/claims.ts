@@ -6,7 +6,7 @@ import { claimInputSchema, claimFiltersSchema, type ClaimInput, type ClaimFilter
 import { requireRole } from "@/lib/auth";
 import { calculateInitialDollarPerSquare, decimalToNumber, serializeClaims, serializeClaim } from "@/lib/calculations";
 import { buildRateProfile, calculateCommission, type PropertyType } from "@/lib/commission-engine";
-import { CLAIM_STATUS_LABELS, getValidNextStatuses, isValidStatusTransition } from "@/lib/constants";
+import { CLAIM_STATUS_LABELS } from "@/lib/constants";
 import { logAudit } from "@/actions/audit";
 import { sendStatusChangeNotification } from "@/actions/notifications";
 import type { ClaimStatus } from "@prisma/client";
@@ -484,15 +484,8 @@ export async function updateClaimStatus(id: string, newStatus: ClaimStatus) {
 
   const oldStatus = existingClaim.status;
 
-  // Validate status transition
-  if (!isValidStatusTransition(oldStatus, newStatus)) {
-    const validOptions = getValidNextStatuses(oldStatus)
-      .map((s) => CLAIM_STATUS_LABELS[s] || s)
-      .join(", ");
-    throw new Error(
-      `Invalid status transition from "${CLAIM_STATUS_LABELS[oldStatus]}" to "${CLAIM_STATUS_LABELS[newStatus]}". Valid options: ${validOptions || "none (terminal state)"}`
-    );
-  }
+  // Note: Status transition validation removed per client request for full flexibility
+  // All status transitions are now allowed
 
   // Update claim with new status and timestamps
   const updateData: Record<string, unknown> = {

@@ -331,9 +331,10 @@ model Supplement {
   newRCV         Decimal          @db.Decimal(12, 2)  // New Total RCV
 
   // Financial - Roof Specific
-  previousRoofRCV Decimal?        @db.Decimal(12, 2)  // Previous Roof RCV
-  newRoofRCV      Decimal?        @db.Decimal(12, 2)  // New Roof RCV
-  roofIncrease    Decimal?        @db.Decimal(12, 2)  // Roof-specific increase
+  previousRoofRCV    Decimal?        @db.Decimal(12, 2)  // Previous Roof RCV
+  newRoofRCV         Decimal?        @db.Decimal(12, 2)  // New Roof RCV
+  roofingIncrease    Decimal?        @db.Decimal(12, 2)  // Roofing-specific increase
+  nonRoofingIncrease Decimal?        @db.Decimal(12, 2)  // Non-roofing increase (siding, gutters, etc.)
 
   // Roof Squares (for reinspection detection)
   previousRoofSquares Decimal?    @db.Decimal(10, 2)  // Previous roof squares
@@ -345,7 +346,7 @@ model Supplement {
   // Details (description contains line items info)
   description    String           @db.Text
   lineItems      Json?
-  omApproved     Boolean          @default(false) // Was O&M (Overhead & Margin) approved
+  omApproved     Boolean          @default(false) // Was O&P (Overhead & Profit) approved
 
   // Status
   status         SupplementStatus @default(draft)

@@ -28,6 +28,9 @@ const supplementFormSchema = z.object({
   amount: z.number().positive("Amount must be positive"),
   description: z.string().min(1, "Line items description is required"),
   omApproved: z.boolean(),
+  // Increase breakdown for price per square calculation
+  roofingIncrease: z.number().nonnegative().optional(),
+  nonRoofingIncrease: z.number().nonnegative().optional(),
   // Roof squares for reinspection detection
   previousRoofSquares: z.number().nonnegative().optional(),
   newRoofSquares: z.number().nonnegative().optional(),
@@ -62,6 +65,8 @@ export function SupplementFormModal({
       amount: undefined,
       description: "",
       omApproved: false,
+      roofingIncrease: undefined,
+      nonRoofingIncrease: undefined,
       previousRoofSquares: currentRoofSquares,
       newRoofSquares: undefined,
     },
@@ -79,6 +84,8 @@ export function SupplementFormModal({
         amount: data.amount,
         description: data.description,
         omApproved: data.omApproved,
+        roofingIncrease: data.roofingIncrease,
+        nonRoofingIncrease: data.nonRoofingIncrease,
         previousRoofSquares: data.previousRoofSquares,
         newRoofSquares: data.newRoofSquares,
       });
@@ -162,18 +169,65 @@ export function SupplementFormModal({
             )}
           </div>
 
-          {/* O&M Approved Checkbox */}
+          {/* O&P Approved Checkbox */}
           <div className="flex items-center space-x-2">
             <input
               type="checkbox"
               id="omApproved"
               className="h-4 w-4 rounded border-slate-300 text-blue-600 focus:ring-blue-500"
               {...register("omApproved")}
-              aria-label="O&M (Overhead & Margin) was approved"
+              aria-label="O&P (Overhead & Profit) was approved"
             />
             <Label htmlFor="omApproved" className="text-sm font-normal cursor-pointer">
-              O&M Approved (Overhead & Margin)
+              O&P Approved (Overhead & Profit)
             </Label>
+          </div>
+
+          {/* Increase Breakdown Section */}
+          <div className="border-t pt-4 mt-2">
+            <p className="text-sm font-medium text-slate-700 mb-3">
+              Increase Breakdown (for price per square calculation)
+            </p>
+            <div className="grid gap-4 grid-cols-2">
+              <div className="space-y-2">
+                <Label htmlFor="roofingIncrease">Roofing Increase</Label>
+                <div className="relative">
+                  <span className="absolute left-3 top-1/2 -translate-y-1/2 text-slate-500">
+                    $
+                  </span>
+                  <Input
+                    id="roofingIncrease"
+                    type="number"
+                    step="0.01"
+                    min="0"
+                    placeholder="0.00"
+                    className="pl-7"
+                    {...register("roofingIncrease", { valueAsNumber: true })}
+                    aria-label="Roofing-related increase amount"
+                  />
+                </div>
+                <p className="text-xs text-slate-500">Roof-related items only</p>
+              </div>
+              <div className="space-y-2">
+                <Label htmlFor="nonRoofingIncrease">Non-Roofing Increase</Label>
+                <div className="relative">
+                  <span className="absolute left-3 top-1/2 -translate-y-1/2 text-slate-500">
+                    $
+                  </span>
+                  <Input
+                    id="nonRoofingIncrease"
+                    type="number"
+                    step="0.01"
+                    min="0"
+                    placeholder="0.00"
+                    className="pl-7"
+                    {...register("nonRoofingIncrease", { valueAsNumber: true })}
+                    aria-label="Non-roofing increase amount"
+                  />
+                </div>
+                <p className="text-xs text-slate-500">Siding, gutters, etc.</p>
+              </div>
+            </div>
           </div>
 
           {/* Roof Squares Section */}

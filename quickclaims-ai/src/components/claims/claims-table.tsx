@@ -75,7 +75,10 @@ export function ClaimsTable({ claims, pagination }: ClaimsTableProps) {
               <tr className="border-b text-left text-sm text-slate-500">
                 <th className="pb-3 font-medium w-8"></th>
                 <th className="pb-3 font-medium">Status</th>
+                <th className="pb-3 font-medium">Claim #</th>
                 <th className="pb-3 font-medium">Policyholder</th>
+                <th className="pb-3 font-medium">Carrier</th>
+                <th className="pb-3 font-medium">Contractor</th>
                 <th className="pb-3 font-medium">Job Type</th>
                 <th className="pb-3 font-medium">Estimator</th>
                 <th className="pb-3 font-medium text-right">Increase</th>
@@ -190,6 +193,9 @@ function ClaimRow({ claim }: { claim: ClaimWithRelations }) {
           {CLAIM_STATUS_LABELS[claim.status] || claim.status}
         </span>
       </td>
+      <td className="py-4 text-sm text-slate-700">
+        {claim.claimNumber || "-"}
+      </td>
       <td className="py-4">
         <Link
           href={`/dashboard/claims/${claim.id}`}
@@ -202,6 +208,12 @@ function ClaimRow({ claim }: { claim: ClaimWithRelations }) {
             {claim.lossAddress}, {claim.lossCity}
           </div>
         </Link>
+      </td>
+      <td className="py-4 text-sm text-slate-700">
+        {claim.carrier.name}
+      </td>
+      <td className="py-4 text-sm text-slate-700">
+        {claim.contractor.companyName}
       </td>
       <td className="py-4">
         <span className="inline-flex rounded-md bg-slate-100 px-2 py-1 text-xs font-medium text-slate-700">

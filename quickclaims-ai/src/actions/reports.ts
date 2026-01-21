@@ -487,7 +487,7 @@ function generateContractorBillingCSV(data: ContractorBillingReportData): string
           supp.amount.toFixed(2),
           "",
           supp.status,
-          supp.omApproved ? "O&M Yes" : "O&M No",
+          supp.omApproved ? "O&P Yes" : "O&P No",
           escapeCSV(supp.description.substring(0, 50) + (supp.description.length > 50 ? "..." : "")),
         ].join(",")
       );

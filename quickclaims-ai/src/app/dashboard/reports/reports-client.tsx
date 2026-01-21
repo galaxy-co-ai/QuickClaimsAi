@@ -973,7 +973,7 @@ function ClaimRowWithSupplements({
                 {supp.omApproved && (
                   <span className="inline-flex items-center gap-1 text-xs text-green-600">
                     <CheckCircle className="h-3 w-3" />
-                    O&M
+                    O&P
                   </span>
                 )}
               </div>

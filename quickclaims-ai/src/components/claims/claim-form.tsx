@@ -1,10 +1,11 @@
 "use client";
 
+import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { useForm, Controller } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { toast } from "sonner";
-import { Loader2, Plus } from "lucide-react";
+import { Loader2 } from "lucide-react";
 
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -19,6 +20,7 @@ import {
 } from "@/components/ui/select";
 import { DatePicker } from "@/components/ui/date-picker";
 import { ScopeUpload } from "@/components/claims/scope-upload";
+import { CarrierFormModal } from "@/components/carriers/carrier-form-modal";
 import { claimInputSchema, type ClaimInput } from "@/lib/validations/claim";
 import { createClaim, updateClaim } from "@/actions/claims";
 import { US_STATES, LOSS_TYPE_LABELS, PROPERTY_TYPE_LABELS } from "@/lib/constants";
@@ -75,11 +77,14 @@ export function ClaimForm({
   claim,
   contractors,
   estimators,
-  carriers,
+  carriers: initialCarriers,
   adjusters,
 }: ClaimFormProps) {
   const router = useRouter();
   const isEditing = !!claim;
+  
+  // Local carriers list that can be updated when adding a new carrier
+  const [carriers, setCarriers] = useState(initialCarriers);
 
   const {
     register,
@@ -452,16 +457,13 @@ export function ClaimForm({
                 <Label htmlFor="carrierId">
                   Insurance Company <span className="text-red-500">*</span>
                 </Label>
-                <a
-                  href="/dashboard/carriers/new"
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="inline-flex items-center gap-1 text-xs text-blue-600 hover:text-blue-800 hover:underline"
-                  aria-label="Add new carrier in new tab"
-                >
-                  <Plus className="h-3 w-3" />
-                  Add New
-                </a>
+                <CarrierFormModal
+                  onCarrierCreated={(newCarrier) => {
+                    // Add new carrier to local list and select it
+                    setCarriers((prev) => [...prev, newCarrier].sort((a, b) => a.name.localeCompare(b.name)));
+                    setValue("carrierId", newCarrier.id, { shouldValidate: true });
+                  }}
+                />
               </div>
               <Controller
                 name="carrierId"
