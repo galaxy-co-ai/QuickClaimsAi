@@ -246,19 +246,20 @@ export function ClaimForm({
 
   async function onSubmit(data: ClaimFormInput) {
     try {
+      // Cast to ClaimInput - zod will apply defaults during server-side validation
+      const claimData = data as ClaimInput;
       if (isEditing) {
-        await updateClaim(claim.id, data);
+        await updateClaim(claim.id, claimData);
         toast.success("Claim updated successfully");
         router.push(`/dashboard/claims/${claim.id}`);
       } else {
-        const result = await createClaim(data);
+        const result = await createClaim(claimData);
         toast.success("Claim created successfully");
         router.push(`/dashboard/claims/${result.claim.id}`);
       }
       router.refresh();
     } catch (error) {
       toast.error("Something went wrong. Please try again.");
-      console.error(error);
     }
   }
 
