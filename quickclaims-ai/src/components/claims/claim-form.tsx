@@ -21,7 +21,7 @@ import {
 import { DatePicker } from "@/components/ui/date-picker";
 import { ScopeUpload } from "@/components/claims/scope-upload";
 import { CarrierFormModal } from "@/components/carriers/carrier-form-modal";
-import { claimInputSchema, type ClaimInput } from "@/lib/validations/claim";
+import { claimInputSchema, type ClaimInput, type ClaimFormInput } from "@/lib/validations/claim";
 import { createClaim, updateClaim } from "@/actions/claims";
 import { US_STATES, LOSS_TYPE_LABELS, PROPERTY_TYPE_LABELS } from "@/lib/constants";
 import type { ExtractedScopeData } from "@/actions/scope-parser";
@@ -93,7 +93,7 @@ export function ClaimForm({
     setValue,
     control,
     formState: { errors, isSubmitting },
-  } = useForm<ClaimInput>({
+  } = useForm<ClaimFormInput>({
     resolver: zodResolver(claimInputSchema),
     defaultValues: claim
       ? {
@@ -244,7 +244,7 @@ export function ClaimForm({
     toast.success(`Form populated from PDF (${data.confidence} confidence).${notesMessage}`);
   };
 
-  async function onSubmit(data: ClaimInput) {
+  async function onSubmit(data: ClaimFormInput) {
     try {
       if (isEditing) {
         await updateClaim(claim.id, data);

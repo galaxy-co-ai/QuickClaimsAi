@@ -70,6 +70,7 @@ export const claimInputSchema = z.object({
 });
 
 export type ClaimInput = z.infer<typeof claimInputSchema>;
+export type ClaimFormInput = z.input<typeof claimInputSchema>;
 
 export const claimFiltersSchema = z.object({
   status: z.string().optional(),
