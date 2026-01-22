@@ -85,7 +85,7 @@ export function AdjusterForm({ adjuster, carriers, defaultCarrierId }: AdjusterF
           {/* Carrier */}
           <div className="space-y-2">
             <Label htmlFor="carrierId">
-              Insurance Carrier <span className="text-red-500">*</span>
+              Insurance Carrier <span className="text-[var(--rr-color-error)]">*</span>
             </Label>
             <Controller
               name="carrierId"
@@ -113,14 +113,14 @@ export function AdjusterForm({ adjuster, carriers, defaultCarrierId }: AdjusterF
               )}
             />
             {errors.carrierId && (
-              <p className="text-sm text-red-500">{errors.carrierId.message}</p>
+              <p className="text-[var(--rr-font-size-sm)] text-[var(--rr-color-error)]">{errors.carrierId.message}</p>
             )}
           </div>
 
           {/* Name */}
           <div className="space-y-2">
             <Label htmlFor="name">
-              Adjuster Name <span className="text-red-500">*</span>
+              Adjuster Name <span className="text-[var(--rr-color-error)]">*</span>
             </Label>
             <Input
               id="name"
@@ -129,7 +129,7 @@ export function AdjusterForm({ adjuster, carriers, defaultCarrierId }: AdjusterF
               aria-invalid={!!errors.name}
             />
             {errors.name && (
-              <p className="text-sm text-red-500">{errors.name.message}</p>
+              <p className="text-[var(--rr-font-size-sm)] text-[var(--rr-color-error)]">{errors.name.message}</p>
             )}
           </div>
 
@@ -171,7 +171,7 @@ export function AdjusterForm({ adjuster, carriers, defaultCarrierId }: AdjusterF
                 {...register("email")}
               />
               {errors.email && (
-                <p className="text-sm text-red-500">{errors.email.message}</p>
+                <p className="text-[var(--rr-font-size-sm)] text-[var(--rr-color-error)]">{errors.email.message}</p>
               )}
             </div>
             <div className="space-y-2">

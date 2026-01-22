@@ -158,16 +158,16 @@ function ContractorBillingReport({
     }
 
     const doc = new jsPDF();
-    
+
     // Header
     doc.setFontSize(18);
     doc.text("Contractor Billing Report", 14, 22);
-    
+
     doc.setFontSize(11);
     doc.text(`Contractor: ${reportData.contractor.companyName}`, 14, 32);
     doc.text(`Billing Rate: ${(reportData.contractor.billingPercentage * 100).toFixed(1)}%`, 14, 38);
     doc.text(`Period: ${formatDate(reportData.period.start)} - ${formatDate(reportData.period.end)}`, 14, 44);
-    
+
     // Summary
     doc.setFontSize(12);
     doc.text("Summary", 14, 56);
@@ -176,7 +176,7 @@ function ContractorBillingReport({
     doc.text(`Total Supplements: ${reportData.totals.supplementCount}`, 14, 70);
     doc.text(`Total Increase: ${formatCurrency(reportData.totals.totalIncrease)}`, 14, 76);
     doc.text(`Total Billing: ${formatCurrency(reportData.totals.totalBilling)}`, 14, 82);
-    
+
     // Claims table
     const tableData = reportData.claims.map((claim) => [
       claim.policyholderName,
@@ -186,7 +186,7 @@ function ContractorBillingReport({
       formatCurrency(claim.billingAmount),
       claim.supplements.length.toString(),
     ]);
-    
+
     autoTable(doc, {
       startY: 92,
       head: [["Policyholder", "Initial RCV", "Final RCV", "Increase", "Billing", "Supps"]],
@@ -195,7 +195,7 @@ function ContractorBillingReport({
       headStyles: { fillColor: [59, 130, 246] },
       styles: { fontSize: 9 },
     });
-    
+
     doc.save(`contractor-billing-${startDate}-${endDate}.pdf`);
     toast.success("PDF downloaded");
   };
@@ -279,7 +279,7 @@ function ContractorBillingReport({
           <CardHeader>
             <div className="flex items-center justify-between">
               <CardTitle>{reportData.contractor.companyName} - Billing Report</CardTitle>
-              <span className="text-sm text-slate-500">
+              <span className="text-sm text-[var(--rr-color-stone)]">
                 {formatDate(reportData.period.start)} - {formatDate(reportData.period.end)}
               </span>
             </div>
@@ -287,25 +287,25 @@ function ContractorBillingReport({
           <CardContent>
             {/* Summary */}
             <div className="grid gap-4 md:grid-cols-4 mb-6">
-              <div className="p-4 rounded-lg bg-slate-100">
-                <p className="text-sm text-slate-600">Total Claims</p>
+              <div className="p-4 rounded-lg bg-[var(--rr-color-sand)]">
+                <p className="text-sm text-[var(--rr-color-text-secondary)]">Total Claims</p>
                 <p className="text-2xl font-bold">{reportData.totals.claimCount}</p>
               </div>
-              <div className="p-4 rounded-lg bg-amber-100">
-                <p className="text-sm text-amber-700">Total Supplements</p>
-                <p className="text-2xl font-bold text-amber-800">{reportData.totals.supplementCount}</p>
+              <div className="p-4 rounded-lg bg-[var(--rr-color-warning)]/10">
+                <p className="text-sm text-[var(--rr-color-warning)]">Total Supplements</p>
+                <p className="text-2xl font-bold text-[var(--rr-color-warning)]">{reportData.totals.supplementCount}</p>
               </div>
-              <div className="p-4 rounded-lg bg-green-100">
-                <p className="text-sm text-green-700">Total Increase</p>
-                <p className="text-2xl font-bold text-green-800">
+              <div className="p-4 rounded-lg bg-[var(--rr-color-success)]/10">
+                <p className="text-sm text-[var(--rr-color-success)]">Total Increase</p>
+                <p className="text-2xl font-bold text-[var(--rr-color-success)]">
                   {formatCurrency(reportData.totals.totalIncrease)}
                 </p>
               </div>
-              <div className="p-4 rounded-lg bg-blue-100">
-                <p className="text-sm text-blue-700">
+              <div className="p-4 rounded-lg bg-[var(--rr-color-info)]/10">
+                <p className="text-sm text-[var(--rr-color-info)]">
                   Total Billing ({(reportData.contractor.billingPercentage * 100).toFixed(1)}%)
                 </p>
-                <p className="text-2xl font-bold text-blue-800">
+                <p className="text-2xl font-bold text-[var(--rr-color-info)]">
                   {formatCurrency(reportData.totals.totalBilling)}
                 </p>
               </div>
@@ -313,12 +313,12 @@ function ContractorBillingReport({
 
             {/* Claims Table - Enhanced with Initial/Final RCV and supplements */}
             {reportData.claims.length === 0 ? (
-              <p className="text-center py-8 text-slate-500">No claims found for this period</p>
+              <p className="text-center py-8 text-[var(--rr-color-stone)]">No claims found for this period</p>
             ) : (
               <div className="overflow-x-auto">
                 <table className="w-full text-sm">
                   <thead>
-                    <tr className="border-b bg-slate-50">
+                    <tr className="border-b bg-[var(--rr-color-sand-light)]">
                       <th className="text-left p-3 font-medium w-8"></th>
                       <th className="text-left p-3 font-medium">Policyholder</th>
                       <th className="text-right p-3 font-medium">Initial RCV</th>
@@ -334,9 +334,9 @@ function ContractorBillingReport({
                     ))}
                   </tbody>
                   <tfoot>
-                    <tr className="bg-slate-100 font-medium">
+                    <tr className="bg-[var(--rr-color-sand)] font-medium">
                       <td colSpan={4} className="p-3">Totals</td>
-                      <td className="p-3 text-right text-green-600">
+                      <td className="p-3 text-right text-[var(--rr-color-success)]">
                         {formatCurrency(reportData.totals.totalIncrease)}
                       </td>
                       <td className="p-3 text-right">
@@ -440,16 +440,16 @@ function EstimatorCommissionReport({
     }
 
     const doc = new jsPDF();
-    
+
     // Header
     doc.setFontSize(18);
     doc.text("Estimator Commission Report", 14, 22);
-    
+
     doc.setFontSize(11);
     doc.text(`Estimator: ${reportData.estimator.firstName} ${reportData.estimator.lastName}`, 14, 32);
     doc.text(`Commission Rate: ${(reportData.estimator.commissionPercentage * 100).toFixed(1)}%`, 14, 38);
     doc.text(`Period: ${formatDate(reportData.period.start)} - ${formatDate(reportData.period.end)}`, 14, 44);
-    
+
     // Summary
     doc.setFontSize(12);
     doc.text("Summary", 14, 56);
@@ -458,7 +458,7 @@ function EstimatorCommissionReport({
     doc.text(`Total Increase: ${formatCurrency(reportData.totals.totalIncrease)}`, 14, 70);
     doc.text(`Total Commission: ${formatCurrency(reportData.totals.totalCommission)}`, 14, 76);
     doc.text(`Avg $/Sq: ${formatCurrency(reportData.totals.avgDollarPerSquare)}`, 14, 82);
-    
+
     // Claims table
     const tableData = reportData.claims.map((claim) => [
       claim.policyholderName,
@@ -467,7 +467,7 @@ function EstimatorCommissionReport({
       formatCurrency(claim.commission),
       formatCurrency(claim.dollarPerSquare),
     ]);
-    
+
     autoTable(doc, {
       startY: 92,
       head: [["Policyholder", "Contractor", "Increase", "Commission", "$/Sq"]],
@@ -476,7 +476,7 @@ function EstimatorCommissionReport({
       headStyles: { fillColor: [34, 197, 94] },
       styles: { fontSize: 9 },
     });
-    
+
     doc.save(`estimator-commission-${startDate}-${endDate}.pdf`);
     toast.success("PDF downloaded");
   };
@@ -560,7 +560,7 @@ function EstimatorCommissionReport({
               <CardTitle>
                 {reportData.estimator.firstName} {reportData.estimator.lastName} - Commission Report
               </CardTitle>
-              <span className="text-sm text-slate-500">
+              <span className="text-sm text-[var(--rr-color-stone)]">
                 {formatDate(reportData.period.start)} - {formatDate(reportData.period.end)}
               </span>
             </div>
@@ -568,27 +568,27 @@ function EstimatorCommissionReport({
           <CardContent>
             {/* Summary */}
             <div className="grid gap-4 md:grid-cols-4 mb-6">
-              <div className="p-4 rounded-lg bg-slate-100">
-                <p className="text-sm text-slate-600">Total Claims</p>
+              <div className="p-4 rounded-lg bg-[var(--rr-color-sand)]">
+                <p className="text-sm text-[var(--rr-color-text-secondary)]">Total Claims</p>
                 <p className="text-2xl font-bold">{reportData.totals.claimCount}</p>
               </div>
-              <div className="p-4 rounded-lg bg-green-100">
-                <p className="text-sm text-green-700">Total Increase</p>
-                <p className="text-2xl font-bold text-green-800">
+              <div className="p-4 rounded-lg bg-[var(--rr-color-success)]/10">
+                <p className="text-sm text-[var(--rr-color-success)]">Total Increase</p>
+                <p className="text-2xl font-bold text-[var(--rr-color-success)]">
                   {formatCurrency(reportData.totals.totalIncrease)}
                 </p>
               </div>
-              <div className="p-4 rounded-lg bg-blue-100">
-                <p className="text-sm text-blue-700">
+              <div className="p-4 rounded-lg bg-[var(--rr-color-info)]/10">
+                <p className="text-sm text-[var(--rr-color-info)]">
                   Total Commission ({(reportData.estimator.commissionPercentage * 100).toFixed(1)}%)
                 </p>
-                <p className="text-2xl font-bold text-blue-800">
+                <p className="text-2xl font-bold text-[var(--rr-color-info)]">
                   {formatCurrency(reportData.totals.totalCommission)}
                 </p>
               </div>
-              <div className="p-4 rounded-lg bg-purple-100">
-                <p className="text-sm text-purple-700">Avg $/Square</p>
-                <p className="text-2xl font-bold text-purple-800">
+              <div className="p-4 rounded-lg bg-[var(--rr-color-brand-accent)]/10">
+                <p className="text-sm text-[var(--rr-color-brand-accent)]">Avg $/Square</p>
+                <p className="text-2xl font-bold text-[var(--rr-color-brand-accent)]">
                   {formatCurrency(reportData.totals.avgDollarPerSquare)}
                 </p>
               </div>
@@ -596,12 +596,12 @@ function EstimatorCommissionReport({
 
             {/* Claims Table */}
             {reportData.claims.length === 0 ? (
-              <p className="text-center py-8 text-slate-500">No claims found for this period</p>
+              <p className="text-center py-8 text-[var(--rr-color-stone)]">No claims found for this period</p>
             ) : (
               <div className="overflow-x-auto">
                 <table className="w-full text-sm">
                   <thead>
-                    <tr className="border-b bg-slate-50">
+                    <tr className="border-b bg-[var(--rr-color-sand-light)]">
                       <th className="text-left p-3 font-medium">Policyholder</th>
                       <th className="text-left p-3 font-medium">Contractor</th>
                       <th className="text-right p-3 font-medium">Total Increase</th>
@@ -614,8 +614,8 @@ function EstimatorCommissionReport({
                     {reportData.claims.map((claim) => (
                       <tr key={claim.id} className="border-b">
                         <td className="p-3 font-medium">{claim.policyholderName}</td>
-                        <td className="p-3 text-slate-600">{claim.contractorName}</td>
-                        <td className="p-3 text-right text-green-600">
+                        <td className="p-3 text-[var(--rr-color-text-secondary)]">{claim.contractorName}</td>
+                        <td className="p-3 text-right text-[var(--rr-color-success)]">
                           {formatCurrency(claim.totalIncrease)}
                         </td>
                         <td className="p-3 text-right font-medium">
@@ -627,9 +627,9 @@ function EstimatorCommissionReport({
                     ))}
                   </tbody>
                   <tfoot>
-                    <tr className="bg-slate-100 font-medium">
+                    <tr className="bg-[var(--rr-color-sand)] font-medium">
                       <td colSpan={2} className="p-3">Totals</td>
-                      <td className="p-3 text-right text-green-600">
+                      <td className="p-3 text-right text-[var(--rr-color-success)]">
                         {formatCurrency(reportData.totals.totalIncrease)}
                       </td>
                       <td className="p-3 text-right">
@@ -724,16 +724,16 @@ function ContractorOwnBillingReport({
     }
 
     const doc = new jsPDF();
-    
+
     // Header
     doc.setFontSize(18);
     doc.text("Billing Report", 14, 22);
-    
+
     doc.setFontSize(11);
     doc.text(`Contractor: ${contractorInfo.companyName}`, 14, 32);
     doc.text(`Billing Rate: ${(reportData.contractor.billingPercentage * 100).toFixed(1)}%`, 14, 38);
     doc.text(`Period: ${formatDate(reportData.period.start)} - ${formatDate(reportData.period.end)}`, 14, 44);
-    
+
     // Summary
     doc.setFontSize(12);
     doc.text("Summary", 14, 56);
@@ -741,7 +741,7 @@ function ContractorOwnBillingReport({
     doc.text(`Total Claims: ${reportData.totals.claimCount}`, 14, 64);
     doc.text(`Total Increase: ${formatCurrency(reportData.totals.totalIncrease)}`, 14, 70);
     doc.text(`Amount Owed: ${formatCurrency(reportData.totals.totalBilling)}`, 14, 76);
-    
+
     // Claims table
     const tableData = reportData.claims.map((claim) => [
       claim.policyholderName,
@@ -750,7 +750,7 @@ function ContractorOwnBillingReport({
       formatCurrency(claim.totalIncrease),
       formatCurrency(claim.billingAmount),
     ]);
-    
+
     autoTable(doc, {
       startY: 86,
       head: [["Policyholder", "Initial RCV", "Final RCV", "Increase", "Amount Owed"]],
@@ -759,7 +759,7 @@ function ContractorOwnBillingReport({
       headStyles: { fillColor: [59, 130, 246] },
       styles: { fontSize: 9 },
     });
-    
+
     doc.save(`billing-report-${startDate}-${endDate}.pdf`);
     toast.success("PDF downloaded");
   };
@@ -822,7 +822,7 @@ function ContractorOwnBillingReport({
           <CardHeader>
             <div className="flex items-center justify-between">
               <CardTitle>Amount Owed to Rise Roofing</CardTitle>
-              <span className="text-sm text-slate-500">
+              <span className="text-sm text-[var(--rr-color-stone)]">
                 {formatDate(reportData.period.start)} - {formatDate(reportData.period.end)}
               </span>
             </div>
@@ -830,21 +830,21 @@ function ContractorOwnBillingReport({
           <CardContent>
             {/* Summary */}
             <div className="grid gap-4 md:grid-cols-3 mb-6">
-              <div className="p-4 rounded-lg bg-slate-100">
-                <p className="text-sm text-slate-600">Total Claims</p>
+              <div className="p-4 rounded-lg bg-[var(--rr-color-sand)]">
+                <p className="text-sm text-[var(--rr-color-text-secondary)]">Total Claims</p>
                 <p className="text-2xl font-bold">{reportData.totals.claimCount}</p>
               </div>
-              <div className="p-4 rounded-lg bg-green-100">
-                <p className="text-sm text-green-700">Total Increase</p>
-                <p className="text-2xl font-bold text-green-800">
+              <div className="p-4 rounded-lg bg-[var(--rr-color-success)]/10">
+                <p className="text-sm text-[var(--rr-color-success)]">Total Increase</p>
+                <p className="text-2xl font-bold text-[var(--rr-color-success)]">
                   {formatCurrency(reportData.totals.totalIncrease)}
                 </p>
               </div>
-              <div className="p-4 rounded-lg bg-blue-100">
-                <p className="text-sm text-blue-700">
+              <div className="p-4 rounded-lg bg-[var(--rr-color-info)]/10">
+                <p className="text-sm text-[var(--rr-color-info)]">
                   Amount Owed ({(reportData.contractor.billingPercentage * 100).toFixed(1)}%)
                 </p>
-                <p className="text-2xl font-bold text-blue-800">
+                <p className="text-2xl font-bold text-[var(--rr-color-info)]">
                   {formatCurrency(reportData.totals.totalBilling)}
                 </p>
               </div>
@@ -852,12 +852,12 @@ function ContractorOwnBillingReport({
 
             {/* Claims Table */}
             {reportData.claims.length === 0 ? (
-              <p className="text-center py-8 text-slate-500">No claims found for this period</p>
+              <p className="text-center py-8 text-[var(--rr-color-stone)]">No claims found for this period</p>
             ) : (
               <div className="overflow-x-auto">
                 <table className="w-full text-sm">
                   <thead>
-                    <tr className="border-b bg-slate-50">
+                    <tr className="border-b bg-[var(--rr-color-sand-light)]">
                       <th className="text-left p-3 font-medium">Policyholder</th>
                       <th className="text-left p-3 font-medium">Address</th>
                       <th className="text-right p-3 font-medium">Total Increase</th>
@@ -869,8 +869,8 @@ function ContractorOwnBillingReport({
                     {reportData.claims.map((claim) => (
                       <tr key={claim.id} className="border-b">
                         <td className="p-3 font-medium">{claim.policyholderName}</td>
-                        <td className="p-3 text-slate-600">{claim.lossAddress}</td>
-                        <td className="p-3 text-right text-green-600">
+                        <td className="p-3 text-[var(--rr-color-text-secondary)]">{claim.lossAddress}</td>
+                        <td className="p-3 text-right text-[var(--rr-color-success)]">
                           {formatCurrency(claim.totalIncrease)}
                         </td>
                         <td className="p-3 text-right font-medium">
@@ -881,9 +881,9 @@ function ContractorOwnBillingReport({
                     ))}
                   </tbody>
                   <tfoot>
-                    <tr className="bg-slate-100 font-medium">
+                    <tr className="bg-[var(--rr-color-sand)] font-medium">
                       <td colSpan={2} className="p-3">Totals</td>
-                      <td className="p-3 text-right text-green-600">
+                      <td className="p-3 text-right text-[var(--rr-color-success)]">
                         {formatCurrency(reportData.totals.totalIncrease)}
                       </td>
                       <td className="p-3 text-right">
@@ -930,18 +930,18 @@ function ClaimRowWithSupplements({
 
   return (
     <>
-      <tr className="border-b hover:bg-slate-50">
+      <tr className="border-b hover:bg-[var(--rr-color-surface-hover)]">
         <td className="p-3">
           {hasSupplements && (
             <button
               onClick={() => setExpanded(!expanded)}
-              className="p-1 hover:bg-slate-200 rounded"
+              className="p-1 hover:bg-[var(--rr-color-sand)] rounded"
               aria-label={expanded ? "Collapse supplements" : "Expand supplements"}
             >
               {expanded ? (
-                <ChevronDown className="h-4 w-4 text-slate-500" />
+                <ChevronDown className="h-4 w-4 text-[var(--rr-color-stone)]" />
               ) : (
-                <ChevronRight className="h-4 w-4 text-slate-500" />
+                <ChevronRight className="h-4 w-4 text-[var(--rr-color-stone)]" />
               )}
             </button>
           )}
@@ -949,41 +949,41 @@ function ClaimRowWithSupplements({
         <td className="p-3">
           <div className="font-medium">{claim.policyholderName}</div>
           {hasSupplements && (
-            <div className="text-xs text-slate-500">{claim.supplements.length} supplement(s)</div>
+            <div className="text-xs text-[var(--rr-color-stone)]">{claim.supplements.length} supplement(s)</div>
           )}
         </td>
-        <td className="p-3 text-right text-slate-600">{formatCurrency(claim.initialRCV)}</td>
-        <td className="p-3 text-right text-slate-600">
+        <td className="p-3 text-right text-[var(--rr-color-text-secondary)]">{formatCurrency(claim.initialRCV)}</td>
+        <td className="p-3 text-right text-[var(--rr-color-text-secondary)]">
           {claim.finalRCV ? formatCurrency(claim.finalRCV) : "-"}
         </td>
-        <td className="p-3 text-right text-green-600">{formatCurrency(claim.totalIncrease)}</td>
+        <td className="p-3 text-right text-[var(--rr-color-success)]">{formatCurrency(claim.totalIncrease)}</td>
         <td className="p-3 text-right font-medium">{formatCurrency(claim.billingAmount)}</td>
         <td className="p-3">{claim.status}</td>
       </tr>
       {/* Supplement sub-rows */}
       {expanded &&
         claim.supplements.map((supp) => (
-          <tr key={supp.id} className="bg-slate-50 border-b">
+          <tr key={supp.id} className="bg-[var(--rr-color-sand-light)] border-b">
             <td className="p-3"></td>
             <td className="p-3 pl-8" colSpan={2}>
               <div className="flex items-center gap-2">
-                <span className="text-xs font-medium bg-amber-100 text-amber-800 px-2 py-0.5 rounded">
+                <span className="text-xs font-medium bg-[var(--rr-color-warning)]/10 text-[var(--rr-color-warning)] px-2 py-0.5 rounded">
                   SOL #{supp.sequenceNumber}
                 </span>
                 {supp.omApproved && (
-                  <span className="inline-flex items-center gap-1 text-xs text-green-600">
+                  <span className="inline-flex items-center gap-1 text-xs text-[var(--rr-color-success)]">
                     <CheckCircle className="h-3 w-3" />
                     O&P
                   </span>
                 )}
               </div>
-              <div className="text-xs text-slate-600 mt-1 max-w-md truncate" title={supp.description}>
+              <div className="text-xs text-[var(--rr-color-text-secondary)] mt-1 max-w-md truncate" title={supp.description}>
                 {supp.description}
               </div>
             </td>
-            <td className="p-3 text-right text-green-600">+{formatCurrency(supp.amount)}</td>
+            <td className="p-3 text-right text-[var(--rr-color-success)]">+{formatCurrency(supp.amount)}</td>
             <td className="p-3"></td>
-            <td className="p-3 text-xs text-slate-500">{supp.status}</td>
+            <td className="p-3 text-xs text-[var(--rr-color-stone)]">{supp.status}</td>
           </tr>
         ))}
     </>

@@ -46,8 +46,8 @@ export default async function ClaimsPage({ searchParams }: ClaimsPageProps) {
       {/* Page Header */}
       <div className="flex items-center justify-between">
         <div>
-          <h1 className="text-2xl font-bold text-slate-900">Claims</h1>
-          <p className="text-slate-600">
+          <h1 className="text-2xl font-bold text-[var(--rr-color-text-primary)]">Claims</h1>
+          <p className="text-[var(--rr-color-text-secondary)]">
             Manage and track all supplement claims
           </p>
         </div>
@@ -87,15 +87,15 @@ function ClaimsTableSkeleton() {
   return (
     <div className="rounded-lg border bg-white">
       <div className="p-4 border-b">
-        <div className="h-6 w-24 bg-slate-200 rounded animate-pulse" />
+        <div className="h-6 w-24 bg-[var(--rr-color-sand)] rounded animate-pulse" />
       </div>
       <div className="divide-y">
         {[...Array(5)].map((_, i) => (
           <div key={i} className="p-4 flex items-center gap-4">
-            <div className="h-6 w-20 bg-slate-200 rounded animate-pulse" />
-            <div className="h-6 flex-1 bg-slate-200 rounded animate-pulse" />
-            <div className="h-6 w-32 bg-slate-200 rounded animate-pulse" />
-            <div className="h-6 w-24 bg-slate-200 rounded animate-pulse" />
+            <div className="h-6 w-20 bg-[var(--rr-color-sand)] rounded animate-pulse" />
+            <div className="h-6 flex-1 bg-[var(--rr-color-sand)] rounded animate-pulse" />
+            <div className="h-6 w-32 bg-[var(--rr-color-sand)] rounded animate-pulse" />
+            <div className="h-6 w-24 bg-[var(--rr-color-sand)] rounded animate-pulse" />
           </div>
         ))}
       </div>

@@ -27,8 +27,8 @@ export default async function ReportsPage() {
   return (
     <div className="space-y-6">
       <div>
-        <h1 className="text-2xl font-bold text-slate-900">Reports</h1>
-        <p className="text-slate-600">
+        <h1 className="text-2xl font-bold text-[var(--rr-color-text-primary)]">Reports</h1>
+        <p className="text-[var(--rr-color-text-secondary)]">
           {isContractor
             ? "View your billing reports"
             : "Generate billing and commission reports"}

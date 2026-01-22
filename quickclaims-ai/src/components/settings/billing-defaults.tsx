@@ -44,21 +44,21 @@ export function BillingDefaults({ settings }: BillingDefaultsProps) {
   return (
     <div className="space-y-6">
       <div>
-        <h2 className="text-lg font-semibold text-slate-900">Billing Defaults</h2>
-        <p className="text-sm text-slate-500">
+        <h2 className="text-lg font-semibold text-[var(--rr-color-text-primary)]">Billing Defaults</h2>
+        <p className="text-sm text-[var(--rr-color-stone)]">
           Set default percentages for new contractors and estimators
         </p>
       </div>
 
       {/* Info Banner */}
-      <div className="p-4 rounded-lg bg-blue-50 border border-blue-100">
+      <div className="p-4 rounded-lg bg-[var(--rr-color-info)]/10 border border-[var(--rr-color-info)]/20">
         <div className="flex gap-3">
-          <DollarSign className="h-5 w-5 text-blue-600 flex-shrink-0 mt-0.5" />
+          <DollarSign className="h-5 w-5 text-[var(--rr-color-info)] flex-shrink-0 mt-0.5" />
           <div>
-            <p className="text-sm text-blue-800 font-medium">
+            <p className="text-sm text-[var(--rr-color-info)] font-medium">
               These are default values only
             </p>
-            <p className="text-sm text-blue-700 mt-1">
+            <p className="text-sm text-[var(--rr-color-info)]/80 mt-1">
               When creating new contractors or estimators, these percentages will
               be pre-filled. You can always adjust them for individual records.
             </p>
@@ -70,7 +70,7 @@ export function BillingDefaults({ settings }: BillingDefaultsProps) {
       <div className="space-y-4">
         <div className="space-y-2">
           <Label htmlFor="billingPct" className="flex items-center gap-2">
-            <Percent className="h-4 w-4 text-slate-400" />
+            <Percent className="h-4 w-4 text-[var(--rr-color-stone)]" />
             Default Contractor Billing Percentage
           </Label>
           <div className="flex items-center gap-2 max-w-xs">
@@ -89,9 +89,9 @@ export function BillingDefaults({ settings }: BillingDefaultsProps) {
               }
               className="w-24"
             />
-            <span className="text-slate-500">%</span>
+            <span className="text-[var(--rr-color-stone)]">%</span>
           </div>
-          <p className="text-xs text-slate-500">
+          <p className="text-xs text-[var(--rr-color-stone)]">
             Rise charges contractors this percentage of the claim increase value.
             Typically 10-15%.
           </p>
@@ -100,7 +100,7 @@ export function BillingDefaults({ settings }: BillingDefaultsProps) {
         {/* Commission Percentage */}
         <div className="space-y-2">
           <Label htmlFor="commissionPct" className="flex items-center gap-2">
-            <Percent className="h-4 w-4 text-slate-400" />
+            <Percent className="h-4 w-4 text-[var(--rr-color-stone)]" />
             Default Estimator Commission Percentage
           </Label>
           <div className="flex items-center gap-2 max-w-xs">
@@ -119,9 +119,9 @@ export function BillingDefaults({ settings }: BillingDefaultsProps) {
               }
               className="w-24"
             />
-            <span className="text-slate-500">%</span>
+            <span className="text-[var(--rr-color-stone)]">%</span>
           </div>
-          <p className="text-xs text-slate-500">
+          <p className="text-xs text-[var(--rr-color-stone)]">
             Rise pays estimators this percentage of the claim increase value as
             commission. Typically 5%.
           </p>
@@ -129,22 +129,22 @@ export function BillingDefaults({ settings }: BillingDefaultsProps) {
       </div>
 
       {/* Current Values Preview */}
-      <div className="p-4 rounded-lg bg-slate-50 border border-slate-200">
-        <h4 className="text-sm font-medium text-slate-700 mb-3">Preview</h4>
+      <div className="p-4 rounded-lg bg-[var(--rr-color-sand-light)] border border-[var(--rr-color-border-default)]">
+        <h4 className="text-sm font-medium text-[var(--rr-color-text-secondary)] mb-3">Preview</h4>
         <div className="grid grid-cols-2 gap-4 text-sm">
           <div>
-            <span className="text-slate-500">On a $10,000 increase:</span>
+            <span className="text-[var(--rr-color-stone)]">On a $10,000 increase:</span>
           </div>
           <div></div>
           <div className="flex justify-between">
-            <span className="text-slate-600">Contractor Bill:</span>
-            <span className="font-medium text-slate-900">
+            <span className="text-[var(--rr-color-text-secondary)]">Contractor Bill:</span>
+            <span className="font-medium text-[var(--rr-color-text-primary)]">
               ${((10000 * formData.defaultBillingPct) / 100).toFixed(2)}
             </span>
           </div>
           <div className="flex justify-between">
-            <span className="text-slate-600">Estimator Commission:</span>
-            <span className="font-medium text-slate-900">
+            <span className="text-[var(--rr-color-text-secondary)]">Estimator Commission:</span>
+            <span className="font-medium text-[var(--rr-color-text-primary)]">
               ${((10000 * formData.defaultCommissionPct) / 100).toFixed(2)}
             </span>
           </div>
@@ -152,7 +152,7 @@ export function BillingDefaults({ settings }: BillingDefaultsProps) {
       </div>
 
       {/* Save Button */}
-      <div className="flex justify-end pt-4 border-t border-slate-200">
+      <div className="flex justify-end pt-4 border-t border-[var(--rr-color-border-default)]">
         <Button onClick={handleSave} disabled={isLoading}>
           {isLoading && <Loader2 className="h-4 w-4 mr-2 animate-spin" />}
           Save Changes

@@ -1,0 +1,16 @@
+/* =================================================
+   QUICKCLAIMS AI - BORDER RADIUS TOKENS
+   ================================================= */
+
+:root {
+  /* ========================================
+     BORDER RADIUS SCALE
+     ======================================== */
+  --rr-radius-none: 0;
+  --rr-radius-sm: 0.25rem;    /* 4px - subtle rounding */
+  --rr-radius-md: 0.5rem;     /* 8px - default, inputs */
+  --rr-radius-lg: 0.75rem;    /* 12px - cards, modals */
+  --rr-radius-xl: 1rem;       /* 16px - large cards */
+  --rr-radius-2xl: 1.5rem;    /* 24px - hero elements */
+  --rr-radius-full: 9999px;   /* Pill shapes, avatars */
+}

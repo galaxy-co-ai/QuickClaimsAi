@@ -10,22 +10,22 @@ interface HeaderProps {
 
 export function Header({ title = "Dashboard" }: HeaderProps) {
   return (
-    <header className="flex h-16 items-center justify-between border-b bg-white px-6">
-      <div className="flex items-center gap-4">
-        <h1 className="text-xl font-semibold text-slate-900">{title}</h1>
+    <header className="flex h-[var(--rr-header-height-desktop)] items-center justify-between border-b border-[var(--rr-color-border-default)] bg-[var(--rr-color-bg-secondary)] px-[var(--rr-space-6)]">
+      <div className="flex items-center gap-[var(--rr-space-4)]">
+        <h1 className="text-[var(--rr-font-size-xl)] font-[var(--rr-font-weight-semibold)] text-[var(--rr-color-text-primary)]">{title}</h1>
       </div>
 
-      <div className="flex items-center gap-4">
+      <div className="flex items-center gap-[var(--rr-space-4)]">
         {/* Search */}
         <div className="relative">
           <Search
-            className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-slate-400"
+            className="absolute left-[var(--rr-space-3)] top-1/2 h-4 w-4 -translate-y-1/2 text-[var(--rr-color-text-tertiary)]"
             aria-hidden="true"
           />
           <input
             type="search"
             placeholder="Search claims..."
-            className="h-9 w-64 rounded-lg border border-slate-200 bg-slate-50 pl-9 pr-4 text-sm outline-none transition-colors placeholder:text-slate-400 focus:border-blue-500 focus:bg-white focus:ring-1 focus:ring-blue-500"
+            className="h-[var(--rr-button-height-sm)] w-64 rounded-[var(--rr-radius-md)] border border-[var(--rr-color-border-default)] bg-[var(--rr-color-bg-tertiary)] pl-9 pr-[var(--rr-space-4)] text-[var(--rr-font-size-sm)] text-[var(--rr-color-text-primary)] outline-none transition-all placeholder:text-[var(--rr-color-text-tertiary)] focus:border-[var(--rr-color-border-focus)] focus:bg-[var(--rr-color-bg-secondary)] focus:ring-2 focus:ring-[var(--rr-color-focus-ring-alpha)]"
             aria-label="Search claims"
           />
         </div>
@@ -37,8 +37,8 @@ export function Header({ title = "Dashboard" }: HeaderProps) {
           className="relative"
           aria-label="Notifications"
         >
-          <Bell className="h-5 w-5 text-slate-600" aria-hidden="true" />
-          <span className="absolute right-1.5 top-1.5 h-2 w-2 rounded-full bg-red-500" />
+          <Bell className="h-5 w-5 text-[var(--rr-color-text-secondary)]" aria-hidden="true" />
+          <span className="absolute right-1.5 top-1.5 h-2 w-2 rounded-[var(--rr-radius-full)] bg-[var(--rr-color-error)]" />
         </Button>
 
         {/* Organization Switcher */}
@@ -49,7 +49,7 @@ export function Header({ title = "Dashboard" }: HeaderProps) {
           appearance={{
             elements: {
               rootBox: "flex items-center",
-              organizationSwitcherTrigger: "rounded-lg border border-slate-200 px-3 py-1.5",
+              organizationSwitcherTrigger: "rounded-[var(--rr-radius-md)] border border-[var(--rr-color-border-default)] px-[var(--rr-space-3)] py-[var(--rr-space-2)] text-[var(--rr-color-text-primary)] hover:bg-[var(--rr-color-surface-hover)] transition-colors",
             },
           }}
         />

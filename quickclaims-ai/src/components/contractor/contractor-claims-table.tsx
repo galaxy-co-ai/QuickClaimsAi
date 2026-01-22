@@ -103,7 +103,7 @@ export function ContractorClaimsTable({
       {/* Search */}
       <div className="flex gap-4">
         <div className="relative flex-1 max-w-md">
-          <Search className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-slate-400" />
+          <Search className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-[var(--rr-color-stone)]" />
           <Input
             placeholder="Search claims..."
             value={searchInput}
@@ -130,36 +130,36 @@ export function ContractorClaimsTable({
       </div>
 
       {/* Table */}
-      <div className="overflow-hidden rounded-lg border bg-white shadow-sm">
-        <table className="min-w-full divide-y divide-slate-200">
-          <thead className="bg-slate-50">
+      <div className="overflow-hidden rounded-lg border bg-[var(--rr-color-surface-primary)] shadow-sm">
+        <table className="min-w-full divide-y divide-[var(--rr-color-border-default)]">
+          <thead className="bg-[var(--rr-color-sand-light)]">
             <tr>
-              <th className="px-4 py-3 text-left text-xs font-medium uppercase tracking-wider text-slate-500">
+              <th className="px-4 py-3 text-left text-xs font-medium uppercase tracking-wider text-[var(--rr-color-stone)]">
                 Policyholder
               </th>
-              <th className="px-4 py-3 text-left text-xs font-medium uppercase tracking-wider text-slate-500">
+              <th className="px-4 py-3 text-left text-xs font-medium uppercase tracking-wider text-[var(--rr-color-stone)]">
                 Status
               </th>
-              <th className="px-4 py-3 text-left text-xs font-medium uppercase tracking-wider text-slate-500">
+              <th className="px-4 py-3 text-left text-xs font-medium uppercase tracking-wider text-[var(--rr-color-stone)]">
                 Estimator
               </th>
-              <th className="px-4 py-3 text-right text-xs font-medium uppercase tracking-wider text-slate-500">
+              <th className="px-4 py-3 text-right text-xs font-medium uppercase tracking-wider text-[var(--rr-color-stone)]">
                 Current RCV
               </th>
-              <th className="px-4 py-3 text-right text-xs font-medium uppercase tracking-wider text-slate-500">
+              <th className="px-4 py-3 text-right text-xs font-medium uppercase tracking-wider text-[var(--rr-color-stone)]">
                 Total Increase
               </th>
-              <th className="px-4 py-3 text-right text-xs font-medium uppercase tracking-wider text-slate-500">
+              <th className="px-4 py-3 text-right text-xs font-medium uppercase tracking-wider text-[var(--rr-color-stone)]">
                 $/Square
               </th>
             </tr>
           </thead>
-          <tbody className="divide-y divide-slate-200">
+          <tbody className="divide-y divide-[var(--rr-color-border-default)]">
             {claims.length === 0 ? (
               <tr>
                 <td
                   colSpan={6}
-                  className="px-4 py-8 text-center text-slate-500"
+                  className="px-4 py-8 text-center text-[var(--rr-color-stone)]"
                 >
                   No claims found
                 </td>
@@ -168,15 +168,15 @@ export function ContractorClaimsTable({
               claims.map((claim) => (
                 <tr
                   key={claim.id}
-                  className="hover:bg-slate-50 cursor-pointer"
+                  className="hover:bg-[var(--rr-color-surface-hover)] cursor-pointer"
                   onClick={() => router.push("/contractor/claims/" + claim.id)}
                 >
                   <td className="px-4 py-3">
                     <div>
-                      <p className="font-medium text-slate-900">
+                      <p className="font-medium text-[var(--rr-color-text-primary)]">
                         {claim.policyholderName}
                       </p>
-                      <p className="text-sm text-slate-500">
+                      <p className="text-sm text-[var(--rr-color-stone)]">
                         {claim.lossAddress}, {claim.lossCity}, {claim.lossState}
                       </p>
                     </div>
@@ -186,16 +186,16 @@ export function ContractorClaimsTable({
                       {CLAIM_STATUS_LABELS[claim.status]}
                     </Badge>
                   </td>
-                  <td className="px-4 py-3 text-sm text-slate-600">
+                  <td className="px-4 py-3 text-sm text-[var(--rr-color-text-secondary)]">
                     {claim.estimator.firstName} {claim.estimator.lastName}
                   </td>
                   <td className="px-4 py-3 text-right font-medium">
                     {"$" + decimalToNumber(claim.currentTotalRCV).toLocaleString()}
                   </td>
-                  <td className="px-4 py-3 text-right font-medium text-green-600">
+                  <td className="px-4 py-3 text-right font-medium text-[var(--rr-color-success)]">
                     {"$" + decimalToNumber(claim.totalIncrease).toLocaleString()}
                   </td>
-                  <td className="px-4 py-3 text-right font-bold text-blue-600">
+                  <td className="px-4 py-3 text-right font-bold text-[var(--rr-color-brand-primary)]">
                     {"$" + decimalToNumber(claim.dollarPerSquare).toFixed(2)}
                   </td>
                 </tr>
@@ -208,7 +208,7 @@ export function ContractorClaimsTable({
       {/* Pagination */}
       {pagination.totalPages > 1 && (
         <div className="flex items-center justify-between">
-          <p className="text-sm text-slate-600">
+          <p className="text-sm text-[var(--rr-color-text-secondary)]">
             Showing {(pagination.page - 1) * pagination.limit + 1} to{" "}
             {Math.min(pagination.page * pagination.limit, pagination.total)} of{" "}
             {pagination.total} claims

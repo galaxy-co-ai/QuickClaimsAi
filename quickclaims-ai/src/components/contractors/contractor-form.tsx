@@ -93,7 +93,7 @@ export function ContractorForm({ contractor }: ContractorFormProps) {
           {/* Company Name */}
           <div className="space-y-2">
             <Label htmlFor="companyName">
-              Company Name <span className="text-red-500">*</span>
+              Company Name <span className="text-[var(--rr-color-error)]">*</span>
             </Label>
             <Input
               id="companyName"
@@ -102,7 +102,7 @@ export function ContractorForm({ contractor }: ContractorFormProps) {
               aria-invalid={!!errors.companyName}
             />
             {errors.companyName && (
-              <p className="text-sm text-red-500">{errors.companyName.message}</p>
+              <p className="text-[var(--rr-font-size-sm)] text-[var(--rr-color-error)]">{errors.companyName.message}</p>
             )}
           </div>
 
@@ -120,7 +120,7 @@ export function ContractorForm({ contractor }: ContractorFormProps) {
           <div className="grid gap-4 md:grid-cols-2">
             <div className="space-y-2">
               <Label htmlFor="email">
-                Email <span className="text-red-500">*</span>
+                Email <span className="text-[var(--rr-color-error)]">*</span>
               </Label>
               <Input
                 id="email"
@@ -130,7 +130,7 @@ export function ContractorForm({ contractor }: ContractorFormProps) {
                 aria-invalid={!!errors.email}
               />
               {errors.email && (
-                <p className="text-sm text-red-500">{errors.email.message}</p>
+                <p className="text-[var(--rr-font-size-sm)] text-[var(--rr-color-error)]">{errors.email.message}</p>
               )}
             </div>
             <div className="space-y-2">
@@ -161,7 +161,7 @@ export function ContractorForm({ contractor }: ContractorFormProps) {
           <CardTitle>Billing Rates</CardTitle>
         </CardHeader>
         <CardContent className="space-y-4">
-          <p className="text-sm text-slate-500 mb-4">
+          <p className="text-[var(--rr-font-size-sm)] text-[var(--rr-color-text-secondary)] mb-4">
             Set billing rates by job type. Enter as decimal (e.g., 0.125 = 12.5%).
           </p>
           
@@ -184,12 +184,12 @@ export function ContractorForm({ contractor }: ContractorFormProps) {
                   aria-invalid={!!errors.residentialRate}
                   aria-label="Residential supplement billing rate"
                 />
-                <span className="absolute right-3 top-1/2 -translate-y-1/2 text-slate-500 text-sm">
+                <span className="absolute right-3 top-1/2 -translate-y-1/2 text-[var(--rr-color-text-secondary)] text-[var(--rr-font-size-sm)]">
                   %
                 </span>
               </div>
               {errors.residentialRate && (
-                <p className="text-sm text-red-500">
+                <p className="text-[var(--rr-font-size-sm)] text-[var(--rr-color-error)]">
                   {errors.residentialRate.message}
                 </p>
               )}
@@ -212,12 +212,12 @@ export function ContractorForm({ contractor }: ContractorFormProps) {
                   aria-invalid={!!errors.commercialRate}
                   aria-label="Commercial supplement billing rate"
                 />
-                <span className="absolute right-3 top-1/2 -translate-y-1/2 text-slate-500 text-sm">
+                <span className="absolute right-3 top-1/2 -translate-y-1/2 text-[var(--rr-color-text-secondary)] text-[var(--rr-font-size-sm)]">
                   %
                 </span>
               </div>
               {errors.commercialRate && (
-                <p className="text-sm text-red-500">
+                <p className="text-[var(--rr-font-size-sm)] text-[var(--rr-color-error)]">
                   {errors.commercialRate.message}
                 </p>
               )}
@@ -240,12 +240,12 @@ export function ContractorForm({ contractor }: ContractorFormProps) {
                   aria-invalid={!!errors.reinspectionRate}
                   aria-label="Reinspection billing rate"
                 />
-                <span className="absolute right-3 top-1/2 -translate-y-1/2 text-slate-500 text-sm">
+                <span className="absolute right-3 top-1/2 -translate-y-1/2 text-[var(--rr-color-text-secondary)] text-[var(--rr-font-size-sm)]">
                   %
                 </span>
               </div>
               {errors.reinspectionRate && (
-                <p className="text-sm text-red-500">
+                <p className="text-[var(--rr-font-size-sm)] text-[var(--rr-color-error)]">
                   {errors.reinspectionRate.message}
                 </p>
               )}
@@ -257,7 +257,7 @@ export function ContractorForm({ contractor }: ContractorFormProps) {
                 Estimate Fee (Flat $)
               </Label>
               <div className="relative">
-                <span className="absolute left-3 top-1/2 -translate-y-1/2 text-slate-500">
+                <span className="absolute left-3 top-1/2 -translate-y-1/2 text-[var(--rr-color-text-secondary)]">
                   $
                 </span>
                 <Input
@@ -274,7 +274,7 @@ export function ContractorForm({ contractor }: ContractorFormProps) {
                 />
               </div>
               {errors.estimateFlatFee && (
-                <p className="text-sm text-red-500">
+                <p className="text-[var(--rr-font-size-sm)] text-[var(--rr-color-error)]">
                   {errors.estimateFlatFee.message}
                 </p>
               )}

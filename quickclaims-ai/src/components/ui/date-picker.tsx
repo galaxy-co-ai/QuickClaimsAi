@@ -52,16 +52,16 @@ const CustomDateInput = React.forwardRef<HTMLInputElement, CustomInputProps>(
         autoComplete="off"
         readOnly
         className={cn(
-          "h-10 w-full cursor-pointer rounded-xl border border-slate-200 bg-white pl-10 pr-3 text-sm outline-none transition-all duration-200",
-          "focus:border-blue-500 focus:ring-2 focus:ring-blue-500/40",
-          "placeholder:text-slate-500",
-          ariaInvalid && "border-red-500 focus:ring-red-500/40",
+          "h-10 w-full cursor-pointer rounded-xl border border-[var(--rr-color-border-default)] bg-[var(--rr-color-surface-primary)] pl-10 pr-3 text-sm outline-none transition-all duration-200",
+          "focus:border-[var(--rr-color-brand-primary)] focus:ring-2 focus:ring-[var(--rr-color-brand-primary)]/40",
+          "placeholder:text-[var(--rr-color-stone)]",
+          ariaInvalid && "border-[var(--rr-color-error)] focus:ring-[var(--rr-color-error)]/40",
           disabled && "cursor-not-allowed opacity-50",
           className
         )}
       />
       <CalendarIcon
-        className="pointer-events-none absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-slate-400"
+        className="pointer-events-none absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-[var(--rr-color-stone)]"
         aria-hidden="true"
       />
     </div>
@@ -105,8 +105,8 @@ export function DatePicker({
             aria-label={ariaLabel || placeholder}
           />
         }
-        calendarClassName="!rounded-xl !border-slate-200/80 !shadow-lg !shadow-black/10 !font-sans"
-        dayClassName={() => "!rounded-lg hover:!bg-slate-100"}
+        calendarClassName="!rounded-xl !border-[var(--rr-color-border-default)]/80 !shadow-lg !shadow-black/10 !font-sans"
+        dayClassName={() => "!rounded-lg hover:!bg-[var(--rr-color-sand)]"}
         popperClassName="!z-50"
         showPopperArrow={false}
         wrapperClassName="w-full"
@@ -149,8 +149,8 @@ export function DatePickerString({
         customInput={
           <CustomDateInput aria-label={ariaLabel || placeholder} />
         }
-        calendarClassName="!rounded-xl !border-slate-200/80 !shadow-lg !shadow-black/10 !font-sans"
-        dayClassName={() => "!rounded-lg hover:!bg-slate-100"}
+        calendarClassName="!rounded-xl !border-[var(--rr-color-border-default)]/80 !shadow-lg !shadow-black/10 !font-sans"
+        dayClassName={() => "!rounded-lg hover:!bg-[var(--rr-color-sand)]"}
         popperClassName="!z-50"
         showPopperArrow={false}
         wrapperClassName="w-full"

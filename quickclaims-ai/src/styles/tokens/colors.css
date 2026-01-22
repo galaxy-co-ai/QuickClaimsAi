@@ -1,0 +1,88 @@
+/* =================================================
+   QUICKCLAIMS AI - COLOR TOKENS
+   Dune + OpenAI inspired palette (from Results Roofing)
+   ================================================= */
+
+:root {
+  /* ========================================
+     COLOR PRIMITIVES
+     Raw color values - don't use directly
+     ======================================== */
+
+  /* Brand Colors */
+  --rr-color-sandstone: #C4A77D;     /* Primary brand - CTAs, accents */
+  --rr-color-terracotta: #B86B4C;    /* Secondary accent - hover states */
+  --rr-color-charcoal: #2C2C2C;      /* Primary text, strong contrast */
+
+  /* Neutral Palette (warm undertones) */
+  --rr-color-white: #FFFFFF;
+  --rr-color-cream: #FAF8F5;         /* Page backgrounds, subtle warmth */
+  --rr-color-sand-light: #F5F0E8;    /* Secondary backgrounds, dividers */
+  --rr-color-sand: #E8E0D4;          /* Borders, disabled states */
+  --rr-color-stone: #9C9688;         /* Secondary text, placeholders */
+  --rr-color-slate: #5C5C5C;         /* Body text */
+
+  /* Status Colors */
+  --rr-color-success: #4A7C59;       /* Confirmations, positive */
+  --rr-color-success-light: #E8F5E9; /* Success backgrounds */
+  --rr-color-warning: #C9A227;       /* Alerts, attention needed */
+  --rr-color-warning-light: #FFF8E1; /* Warning backgrounds */
+  --rr-color-error: #B54A4A;         /* Errors, destructive actions */
+  --rr-color-error-light: #FFEBEE;   /* Error backgrounds */
+  --rr-color-info: #5B7B8C;          /* Informational, neutral alerts */
+  --rr-color-info-light: #E3F2FD;    /* Info backgrounds */
+
+  /* ========================================
+     SEMANTIC COLOR TOKENS
+     Use these in components
+     ======================================== */
+
+  /* Backgrounds */
+  --rr-color-bg-primary: var(--rr-color-cream);        /* Main page background */
+  --rr-color-bg-secondary: var(--rr-color-white);      /* Cards, panels */
+  --rr-color-bg-tertiary: var(--rr-color-sand-light);  /* Subtle sections */
+  --rr-color-bg-inverse: var(--rr-color-charcoal);     /* Dark backgrounds */
+  --rr-color-bg-muted: var(--rr-color-sand);           /* Disabled, inactive */
+
+  /* Surfaces - interactive backgrounds */
+  --rr-color-surface-default: var(--rr-color-white);
+  --rr-color-surface-hover: var(--rr-color-sand-light);
+  --rr-color-surface-active: var(--rr-color-sand);
+  --rr-color-surface-selected: var(--rr-color-sand-light);
+
+  /* Text */
+  --rr-color-text-primary: var(--rr-color-charcoal);   /* Main text */
+  --rr-color-text-secondary: var(--rr-color-slate);    /* Body text */
+  --rr-color-text-tertiary: var(--rr-color-stone);     /* Subtle text, placeholders */
+  --rr-color-text-disabled: var(--rr-color-stone);     /* Disabled text */
+  --rr-color-text-inverse: var(--rr-color-white);      /* Text on dark backgrounds */
+  --rr-color-text-link: var(--rr-color-sandstone);     /* Links */
+  --rr-color-text-link-hover: var(--rr-color-terracotta);
+
+  /* Borders */
+  --rr-color-border-default: var(--rr-color-sand);     /* Default borders */
+  --rr-color-border-strong: var(--rr-color-stone);     /* Emphasized borders */
+  --rr-color-border-focus: var(--rr-color-sandstone);  /* Focus rings */
+  --rr-color-border-error: var(--rr-color-error);      /* Error state borders */
+  --rr-color-border-success: var(--rr-color-success);  /* Success state borders */
+
+  /* Brand Interactive */
+  --rr-color-brand-primary: var(--rr-color-sandstone);
+  --rr-color-brand-primary-hover: var(--rr-color-terracotta);
+  --rr-color-brand-primary-active: var(--rr-color-charcoal);
+  --rr-color-brand-secondary: var(--rr-color-terracotta);
+
+  /* Status Semantic */
+  --rr-color-status-success: var(--rr-color-success);
+  --rr-color-status-success-bg: var(--rr-color-success-light);
+  --rr-color-status-warning: var(--rr-color-warning);
+  --rr-color-status-warning-bg: var(--rr-color-warning-light);
+  --rr-color-status-error: var(--rr-color-error);
+  --rr-color-status-error-bg: var(--rr-color-error-light);
+  --rr-color-status-info: var(--rr-color-info);
+  --rr-color-status-info-bg: var(--rr-color-info-light);
+
+  /* Focus Ring */
+  --rr-color-focus-ring: var(--rr-color-sandstone);
+  --rr-color-focus-ring-alpha: rgba(196, 167, 125, 0.15);
+}

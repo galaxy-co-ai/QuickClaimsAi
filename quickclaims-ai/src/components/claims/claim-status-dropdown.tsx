@@ -80,7 +80,7 @@ export function ClaimStatusDropdown({
         </Button>
       </DropdownMenuTrigger>
       <DropdownMenuContent align="start" className="max-h-80 overflow-y-auto">
-        <DropdownMenuLabel className="text-xs text-slate-500">
+        <DropdownMenuLabel className="text-[var(--rr-font-size-xs)] text-[var(--rr-color-text-secondary)]">
           Change Status
         </DropdownMenuLabel>
         <DropdownMenuSeparator />

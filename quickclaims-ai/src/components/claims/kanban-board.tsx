@@ -144,7 +144,7 @@ export function KanbanBoard({ initialClaims }: KanbanBoardProps) {
   return (
     <div className="space-y-4">
       {error && (
-        <div className="rounded-lg bg-red-50 border border-red-200 p-3 text-sm text-red-700">
+        <div className="rounded-[var(--rr-radius-lg)] bg-[var(--rr-color-error)]/10 border border-[var(--rr-color-error)]/20 p-[var(--rr-space-3)] text-[var(--rr-font-size-sm)] text-[var(--rr-color-error)]">
           {error}
         </div>
       )}
@@ -155,7 +155,7 @@ export function KanbanBoard({ initialClaims }: KanbanBoardProps) {
         onDragStart={handleDragStart}
         onDragEnd={handleDragEnd}
       >
-        <div className="flex gap-4 overflow-x-auto pb-4">
+        <div className="flex gap-[var(--rr-space-4)] overflow-x-auto pb-[var(--rr-space-4)]">
           {KANBAN_STATUSES.map((status) => (
             <KanbanColumn
               key={status}

@@ -1,0 +1,26 @@
+/* =================================================
+   QUICKCLAIMS AI - SHADOW TOKENS
+   Warm charcoal-based shadows for Dune aesthetic
+   ================================================= */
+
+:root {
+  /* ========================================
+     SHADOW PRIMITIVES
+     Using warm charcoal for Dune aesthetic
+     ======================================== */
+  --rr-shadow-color: 44, 44, 44; /* Charcoal RGB for alpha shadows */
+
+  /* Elevation scale */
+  --rr-shadow-sm: 0 1px 2px rgba(var(--rr-shadow-color), 0.05);
+  --rr-shadow-md: 0 4px 6px rgba(var(--rr-shadow-color), 0.07),
+                  0 2px 4px rgba(var(--rr-shadow-color), 0.06);
+  --rr-shadow-lg: 0 10px 15px rgba(var(--rr-shadow-color), 0.1),
+                  0 4px 6px rgba(var(--rr-shadow-color), 0.05);
+  --rr-shadow-xl: 0 20px 25px rgba(var(--rr-shadow-color), 0.1),
+                  0 10px 10px rgba(var(--rr-shadow-color), 0.04);
+
+  /* Special shadows */
+  --rr-shadow-inner: inset 0 2px 4px rgba(var(--rr-shadow-color), 0.06);
+  --rr-shadow-focus: 0 0 0 3px var(--rr-color-focus-ring-alpha);
+  --rr-shadow-none: none;
+}

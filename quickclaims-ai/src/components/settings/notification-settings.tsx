@@ -76,8 +76,8 @@ export function NotificationSettings({ preferences }: NotificationSettingsProps)
   return (
     <div className="space-y-6">
       <div>
-        <h2 className="text-lg font-semibold text-slate-900">Notifications</h2>
-        <p className="text-sm text-slate-500">
+        <h2 className="text-lg font-semibold text-[var(--rr-color-text-primary)]">Notifications</h2>
+        <p className="text-sm text-[var(--rr-color-stone)]">
           Choose which email notifications you&apos;d like to receive
         </p>
       </div>
@@ -89,20 +89,20 @@ export function NotificationSettings({ preferences }: NotificationSettingsProps)
           return (
             <div
               key={option.key}
-              className="flex items-center justify-between py-4 border-b border-slate-100 last:border-0"
+              className="flex items-center justify-between py-4 border-b border-[var(--rr-color-border-default)] last:border-0"
             >
               <div className="flex items-start gap-3">
-                <div className="mt-0.5 p-2 rounded-lg bg-slate-100">
-                  <Icon className="h-4 w-4 text-slate-600" />
+                <div className="mt-0.5 p-2 rounded-lg bg-[var(--rr-color-sand)]">
+                  <Icon className="h-4 w-4 text-[var(--rr-color-text-secondary)]" />
                 </div>
                 <div>
                   <label
                     htmlFor={option.key}
-                    className="font-medium text-slate-900 cursor-pointer"
+                    className="font-medium text-[var(--rr-color-text-primary)] cursor-pointer"
                   >
                     {option.label}
                   </label>
-                  <p className="text-sm text-slate-500">{option.description}</p>
+                  <p className="text-sm text-[var(--rr-color-stone)]">{option.description}</p>
                 </div>
               </div>
               <Switch
@@ -117,7 +117,7 @@ export function NotificationSettings({ preferences }: NotificationSettingsProps)
       </div>
 
       {/* Save Button */}
-      <div className="flex justify-end pt-4 border-t border-slate-200">
+      <div className="flex justify-end pt-4 border-t border-[var(--rr-color-border-default)]">
         <Button onClick={handleSave} disabled={isLoading}>
           {isLoading && <Loader2 className="h-4 w-4 mr-2 animate-spin" />}
           Save Changes
@@ -125,8 +125,8 @@ export function NotificationSettings({ preferences }: NotificationSettingsProps)
       </div>
 
       {/* Info Note */}
-      <div className="p-3 rounded-lg bg-amber-50 border border-amber-100">
-        <p className="text-sm text-amber-700">
+      <div className="p-3 rounded-lg bg-[var(--rr-color-warning)]/10 border border-[var(--rr-color-warning)]/20">
+        <p className="text-sm text-[var(--rr-color-warning)]">
           <strong>Note:</strong> Email notifications require a valid email address
           and may take a few minutes to take effect.
         </p>

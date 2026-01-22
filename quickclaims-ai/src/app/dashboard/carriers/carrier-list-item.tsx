@@ -31,9 +31,9 @@ interface CarrierListItemProps {
 }
 
 const TYPE_COLORS: Record<string, string> = {
-  desk: "bg-blue-100 text-blue-700",
-  field: "bg-green-100 text-green-700",
-  independent: "bg-purple-100 text-purple-700",
+  desk: "bg-[var(--rr-color-info)]/10 text-[var(--rr-color-info)]",
+  field: "bg-[var(--rr-color-success)]/10 text-[var(--rr-color-success)]",
+  independent: "bg-[var(--rr-color-brand-accent)]/10 text-[var(--rr-color-brand-accent)]",
 };
 
 export function CarrierListItem({ carrier }: CarrierListItemProps) {
@@ -44,7 +44,7 @@ export function CarrierListItem({ carrier }: CarrierListItemProps) {
     <div className="border rounded-lg overflow-hidden">
       {/* Carrier Row */}
       <div
-        className="flex items-center justify-between p-3 hover:bg-slate-50 cursor-pointer"
+        className="flex items-center justify-between p-3 hover:bg-[var(--rr-color-surface-hover)] cursor-pointer"
         onClick={() => hasAdjusters && setExpanded(!expanded)}
         role="button"
         aria-expanded={expanded}
@@ -60,7 +60,7 @@ export function CarrierListItem({ carrier }: CarrierListItemProps) {
         <div className="flex items-center gap-3">
           {/* Expand Toggle */}
           <button
-            className={`p-1 rounded hover:bg-slate-200 ${!hasAdjusters && "invisible"}`}
+            className={`p-1 rounded hover:bg-[var(--rr-color-sand)] ${!hasAdjusters && "invisible"}`}
             onClick={(e) => {
               e.stopPropagation();
               setExpanded(!expanded);
@@ -68,16 +68,16 @@ export function CarrierListItem({ carrier }: CarrierListItemProps) {
             aria-label={expanded ? "Collapse adjusters" : "Expand adjusters"}
           >
             {expanded ? (
-              <ChevronDown className="h-4 w-4 text-slate-500" />
+              <ChevronDown className="h-4 w-4 text-[var(--rr-color-stone)]" />
             ) : (
-              <ChevronRight className="h-4 w-4 text-slate-500" />
+              <ChevronRight className="h-4 w-4 text-[var(--rr-color-stone)]" />
             )}
           </button>
 
           {/* Carrier Info */}
           <div>
-            <div className="font-medium text-slate-900">{carrier.name}</div>
-            <div className="flex items-center gap-3 text-sm text-slate-500">
+            <div className="font-medium text-[var(--rr-color-text-primary)]">{carrier.name}</div>
+            <div className="flex items-center gap-3 text-sm text-[var(--rr-color-stone)]">
               {carrier.email && (
                 <span className="flex items-center gap-1">
                   <Mail className="h-3 w-3" />
@@ -95,7 +95,7 @@ export function CarrierListItem({ carrier }: CarrierListItemProps) {
         </div>
 
         <div className="flex items-center gap-4">
-          <span className="text-sm text-slate-500">
+          <span className="text-sm text-[var(--rr-color-stone)]">
             {carrier._count.adjusters} adjusters · {carrier._count.claims} claims
           </span>
           <Link
@@ -112,7 +112,7 @@ export function CarrierListItem({ carrier }: CarrierListItemProps) {
 
       {/* Expandable Adjusters List */}
       {expanded && hasAdjusters && (
-        <div className="border-t bg-slate-50 p-3 pl-12 space-y-2">
+        <div className="border-t bg-[var(--rr-color-sand-light)] p-3 pl-12 space-y-2">
           {carrier.adjusters.map((adjuster) => (
             <Link
               key={adjuster.id}
@@ -120,10 +120,10 @@ export function CarrierListItem({ carrier }: CarrierListItemProps) {
               className="flex items-center justify-between p-2 rounded hover:bg-white transition-colors"
             >
               <div className="flex items-center gap-3">
-                <UserCheck className="h-4 w-4 text-slate-400" />
+                <UserCheck className="h-4 w-4 text-[var(--rr-color-stone)]" />
                 <div>
-                  <span className="font-medium text-sm text-slate-700">{adjuster.name}</span>
-                  <div className="flex items-center gap-2 text-xs text-slate-500">
+                  <span className="font-medium text-sm text-[var(--rr-color-text-secondary)]">{adjuster.name}</span>
+                  <div className="flex items-center gap-2 text-xs text-[var(--rr-color-stone)]">
                     {adjuster.email && <span>{adjuster.email}</span>}
                     {adjuster.phone && <span>{adjuster.phone}</span>}
                   </div>
@@ -136,7 +136,7 @@ export function CarrierListItem({ carrier }: CarrierListItemProps) {
           ))}
           <Link
             href={`/dashboard/adjusters/new?carrierId=${carrier.id}`}
-            className="inline-flex items-center gap-1 text-xs text-blue-600 hover:underline mt-2"
+            className="inline-flex items-center gap-1 text-xs text-[var(--rr-color-brand-primary)] hover:underline mt-2"
           >
             + Add adjuster to {carrier.name}
           </Link>

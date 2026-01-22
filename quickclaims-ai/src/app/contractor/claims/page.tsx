@@ -23,8 +23,8 @@ export default async function ContractorClaimsPage({ searchParams }: PageProps) 
   return (
     <div className="space-y-6">
       <div>
-        <h1 className="text-2xl font-bold text-slate-900">My Claims</h1>
-        <p className="text-slate-600">View and track your claims</p>
+        <h1 className="text-2xl font-bold text-[var(--rr-color-text-primary)]">My Claims</h1>
+        <p className="text-[var(--rr-color-text-secondary)]">View and track your claims</p>
       </div>
 
       <ContractorClaimsTable

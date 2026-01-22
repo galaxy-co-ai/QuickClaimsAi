@@ -13,8 +13,8 @@ export default async function KanbanPage() {
     <div className="space-y-6">
       <div className="flex items-center justify-between">
         <div>
-          <h1 className="text-2xl font-bold text-slate-900">Claims Kanban</h1>
-          <p className="text-slate-600">
+          <h1 className="text-2xl font-bold text-[var(--rr-color-text-primary)]">Claims Kanban</h1>
+          <p className="text-[var(--rr-color-text-secondary)]">
             Drag and drop claims to update status
           </p>
         </div>

@@ -81,7 +81,7 @@ export function CarrierFormModal({ onCarrierCreated }: CarrierFormModalProps) {
       <DialogTrigger asChild>
         <button
           type="button"
-          className="inline-flex items-center gap-1 text-xs text-blue-600 hover:text-blue-800 hover:underline"
+          className="inline-flex items-center gap-1 text-xs text-[var(--rr-color-brand-primary)] hover:text-[var(--rr-color-brand-primary)] hover:underline"
           aria-label="Add new carrier"
         >
           <Plus className="h-3 w-3" aria-hidden="true" />
@@ -99,7 +99,7 @@ export function CarrierFormModal({ onCarrierCreated }: CarrierFormModalProps) {
           {/* Carrier Name */}
           <div className="space-y-2">
             <Label htmlFor="carrier-name">
-              Carrier Name <span className="text-red-500">*</span>
+              Carrier Name <span className="text-[var(--rr-color-error)]">*</span>
             </Label>
             <Input
               id="carrier-name"
@@ -108,7 +108,7 @@ export function CarrierFormModal({ onCarrierCreated }: CarrierFormModalProps) {
               aria-invalid={!!errors.name}
             />
             {errors.name && (
-              <p className="text-sm text-red-500">{errors.name.message}</p>
+              <p className="text-sm text-[var(--rr-color-error)]">{errors.name.message}</p>
             )}
           </div>
 
@@ -123,7 +123,7 @@ export function CarrierFormModal({ onCarrierCreated }: CarrierFormModalProps) {
                 {...register("email")}
               />
               {errors.email && (
-                <p className="text-sm text-red-500">{errors.email.message}</p>
+                <p className="text-sm text-[var(--rr-color-error)]">{errors.email.message}</p>
               )}
             </div>
             <div className="space-y-2">
@@ -147,7 +147,7 @@ export function CarrierFormModal({ onCarrierCreated }: CarrierFormModalProps) {
               {...register("website")}
             />
             {errors.website && (
-              <p className="text-sm text-red-500">{errors.website.message}</p>
+              <p className="text-sm text-[var(--rr-color-error)]">{errors.website.message}</p>
             )}
           </div>
 

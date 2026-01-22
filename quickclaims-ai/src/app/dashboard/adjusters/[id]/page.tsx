@@ -45,10 +45,10 @@ export default async function AdjusterDetailPage({
             </Button>
           </Link>
           <div>
-            <h1 className="text-2xl font-bold text-slate-900">
+            <h1 className="text-2xl font-bold text-[var(--rr-color-text-primary)]">
               {adjuster.name}
             </h1>
-            <p className="text-slate-600">
+            <p className="text-[var(--rr-color-text-secondary)]">
               {TYPE_LABELS[adjuster.type] || adjuster.type}
             </p>
           </div>
@@ -69,20 +69,20 @@ export default async function AdjusterDetailPage({
           </CardHeader>
           <CardContent className="space-y-3">
             <div className="flex items-center gap-3">
-              <Shield className="h-4 w-4 text-slate-400" />
+              <Shield className="h-4 w-4 text-[var(--rr-color-stone)]" />
               <Link
                 href={`/dashboard/carriers/${adjuster.carrier.id}`}
-                className="text-blue-600 hover:underline"
+                className="text-[var(--rr-color-brand-primary)] hover:underline"
               >
                 {adjuster.carrier.name}
               </Link>
             </div>
             {adjuster.email && (
               <div className="flex items-center gap-3">
-                <Mail className="h-4 w-4 text-slate-400" />
+                <Mail className="h-4 w-4 text-[var(--rr-color-stone)]" />
                 <a
                   href={`mailto:${adjuster.email}`}
-                  className="text-blue-600 hover:underline"
+                  className="text-[var(--rr-color-brand-primary)] hover:underline"
                 >
                   {adjuster.email}
                 </a>
@@ -90,10 +90,10 @@ export default async function AdjusterDetailPage({
             )}
             {adjuster.phone && (
               <div className="flex items-center gap-3">
-                <Phone className="h-4 w-4 text-slate-400" />
+                <Phone className="h-4 w-4 text-[var(--rr-color-stone)]" />
                 <a
                   href={`tel:${adjuster.phone}`}
-                  className="text-blue-600 hover:underline"
+                  className="text-[var(--rr-color-brand-primary)] hover:underline"
                 >
                   {adjuster.phone}
                 </a>
@@ -109,19 +109,19 @@ export default async function AdjusterDetailPage({
           </CardHeader>
           <CardContent className="space-y-3">
             <div className="flex items-center justify-between">
-              <span className="text-slate-600">Total Claims</span>
+              <span className="text-[var(--rr-color-text-secondary)]">Total Claims</span>
               <span className="font-semibold text-lg">
                 {adjuster._count.claims}
               </span>
             </div>
             <div className="flex items-center justify-between">
-              <span className="text-slate-600">Avg Increase</span>
-              <span className="font-semibold text-lg text-green-600">
+              <span className="text-[var(--rr-color-text-secondary)]">Avg Increase</span>
+              <span className="font-semibold text-lg text-[var(--rr-color-success)]">
                 {formatCurrency(stats.avgIncrease)}
               </span>
             </div>
             <div className="flex items-center justify-between">
-              <span className="text-slate-600">Avg $/Square</span>
+              <span className="text-[var(--rr-color-text-secondary)]">Avg $/Square</span>
               <span className="font-semibold text-lg">
                 {formatCurrency(stats.avgDollarPerSquare)}
               </span>
@@ -136,11 +136,11 @@ export default async function AdjusterDetailPage({
           </CardHeader>
           <CardContent className="space-y-3">
             <div className="flex items-center justify-between">
-              <span className="text-slate-600">Active</span>
+              <span className="text-[var(--rr-color-text-secondary)]">Active</span>
               <Badge variant="success">Active</Badge>
             </div>
             <div className="flex items-center justify-between">
-              <span className="text-slate-600">Type</span>
+              <span className="text-[var(--rr-color-text-secondary)]">Type</span>
               <span className="font-medium">
                 {TYPE_LABELS[adjuster.type] || adjuster.type}
               </span>
@@ -156,7 +156,7 @@ export default async function AdjusterDetailPage({
           {adjuster.claims.length > 0 && (
             <Link
               href={`/dashboard/claims?adjuster=${id}`}
-              className="text-sm text-blue-600 hover:underline"
+              className="text-sm text-[var(--rr-color-brand-primary)] hover:underline"
             >
               View all →
             </Link>
@@ -164,8 +164,8 @@ export default async function AdjusterDetailPage({
         </CardHeader>
         <CardContent>
           {adjuster.claims.length === 0 ? (
-            <div className="text-center py-8 text-slate-500">
-              <FileText className="h-8 w-8 mx-auto mb-2 text-slate-300" />
+            <div className="text-center py-8 text-[var(--rr-color-stone)]">
+              <FileText className="h-8 w-8 mx-auto mb-2 text-[var(--rr-color-stone)]" />
               <p>No claims yet</p>
             </div>
           ) : (
@@ -174,16 +174,16 @@ export default async function AdjusterDetailPage({
                 <Link
                   key={claim.id}
                   href={`/dashboard/claims/${claim.id}`}
-                  className="flex items-center justify-between p-3 rounded-lg border hover:bg-slate-50 transition-colors"
+                  className="flex items-center justify-between p-3 rounded-lg border hover:bg-[var(--rr-color-surface-hover)] transition-colors"
                 >
                   <div>
                     <p className="font-medium">{claim.policyholderName}</p>
-                    <p className="text-sm text-slate-500">
+                    <p className="text-sm text-[var(--rr-color-stone)]">
                       {formatDate(claim.createdAt)}
                     </p>
                   </div>
                   <div className="flex items-center gap-3">
-                    <span className="font-medium text-green-600">
+                    <span className="font-medium text-[var(--rr-color-success)]">
                       {formatCurrency(Number(claim.totalIncrease))}
                     </span>
                     <span

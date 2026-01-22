@@ -88,15 +88,15 @@ export function AppearanceSettings({ preferences }: AppearanceSettingsProps) {
   return (
     <div className="space-y-6">
       <div>
-        <h2 className="text-lg font-semibold text-slate-900">Appearance</h2>
-        <p className="text-sm text-slate-500">
+        <h2 className="text-lg font-semibold text-[var(--rr-color-text-primary)]">Appearance</h2>
+        <p className="text-sm text-[var(--rr-color-stone)]">
           Customize how QuickClaims looks and feels
         </p>
       </div>
 
       {/* Theme Selection */}
       <div className="space-y-3">
-        <label className="text-sm font-medium text-slate-700">Theme</label>
+        <label className="text-sm font-medium text-[var(--rr-color-text-secondary)]">Theme</label>
         <div className="grid grid-cols-3 gap-3">
           {themes.map((theme) => {
             const Icon = theme.icon;
@@ -109,38 +109,38 @@ export function AppearanceSettings({ preferences }: AppearanceSettingsProps) {
                 className={cn(
                   "flex flex-col items-center gap-2 p-4 rounded-lg border-2 transition-all",
                   isSelected
-                    ? "border-blue-600 bg-blue-50"
-                    : "border-slate-200 hover:border-slate-300 bg-white"
+                    ? "border-[var(--rr-color-brand-primary)] bg-[var(--rr-color-brand-primary)]/10"
+                    : "border-[var(--rr-color-border-default)] hover:border-[var(--rr-color-stone)] bg-white"
                 )}
                 aria-pressed={isSelected}
               >
                 <Icon
                   className={cn(
                     "h-6 w-6",
-                    isSelected ? "text-blue-600" : "text-slate-500"
+                    isSelected ? "text-[var(--rr-color-brand-primary)]" : "text-[var(--rr-color-stone)]"
                   )}
                 />
                 <span
                   className={cn(
                     "text-sm font-medium",
-                    isSelected ? "text-blue-600" : "text-slate-700"
+                    isSelected ? "text-[var(--rr-color-brand-primary)]" : "text-[var(--rr-color-text-secondary)]"
                   )}
                 >
                   {theme.label}
                 </span>
-                <span className="text-xs text-slate-500">{theme.description}</span>
+                <span className="text-xs text-[var(--rr-color-stone)]">{theme.description}</span>
               </button>
             );
           })}
         </div>
-        <p className="text-xs text-slate-500">
+        <p className="text-xs text-[var(--rr-color-stone)]">
           Note: Dark mode is coming soon. Currently only affects future preference.
         </p>
       </div>
 
       {/* Date Format */}
       <div className="space-y-2">
-        <label htmlFor="dateFormat" className="text-sm font-medium text-slate-700">
+        <label htmlFor="dateFormat" className="text-sm font-medium text-[var(--rr-color-text-secondary)]">
           Date Format
         </label>
         <Select
@@ -164,7 +164,7 @@ export function AppearanceSettings({ preferences }: AppearanceSettingsProps) {
 
       {/* Claims Per Page */}
       <div className="space-y-2">
-        <label htmlFor="claimsPerPage" className="text-sm font-medium text-slate-700">
+        <label htmlFor="claimsPerPage" className="text-sm font-medium text-[var(--rr-color-text-secondary)]">
           Claims Per Page
         </label>
         <Select
@@ -187,15 +187,15 @@ export function AppearanceSettings({ preferences }: AppearanceSettingsProps) {
       </div>
 
       {/* Sidebar Default */}
-      <div className="flex items-center justify-between py-4 border-t border-slate-200">
+      <div className="flex items-center justify-between py-4 border-t border-[var(--rr-color-border-default)]">
         <div>
           <label
             htmlFor="sidebarCollapsed"
-            className="font-medium text-slate-900 cursor-pointer"
+            className="font-medium text-[var(--rr-color-text-primary)] cursor-pointer"
           >
             Start with Sidebar Collapsed
           </label>
-          <p className="text-sm text-slate-500">
+          <p className="text-sm text-[var(--rr-color-stone)]">
             Open the app with a minimized sidebar by default
           </p>
         </div>
@@ -210,7 +210,7 @@ export function AppearanceSettings({ preferences }: AppearanceSettingsProps) {
       </div>
 
       {/* Save Button */}
-      <div className="flex justify-end pt-4 border-t border-slate-200">
+      <div className="flex justify-end pt-4 border-t border-[var(--rr-color-border-default)]">
         <Button onClick={handleSave} disabled={isLoading}>
           {isLoading && <Loader2 className="h-4 w-4 mr-2 animate-spin" />}
           Save Changes

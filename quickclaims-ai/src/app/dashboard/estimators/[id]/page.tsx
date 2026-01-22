@@ -40,10 +40,10 @@ export default async function EstimatorDetailPage({
             </Button>
           </Link>
           <div>
-            <h1 className="text-2xl font-bold text-slate-900">
+            <h1 className="text-2xl font-bold text-[var(--rr-color-text-primary)]">
               {estimator.firstName} {estimator.lastName}
             </h1>
-            <p className="text-slate-600">Estimator</p>
+            <p className="text-[var(--rr-color-text-secondary)]">Estimator</p>
           </div>
         </div>
         <Link href={`/dashboard/estimators/${id}/edit`}>
@@ -62,20 +62,20 @@ export default async function EstimatorDetailPage({
           </CardHeader>
           <CardContent className="space-y-3">
             <div className="flex items-center gap-3">
-              <Mail className="h-4 w-4 text-slate-400" />
+              <Mail className="h-4 w-4 text-[var(--rr-color-stone)]" />
               <a
                 href={`mailto:${estimator.email}`}
-                className="text-blue-600 hover:underline"
+                className="text-[var(--rr-color-brand-primary)] hover:underline"
               >
                 {estimator.email}
               </a>
             </div>
             {estimator.phone && (
               <div className="flex items-center gap-3">
-                <Phone className="h-4 w-4 text-slate-400" />
+                <Phone className="h-4 w-4 text-[var(--rr-color-stone)]" />
                 <a
                   href={`tel:${estimator.phone}`}
-                  className="text-blue-600 hover:underline"
+                  className="text-[var(--rr-color-brand-primary)] hover:underline"
                 >
                   {estimator.phone}
                 </a>
@@ -91,14 +91,14 @@ export default async function EstimatorDetailPage({
           </CardHeader>
           <CardContent className="space-y-3">
             <div className="flex items-center justify-between">
-              <span className="text-slate-600">Commission Rate</span>
+              <span className="text-[var(--rr-color-text-secondary)]">Commission Rate</span>
               <span className="font-semibold text-lg">
                 {(Number(estimator.commissionPercentage) * 100).toFixed(1)}%
               </span>
             </div>
             <div className="flex items-center justify-between">
-              <span className="text-slate-600">Recent Earnings</span>
-              <span className="font-semibold text-green-600">
+              <span className="text-[var(--rr-color-text-secondary)]">Recent Earnings</span>
+              <span className="font-semibold text-[var(--rr-color-success)]">
                 {formatCurrency(totalCommission)}
               </span>
             </div>
@@ -112,13 +112,13 @@ export default async function EstimatorDetailPage({
           </CardHeader>
           <CardContent className="space-y-3">
             <div className="flex items-center justify-between">
-              <span className="text-slate-600">Total Claims</span>
+              <span className="text-[var(--rr-color-text-secondary)]">Total Claims</span>
               <span className="font-semibold text-lg">
                 {estimator._count.claims}
               </span>
             </div>
             <div className="flex items-center justify-between">
-              <span className="text-slate-600">Status</span>
+              <span className="text-[var(--rr-color-text-secondary)]">Status</span>
               <Badge variant="success">Active</Badge>
             </div>
           </CardContent>
@@ -132,7 +132,7 @@ export default async function EstimatorDetailPage({
           {estimator.claims.length > 0 && (
             <Link
               href={`/dashboard/claims?estimator=${id}`}
-              className="text-sm text-blue-600 hover:underline"
+              className="text-sm text-[var(--rr-color-brand-primary)] hover:underline"
             >
               View all →
             </Link>
@@ -140,8 +140,8 @@ export default async function EstimatorDetailPage({
         </CardHeader>
         <CardContent>
           {estimator.claims.length === 0 ? (
-            <div className="text-center py-8 text-slate-500">
-              <FileText className="h-8 w-8 mx-auto mb-2 text-slate-300" />
+            <div className="text-center py-8 text-[var(--rr-color-stone)]">
+              <FileText className="h-8 w-8 mx-auto mb-2 text-[var(--rr-color-stone)]" />
               <p>No claims yet</p>
             </div>
           ) : (
@@ -153,20 +153,20 @@ export default async function EstimatorDetailPage({
                   <Link
                     key={claim.id}
                     href={`/dashboard/claims/${claim.id}`}
-                    className="flex items-center justify-between p-3 rounded-lg border hover:bg-slate-50 transition-colors"
+                    className="flex items-center justify-between p-3 rounded-lg border hover:bg-[var(--rr-color-surface-hover)] transition-colors"
                   >
                     <div>
                       <p className="font-medium">{claim.policyholderName}</p>
-                      <p className="text-sm text-slate-500">
+                      <p className="text-sm text-[var(--rr-color-stone)]">
                         {formatDate(claim.createdAt)}
                       </p>
                     </div>
                     <div className="flex items-center gap-4">
                       <div className="text-right">
-                        <p className="font-medium text-green-600">
+                        <p className="font-medium text-[var(--rr-color-success)]">
                           {formatCurrency(commission)}
                         </p>
-                        <p className="text-xs text-slate-500">commission</p>
+                        <p className="text-xs text-[var(--rr-color-stone)]">commission</p>
                       </div>
                       <span
                         className={`inline-flex rounded-full px-2 py-1 text-xs font-medium ${

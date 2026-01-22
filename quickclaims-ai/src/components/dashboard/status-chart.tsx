@@ -20,24 +20,25 @@ interface StatusChartProps {
   data: StatusChartData[];
 }
 
+// Design system inspired colors
 const COLORS = [
-  "#3b82f6", // blue
-  "#eab308", // yellow
-  "#8b5cf6", // purple
-  "#6366f1", // indigo
-  "#06b6d4", // cyan
-  "#f97316", // orange
-  "#f59e0b", // amber
-  "#84cc16", // lime
-  "#22c55e", // green
-  "#14b8a6", // teal
-  "#10b981", // emerald
+  "#C4A77D", // sandstone (brand primary)
+  "#B86B4C", // terracotta (brand secondary)
+  "#2C2C2C", // charcoal
+  "#A39171", // stone
+  "#8B7355", // slate
+  "#E8DFD0", // sand
+  "#D4A574", // warm accent
+  "#9B7B5C", // muted primary
+  "#6B5B4C", // dark stone
+  "#BFA88F", // light sandstone
+  "#C69C6D", // golden sand
 ];
 
 export function StatusChart({ data }: StatusChartProps) {
   if (data.length === 0) {
     return (
-      <div className="flex h-64 items-center justify-center text-slate-400">
+      <div className="flex h-64 items-center justify-center text-[var(--rr-color-stone)]">
         No data available
       </div>
     );
@@ -60,10 +61,10 @@ export function StatusChart({ data }: StatusChartProps) {
         />
         <Tooltip
           contentStyle={{
-            backgroundColor: "white",
-            border: "1px solid #e2e8f0",
-            borderRadius: "8px",
-            boxShadow: "0 4px 6px -1px rgb(0 0 0 / 0.1)",
+            backgroundColor: "var(--rr-color-bg-secondary)",
+            border: "1px solid var(--rr-color-border-default)",
+            borderRadius: "var(--rr-radius-lg)",
+            boxShadow: "var(--rr-shadow-md)",
           }}
           formatter={(value) => [value + " claims", "Count"]}
         />

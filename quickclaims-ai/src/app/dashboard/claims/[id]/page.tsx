@@ -49,15 +49,15 @@ export default async function ClaimDetailPage({ params }: ClaimDetailPageProps) 
   const hoursSinceActivity = Math.floor(hoursSince(claim.lastActivityAt));
 
   const complianceBg = {
-    compliant: "bg-green-50 border-green-200",
-    warning: "bg-yellow-50 border-yellow-200",
-    overdue: "bg-red-50 border-red-200",
+    compliant: "bg-[var(--rr-color-success)]/10 border-[var(--rr-color-success)]",
+    warning: "bg-[var(--rr-color-warning)]/10 border-[var(--rr-color-warning)]",
+    overdue: "bg-[var(--rr-color-error)]/10 border-[var(--rr-color-error)]",
   }[complianceStatus];
 
   const complianceText = {
-    compliant: "text-green-700",
-    warning: "text-yellow-700",
-    overdue: "text-red-700",
+    compliant: "text-[var(--rr-color-success)]",
+    warning: "text-[var(--rr-color-warning)]",
+    overdue: "text-[var(--rr-color-error)]",
   }[complianceStatus];
 
   return (
@@ -72,16 +72,16 @@ export default async function ClaimDetailPage({ params }: ClaimDetailPageProps) 
           </Link>
           <div>
             <div className="flex items-center gap-3">
-              <h1 className="text-2xl font-bold text-slate-900">
+              <h1 className="text-2xl font-bold text-[var(--rr-color-text-primary)]">
                 {claim.policyholderName}
               </h1>
               <ClaimStatusDropdown claimId={claim.id} currentStatus={claim.status} />
             </div>
-            <p className="text-slate-600 mt-1">
+            <p className="text-[var(--rr-color-text-secondary)] mt-1">
               {claim.lossAddress}, {claim.lossCity}, {claim.lossState} {claim.lossZip}
             </p>
             {claim.claimNumber && (
-              <p className="text-sm text-slate-500 mt-1">
+              <p className="text-sm text-[var(--rr-color-stone)] mt-1">
                 Claim #{claim.claimNumber}
               </p>
             )}
@@ -105,45 +105,45 @@ export default async function ClaimDetailPage({ params }: ClaimDetailPageProps) 
         <CardContent className="py-4">
           <div className="grid grid-cols-4 gap-4">
             <div className="flex items-center gap-3">
-              <Building2 className="h-5 w-5 text-slate-400" />
+              <Building2 className="h-5 w-5 text-[var(--rr-color-stone)]" />
               <div>
-                <p className="text-xs text-slate-500">Contractor</p>
+                <p className="text-xs text-[var(--rr-color-stone)]">Contractor</p>
                 <Link
                   href={`/dashboard/contractors/${claim.contractor.id}`}
-                  className="font-medium text-blue-600 hover:underline"
+                  className="font-medium text-[var(--rr-color-brand-primary)] hover:underline"
                 >
                   {claim.contractor.companyName}
                 </Link>
               </div>
             </div>
             <div className="flex items-center gap-3">
-              <User className="h-5 w-5 text-slate-400" />
+              <User className="h-5 w-5 text-[var(--rr-color-stone)]" />
               <div>
-                <p className="text-xs text-slate-500">Estimator</p>
+                <p className="text-xs text-[var(--rr-color-stone)]">Estimator</p>
                 <Link
                   href={`/dashboard/estimators/${claim.estimator.id}`}
-                  className="font-medium text-blue-600 hover:underline"
+                  className="font-medium text-[var(--rr-color-brand-primary)] hover:underline"
                 >
                   {claim.estimator.firstName} {claim.estimator.lastName}
                 </Link>
               </div>
             </div>
             <div className="flex items-center gap-3">
-              <Shield className="h-5 w-5 text-slate-400" />
+              <Shield className="h-5 w-5 text-[var(--rr-color-stone)]" />
               <div>
-                <p className="text-xs text-slate-500">Carrier</p>
+                <p className="text-xs text-[var(--rr-color-stone)]">Carrier</p>
                 <Link
                   href={`/dashboard/carriers/${claim.carrier.id}`}
-                  className="font-medium text-blue-600 hover:underline"
+                  className="font-medium text-[var(--rr-color-brand-primary)] hover:underline"
                 >
                   {claim.carrier.name}
                 </Link>
               </div>
             </div>
             <div className="flex items-center gap-3">
-              <UserCheck className="h-5 w-5 text-slate-400" />
+              <UserCheck className="h-5 w-5 text-[var(--rr-color-stone)]" />
               <div>
-                <p className="text-xs text-slate-500">Adjuster</p>
+                <p className="text-xs text-[var(--rr-color-stone)]">Adjuster</p>
                 <p className="font-medium">
                   {claim.adjuster ? claim.adjuster.name : "Not assigned"}
                 </p>
@@ -158,11 +158,11 @@ export default async function ClaimDetailPage({ params }: ClaimDetailPageProps) 
         <Card>
           <CardContent className="pt-6">
             <div className="flex items-center gap-3">
-              <div className="p-2 bg-slate-100 rounded-lg">
-                <DollarSign className="h-5 w-5 text-slate-600" />
+              <div className="p-2 bg-[var(--rr-color-sand)] rounded-lg">
+                <DollarSign className="h-5 w-5 text-[var(--rr-color-text-secondary)]" />
               </div>
               <div>
-                <p className="text-sm text-slate-500">Initial RCV</p>
+                <p className="text-sm text-[var(--rr-color-stone)]">Initial RCV</p>
                 <p className="text-2xl font-bold">{formatCurrency(initialRCV)}</p>
               </div>
             </div>
@@ -172,11 +172,11 @@ export default async function ClaimDetailPage({ params }: ClaimDetailPageProps) 
         <Card>
           <CardContent className="pt-6">
             <div className="flex items-center gap-3">
-              <div className="p-2 bg-blue-100 rounded-lg">
-                <Calculator className="h-5 w-5 text-blue-600" />
+              <div className="p-2 bg-[var(--rr-color-info)]/10 rounded-lg">
+                <Calculator className="h-5 w-5 text-[var(--rr-color-brand-primary)]" />
               </div>
               <div>
-                <p className="text-sm text-slate-500">Current RCV</p>
+                <p className="text-sm text-[var(--rr-color-stone)]">Current RCV</p>
                 <p className="text-2xl font-bold">{formatCurrency(currentTotalRCV)}</p>
               </div>
             </div>
@@ -186,12 +186,12 @@ export default async function ClaimDetailPage({ params }: ClaimDetailPageProps) 
         <Card>
           <CardContent className="pt-6">
             <div className="flex items-center gap-3">
-              <div className="p-2 bg-green-100 rounded-lg">
-                <TrendingUp className="h-5 w-5 text-green-600" />
+              <div className="p-2 bg-[var(--rr-color-success)]/10 rounded-lg">
+                <TrendingUp className="h-5 w-5 text-[var(--rr-color-success)]" />
               </div>
               <div>
-                <p className="text-sm text-slate-500">Total Increase</p>
-                <p className="text-2xl font-bold text-green-600">
+                <p className="text-sm text-[var(--rr-color-stone)]">Total Increase</p>
+                <p className="text-2xl font-bold text-[var(--rr-color-success)]">
                   {formatCurrency(totalIncrease)}
                 </p>
               </div>
@@ -199,15 +199,15 @@ export default async function ClaimDetailPage({ params }: ClaimDetailPageProps) 
           </CardContent>
         </Card>
 
-        <Card className="bg-indigo-50 border-indigo-200">
+        <Card className="bg-[var(--rr-color-brand-accent)]/10 border-[var(--rr-color-brand-accent)]">
           <CardContent className="pt-6">
             <div className="flex items-center gap-3">
-              <div className="p-2 bg-indigo-100 rounded-lg">
-                <Percent className="h-5 w-5 text-indigo-600" />
+              <div className="p-2 bg-[var(--rr-color-brand-accent)]/20 rounded-lg">
+                <Percent className="h-5 w-5 text-[var(--rr-color-brand-accent)]" />
               </div>
               <div>
-                <p className="text-sm text-indigo-600">$/Square</p>
-                <p className="text-2xl font-bold text-indigo-700">
+                <p className="text-sm text-[var(--rr-color-brand-accent)]">$/Square</p>
+                <p className="text-2xl font-bold text-[var(--rr-color-brand-accent)]">
                   {formatCurrency(dollarPerSquare)}
                 </p>
               </div>
@@ -220,23 +220,23 @@ export default async function ClaimDetailPage({ params }: ClaimDetailPageProps) 
       <Card>
         <CardContent className="py-4">
           <div className="grid grid-cols-2 gap-8">
-            <div className="flex items-center justify-between p-4 bg-slate-50 rounded-lg">
+            <div className="flex items-center justify-between p-4 bg-[var(--rr-color-sand-light)] rounded-lg">
               <div>
-                <p className="text-sm text-slate-500">Contractor Billing</p>
+                <p className="text-sm text-[var(--rr-color-stone)]">Contractor Billing</p>
                 <p className="text-xl font-bold">{formatCurrency(contractorBillingAmount)}</p>
               </div>
               <div className="text-right">
-                <p className="text-sm text-slate-500">Rate</p>
+                <p className="text-sm text-[var(--rr-color-stone)]">Rate</p>
                 <p className="font-medium">{(contractorBillingPct * 100).toFixed(1)}%</p>
               </div>
             </div>
-            <div className="flex items-center justify-between p-4 bg-slate-50 rounded-lg">
+            <div className="flex items-center justify-between p-4 bg-[var(--rr-color-sand-light)] rounded-lg">
               <div>
-                <p className="text-sm text-slate-500">Estimator Commission</p>
+                <p className="text-sm text-[var(--rr-color-stone)]">Estimator Commission</p>
                 <p className="text-xl font-bold">{formatCurrency(estimatorCommission)}</p>
               </div>
               <div className="text-right">
-                <p className="text-sm text-slate-500">Rate</p>
+                <p className="text-sm text-[var(--rr-color-stone)]">Rate</p>
                 <p className="font-medium">{(estimatorCommissionPct * 100).toFixed(1)}%</p>
               </div>
             </div>

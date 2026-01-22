@@ -32,22 +32,22 @@ export default async function ContractorClaimDetailPage({ params }: PageProps) {
     {
       label: "Initial RCV",
       value: "$" + decimalToNumber(claim.initialRCV).toLocaleString(),
-      color: "text-slate-900",
+      color: "text-[var(--rr-color-text-primary)]",
     },
     {
       label: "Current RCV",
       value: "$" + decimalToNumber(claim.currentTotalRCV).toLocaleString(),
-      color: "text-slate-900",
+      color: "text-[var(--rr-color-text-primary)]",
     },
     {
       label: "Total Increase",
       value: "$" + decimalToNumber(claim.totalIncrease).toLocaleString(),
-      color: "text-green-600",
+      color: "text-[var(--rr-color-success)]",
     },
     {
       label: "$/Square",
       value: "$" + decimalToNumber(claim.dollarPerSquare).toFixed(2),
-      color: "text-blue-600 font-bold text-xl",
+      color: "text-[var(--rr-color-brand-primary)] font-bold text-xl",
     },
   ];
 
@@ -63,18 +63,18 @@ export default async function ContractorClaimDetailPage({ params }: PageProps) {
           </Link>
           <div>
             <div className="flex items-center gap-3">
-              <h1 className="text-2xl font-bold text-slate-900">
+              <h1 className="text-2xl font-bold text-[var(--rr-color-text-primary)]">
                 {claim.policyholderName}
               </h1>
               <Badge className={CLAIM_STATUS_COLORS[claim.status]}>
                 {CLAIM_STATUS_LABELS[claim.status]}
               </Badge>
             </div>
-            <p className="text-slate-600">
+            <p className="text-[var(--rr-color-text-secondary)]">
               {claim.lossAddress}, {claim.lossCity}, {claim.lossState} {claim.lossZip}
             </p>
             {claim.claimNumber && (
-              <p className="text-sm text-slate-500">
+              <p className="text-sm text-[var(--rr-color-stone)]">
                 Claim #: {claim.claimNumber}
               </p>
             )}
@@ -84,20 +84,20 @@ export default async function ContractorClaimDetailPage({ params }: PageProps) {
 
       {/* Key Info Cards */}
       <div className="grid gap-4 md:grid-cols-3">
-        <div className="rounded-lg border bg-white p-4">
+        <div className="rounded-lg border bg-[var(--rr-color-surface-primary)] p-4">
           <div className="flex items-center gap-3">
-            <Building2 className="h-5 w-5 text-slate-400" />
+            <Building2 className="h-5 w-5 text-[var(--rr-color-stone)]" />
             <div>
-              <p className="text-sm text-slate-500">Carrier</p>
+              <p className="text-sm text-[var(--rr-color-stone)]">Carrier</p>
               <p className="font-medium">{claim.carrier.name}</p>
             </div>
           </div>
         </div>
-        <div className="rounded-lg border bg-white p-4">
+        <div className="rounded-lg border bg-[var(--rr-color-surface-primary)] p-4">
           <div className="flex items-center gap-3">
-            <User className="h-5 w-5 text-slate-400" />
+            <User className="h-5 w-5 text-[var(--rr-color-stone)]" />
             <div>
-              <p className="text-sm text-slate-500">Estimator</p>
+              <p className="text-sm text-[var(--rr-color-stone)]">Estimator</p>
               <p className="font-medium">
                 {claim.estimator.firstName} {claim.estimator.lastName}
               </p>
@@ -105,11 +105,11 @@ export default async function ContractorClaimDetailPage({ params }: PageProps) {
           </div>
         </div>
         {claim.adjuster && (
-          <div className="rounded-lg border bg-white p-4">
+          <div className="rounded-lg border bg-[var(--rr-color-surface-primary)] p-4">
             <div className="flex items-center gap-3">
-              <Shield className="h-5 w-5 text-slate-400" />
+              <Shield className="h-5 w-5 text-[var(--rr-color-stone)]" />
               <div>
-                <p className="text-sm text-slate-500">Adjuster</p>
+                <p className="text-sm text-[var(--rr-color-stone)]">Adjuster</p>
                 <p className="font-medium">{claim.adjuster.name}</p>
               </div>
             </div>
@@ -118,12 +118,12 @@ export default async function ContractorClaimDetailPage({ params }: PageProps) {
       </div>
 
       {/* Financial Metrics */}
-      <div className="rounded-lg border bg-white p-6">
+      <div className="rounded-lg border bg-[var(--rr-color-surface-primary)] p-6">
         <h2 className="mb-4 text-lg font-semibold">Financial Summary</h2>
         <div className="grid gap-6 md:grid-cols-4">
           {metrics.map((metric) => (
             <div key={metric.label}>
-              <p className="text-sm text-slate-500">{metric.label}</p>
+              <p className="text-sm text-[var(--rr-color-stone)]">{metric.label}</p>
               <p className={"text-lg font-medium " + metric.color}>{metric.value}</p>
             </div>
           ))}

@@ -44,23 +44,23 @@ export function KanbanColumn({ status, claims }: KanbanColumnProps) {
     <div className="flex-shrink-0 w-72">
       <div
         className={cn(
-          "rounded-lg border-2 border-dashed p-2 min-h-[600px] transition-colors",
-          isOver ? "border-blue-400 bg-blue-50" : "border-slate-200 bg-slate-50"
+          "rounded-[var(--rr-radius-lg)] border-2 border-dashed p-[var(--rr-space-2)] min-h-[600px] transition-colors",
+          isOver ? "border-[var(--rr-color-brand-primary)] bg-[var(--rr-color-brand-primary)]/5" : "border-[var(--rr-color-border-default)] bg-[var(--rr-color-sand-light)]"
         )}
       >
         {/* Column Header */}
-        <div className="flex items-center justify-between mb-3 p-2">
-          <div className="flex items-center gap-2">
+        <div className="flex items-center justify-between mb-[var(--rr-space-3)] p-[var(--rr-space-2)]">
+          <div className="flex items-center gap-[var(--rr-space-2)]">
             <span
               className={cn(
-                "inline-flex items-center rounded-full px-2 py-1 text-xs font-medium",
+                "inline-flex items-center rounded-[var(--rr-radius-full)] px-[var(--rr-space-2)] py-[var(--rr-space-1)] text-[var(--rr-font-size-xs)] font-[var(--rr-font-weight-medium)]",
                 CLAIM_STATUS_COLORS[status]
               )}
             >
               {CLAIM_STATUS_LABELS[status]}
             </span>
           </div>
-          <span className="text-sm font-medium text-slate-500">
+          <span className="text-[var(--rr-font-size-sm)] font-[var(--rr-font-weight-medium)] text-[var(--rr-color-text-secondary)]">
             {claims.length}
           </span>
         </div>
@@ -80,7 +80,7 @@ export function KanbanColumn({ status, claims }: KanbanColumnProps) {
           </SortableContext>
 
           {claims.length === 0 && (
-            <div className="py-8 text-center text-sm text-slate-400">
+            <div className="py-[var(--rr-space-8)] text-center text-[var(--rr-font-size-sm)] text-[var(--rr-color-stone)]">
               No claims
             </div>
           )}

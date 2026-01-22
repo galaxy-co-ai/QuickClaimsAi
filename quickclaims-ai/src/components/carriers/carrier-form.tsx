@@ -83,7 +83,7 @@ export function CarrierForm({ carrier }: CarrierFormProps) {
           {/* Carrier Name */}
           <div className="space-y-2">
             <Label htmlFor="name">
-              Carrier Name <span className="text-red-500">*</span>
+              Carrier Name <span className="text-[var(--rr-color-error)]">*</span>
             </Label>
             <Input
               id="name"
@@ -92,7 +92,7 @@ export function CarrierForm({ carrier }: CarrierFormProps) {
               aria-invalid={!!errors.name}
             />
             {errors.name && (
-              <p className="text-sm text-red-500">{errors.name.message}</p>
+              <p className="text-[var(--rr-font-size-sm)] text-[var(--rr-color-error)]">{errors.name.message}</p>
             )}
           </div>
 
@@ -107,7 +107,7 @@ export function CarrierForm({ carrier }: CarrierFormProps) {
                 {...register("email")}
               />
               {errors.email && (
-                <p className="text-sm text-red-500">{errors.email.message}</p>
+                <p className="text-[var(--rr-font-size-sm)] text-[var(--rr-color-error)]">{errors.email.message}</p>
               )}
             </div>
             <div className="space-y-2">
@@ -131,7 +131,7 @@ export function CarrierForm({ carrier }: CarrierFormProps) {
               {...register("website")}
             />
             {errors.website && (
-              <p className="text-sm text-red-500">{errors.website.message}</p>
+              <p className="text-[var(--rr-font-size-sm)] text-[var(--rr-color-error)]">{errors.website.message}</p>
             )}
           </div>
 

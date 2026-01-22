@@ -39,12 +39,12 @@ export default async function AuditPage({ searchParams }: AuditPageProps) {
   return (
     <div className="space-y-6">
       <div className="flex items-center gap-3">
-        <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-blue-100">
-          <Shield className="h-5 w-5 text-blue-600" aria-hidden="true" />
+        <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-[var(--rr-color-info)]/10">
+          <Shield className="h-5 w-5 text-[var(--rr-color-brand-primary)]" aria-hidden="true" />
         </div>
         <div>
-          <h1 className="text-2xl font-bold text-slate-900">Audit Log</h1>
-          <p className="text-slate-600">
+          <h1 className="text-2xl font-bold text-[var(--rr-color-text-primary)]">Audit Log</h1>
+          <p className="text-[var(--rr-color-text-secondary)]">
             Immutable record of all system changes for compliance
           </p>
         </div>
@@ -66,14 +66,14 @@ function AuditLogSkeleton() {
   return (
     <div className="rounded-lg border bg-white">
       <div className="p-4 border-b">
-        <div className="h-6 w-32 bg-slate-200 rounded animate-pulse" />
+        <div className="h-6 w-32 bg-[var(--rr-color-sand)] rounded animate-pulse" />
       </div>
       <div className="divide-y">
         {[...Array(10)].map((_, i) => (
           <div key={i} className="p-4 flex items-center gap-4">
-            <div className="h-5 w-24 bg-slate-200 rounded animate-pulse" />
-            <div className="h-5 flex-1 bg-slate-200 rounded animate-pulse" />
-            <div className="h-5 w-32 bg-slate-200 rounded animate-pulse" />
+            <div className="h-5 w-24 bg-[var(--rr-color-sand)] rounded animate-pulse" />
+            <div className="h-5 flex-1 bg-[var(--rr-color-sand)] rounded animate-pulse" />
+            <div className="h-5 w-32 bg-[var(--rr-color-sand)] rounded animate-pulse" />
           </div>
         ))}
       </div>

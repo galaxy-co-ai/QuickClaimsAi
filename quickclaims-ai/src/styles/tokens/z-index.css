@@ -1,0 +1,19 @@
+/* =================================================
+   QUICKCLAIMS AI - Z-INDEX TOKENS
+   Layering scale for proper stacking
+   ================================================= */
+
+:root {
+  /* ========================================
+     Z-INDEX SCALE
+     ======================================== */
+  --rr-z-negative: -1;
+  --rr-z-0: 0;
+  --rr-z-10: 10;        /* Subtle overlays */
+  --rr-z-20: 20;        /* Dropdowns */
+  --rr-z-30: 30;        /* Sticky headers */
+  --rr-z-40: 40;        /* Fixed navigation */
+  --rr-z-50: 50;        /* Modals, dialogs */
+  --rr-z-60: 60;        /* Toasts */
+  --rr-z-max: 999;      /* Emergency overlay */
+}

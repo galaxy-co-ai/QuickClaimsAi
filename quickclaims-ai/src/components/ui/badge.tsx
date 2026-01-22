@@ -4,21 +4,26 @@ import { cva, type VariantProps } from "class-variance-authority";
 import { cn } from "@/lib/utils";
 
 const badgeVariants = cva(
-  "inline-flex items-center rounded-full border px-2.5 py-0.5 text-xs font-semibold transition-colors focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2",
+  "inline-flex items-center rounded-[var(--rr-radius-full)] border px-[var(--rr-space-3)] py-[var(--rr-space-1)] text-[var(--rr-font-size-xs)] font-[var(--rr-font-weight-medium)] transition-all focus:outline-none focus:ring-2 focus:ring-[var(--rr-color-focus-ring)] focus:ring-offset-2",
   {
     variants: {
       variant: {
         default:
-          "border-transparent bg-primary text-primary-foreground hover:bg-primary/80",
+          "border-transparent bg-[var(--rr-color-brand-primary)] text-[var(--rr-color-text-inverse)]",
         secondary:
-          "border-transparent bg-secondary text-secondary-foreground hover:bg-secondary/80",
+          "border-transparent bg-[var(--rr-color-bg-tertiary)] text-[var(--rr-color-text-primary)]",
         destructive:
-          "border-transparent bg-destructive text-destructive-foreground hover:bg-destructive/80",
-        outline: "text-foreground",
+          "border-transparent bg-[var(--rr-color-error)] text-[var(--rr-color-text-inverse)]",
+        outline:
+          "border-[var(--rr-color-border-default)] text-[var(--rr-color-text-primary)] bg-transparent",
         success:
-          "border-transparent bg-green-100 text-green-800",
+          "border-transparent bg-[var(--rr-color-status-success-bg)] text-[var(--rr-color-status-success)]",
         warning:
-          "border-transparent bg-yellow-100 text-yellow-800",
+          "border-transparent bg-[var(--rr-color-status-warning-bg)] text-[var(--rr-color-status-warning)]",
+        error:
+          "border-transparent bg-[var(--rr-color-status-error-bg)] text-[var(--rr-color-status-error)]",
+        info:
+          "border-transparent bg-[var(--rr-color-status-info-bg)] text-[var(--rr-color-status-info)]",
       },
     },
     defaultVariants: {

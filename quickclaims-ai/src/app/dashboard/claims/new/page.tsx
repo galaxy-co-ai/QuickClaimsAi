@@ -10,8 +10,8 @@ export default async function NewClaimPage() {
     <div className="max-w-3xl mx-auto space-y-6">
       {/* Page Header */}
       <div>
-        <h1 className="text-2xl font-bold text-slate-900">New Claim</h1>
-        <p className="text-slate-600">
+        <h1 className="text-2xl font-bold text-[var(--rr-color-text-primary)]">New Claim</h1>
+        <p className="text-[var(--rr-color-text-secondary)]">
           Create a new supplement claim for tracking
         </p>
       </div>

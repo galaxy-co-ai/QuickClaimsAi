@@ -1,0 +1,13 @@
+/* =================================================
+   QUICKCLAIMS AI - DESIGN TOKENS INDEX
+   Single import point for all design tokens
+   ================================================= */
+
+@import './colors.css';
+@import './typography.css';
+@import './spacing.css';
+@import './radii.css';
+@import './shadows.css';
+@import './animations.css';
+@import './z-index.css';
+@import './components.css';

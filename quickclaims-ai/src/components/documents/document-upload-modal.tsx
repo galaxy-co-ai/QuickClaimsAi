@@ -134,15 +134,15 @@ export function DocumentUploadModal({
           {/* File Input */}
           <div className="space-y-2">
             <Label htmlFor="file">
-              File <span className="text-red-500">*</span>
+              File <span className="text-[var(--rr-color-error)]">*</span>
             </Label>
             {selectedFile ? (
-              <div className="flex items-center justify-between p-3 rounded-lg border bg-slate-50">
+              <div className="flex items-center justify-between p-3 rounded-lg border bg-[var(--rr-color-sand-light)]">
                 <div className="flex items-center gap-3">
-                  <FileText className="h-5 w-5 text-slate-500" />
+                  <FileText className="h-5 w-5 text-[var(--rr-color-text-secondary)]" />
                   <div>
                     <p className="text-sm font-medium">{selectedFile.name}</p>
-                    <p className="text-xs text-slate-500">
+                    <p className="text-xs text-[var(--rr-color-text-secondary)]">
                       {formatFileSize(selectedFile.size)}
                     </p>
                   </div>
@@ -161,15 +161,15 @@ export function DocumentUploadModal({
               <div className="flex items-center justify-center w-full">
                 <label
                   htmlFor="file-upload"
-                  className="flex flex-col items-center justify-center w-full h-32 border-2 border-dashed rounded-lg cursor-pointer bg-slate-50 hover:bg-slate-100 border-slate-300"
+                  className="flex flex-col items-center justify-center w-full h-32 border-2 border-dashed rounded-lg cursor-pointer bg-[var(--rr-color-sand-light)] hover:bg-[var(--rr-color-surface-hover)] border-[var(--rr-color-border-default)]"
                 >
                   <div className="flex flex-col items-center justify-center pt-5 pb-6">
-                    <Upload className="w-8 h-8 mb-2 text-slate-400" />
-                    <p className="mb-2 text-sm text-slate-500">
+                    <Upload className="w-8 h-8 mb-2 text-[var(--rr-color-stone)]" />
+                    <p className="mb-2 text-sm text-[var(--rr-color-text-secondary)]">
                       <span className="font-semibold">Click to upload</span> or
                       drag and drop
                     </p>
-                    <p className="text-xs text-slate-400">
+                    <p className="text-xs text-[var(--rr-color-stone)]">
                       PDF, images, Word, or Excel (max 10MB)
                     </p>
                   </div>
@@ -190,7 +190,7 @@ export function DocumentUploadModal({
           {/* Document Type */}
           <div className="space-y-2">
             <Label htmlFor="documentType">
-              Document Type <span className="text-red-500">*</span>
+              Document Type <span className="text-[var(--rr-color-error)]">*</span>
             </Label>
             <Select
               value={documentType}

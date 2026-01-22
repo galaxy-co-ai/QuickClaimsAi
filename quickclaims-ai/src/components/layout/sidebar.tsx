@@ -23,7 +23,7 @@ interface NavItem {
   label: string;
   href: string;
   icon: React.ElementType;
-  exact?: boolean; // For routes that should only match exactly
+  exact?: boolean;
 }
 
 const navItems: NavItem[] = [
@@ -52,21 +52,21 @@ export function Sidebar() {
   return (
     <aside
       className={cn(
-        "flex h-screen flex-col transition-all duration-300 ease-out",
-        "bg-gradient-to-b from-slate-900/95 via-slate-900/98 to-slate-950",
-        "backdrop-blur-xl border-r border-white/[0.08]",
-        "rounded-r-2xl shadow-2xl shadow-black/20",
-        collapsed ? "w-16" : "w-64"
+        "flex h-screen flex-col transition-all",
+        "bg-[var(--rr-color-bg-inverse)]",
+        "border-r border-[var(--rr-color-charcoal)]",
+        "shadow-[var(--rr-shadow-xl)]",
+        collapsed ? "w-16" : "w-[var(--rr-side-nav-width)]"
       )}
     >
       {/* Logo */}
-      <div className="flex h-16 items-center justify-between px-4 border-b border-white/[0.06]">
+      <div className="flex h-[var(--rr-header-height-desktop)] items-center justify-between px-[var(--rr-space-4)] border-b border-[var(--rr-color-slate)]/20">
         {!collapsed && (
-          <Link href="/dashboard" className="flex items-center gap-3 group">
-            <div className="relative flex h-9 w-9 items-center justify-center rounded-xl bg-gradient-to-br from-indigo-500 to-purple-600 shadow-lg shadow-indigo-500/25 group-hover:shadow-indigo-500/40 transition-shadow duration-300">
-              <span className="text-sm font-bold text-white tracking-tight">QC</span>
+          <Link href="/dashboard" className="flex items-center gap-[var(--rr-space-3)] group">
+            <div className="relative flex h-9 w-9 items-center justify-center rounded-[var(--rr-radius-lg)] bg-[var(--rr-color-brand-primary)] shadow-[var(--rr-shadow-md)] group-hover:shadow-[var(--rr-shadow-lg)] transition-shadow">
+              <span className="text-[var(--rr-font-size-sm)] font-[var(--rr-font-weight-semibold)] text-[var(--rr-color-text-inverse)] tracking-tight">QC</span>
             </div>
-            <span className="font-semibold text-white/90 tracking-tight">QuickClaims</span>
+            <span className="font-[var(--rr-font-weight-semibold)] text-[var(--rr-color-text-inverse)]/90 tracking-tight">QuickClaims</span>
           </Link>
         )}
         <Button
@@ -74,8 +74,8 @@ export function Sidebar() {
           size="icon"
           onClick={() => setCollapsed(!collapsed)}
           className={cn(
-            "text-white/40 hover:text-white/80 hover:bg-white/[0.06]",
-            "rounded-xl transition-all duration-200",
+            "text-[var(--rr-color-text-inverse)]/40 hover:text-[var(--rr-color-text-inverse)]/80 hover:bg-[var(--rr-color-text-inverse)]/[0.06]",
+            "rounded-[var(--rr-radius-lg)] transition-all",
             collapsed && "mx-auto"
           )}
           aria-label={collapsed ? "Expand sidebar" : "Collapse sidebar"}
@@ -89,7 +89,7 @@ export function Sidebar() {
       </div>
 
       {/* Navigation */}
-      <nav className="flex-1 px-3 py-4 space-y-1" aria-label="Main navigation">
+      <nav className="flex-1 px-[var(--rr-space-3)] py-[var(--rr-space-4)] space-y-[var(--rr-space-1)]" aria-label="Main navigation">
         {navItems.map((item) => {
           const isActive = isActiveRoute(item);
           const Icon = item.icon;
@@ -99,42 +99,40 @@ export function Sidebar() {
               key={item.href}
               href={item.href}
               className={cn(
-                "group relative flex items-center gap-3 rounded-xl px-3 py-2.5 text-sm font-medium transition-all duration-200",
+                "group relative flex items-center gap-[var(--rr-space-3)] rounded-[var(--rr-radius-lg)] px-[var(--rr-space-3)] py-[var(--rr-space-3)] text-[var(--rr-font-size-sm)] font-[var(--rr-font-weight-medium)] transition-all",
                 isActive
                   ? [
-                      "bg-white/[0.12] text-white",
-                      "shadow-[inset_0_1px_0_0_rgba(255,255,255,0.1),0_2px_8px_-2px_rgba(0,0,0,0.3)]",
-                      "backdrop-blur-sm",
+                      "bg-[var(--rr-color-brand-primary)]/20 text-[var(--rr-color-text-inverse)]",
+                      "shadow-[var(--rr-shadow-sm)]",
                     ]
                   : [
-                      "text-white/50 hover:text-white/90",
-                      "hover:bg-white/[0.06]",
-                      "hover:shadow-[0_2px_8px_-4px_rgba(0,0,0,0.2)]",
+                      "text-[var(--rr-color-text-inverse)]/50 hover:text-[var(--rr-color-text-inverse)]/90",
+                      "hover:bg-[var(--rr-color-text-inverse)]/[0.06]",
                     ],
-                collapsed && "justify-center px-2"
+                collapsed && "justify-center px-[var(--rr-space-2)]"
               )}
               aria-current={isActive ? "page" : undefined}
             >
-              {/* Subtle glow effect for active state */}
+              {/* Active glow effect */}
               {isActive && (
-                <div className="absolute inset-0 rounded-xl bg-gradient-to-r from-indigo-500/10 via-transparent to-purple-500/10 pointer-events-none" />
+                <div className="absolute inset-0 rounded-[var(--rr-radius-lg)] bg-gradient-to-r from-[var(--rr-color-brand-primary)]/10 via-transparent to-[var(--rr-color-brand-secondary)]/10 pointer-events-none" />
               )}
-              
-              <Icon 
+
+              <Icon
                 className={cn(
-                  "h-[18px] w-[18px] shrink-0 transition-transform duration-200",
-                  isActive ? "text-white" : "text-white/50 group-hover:text-white/80",
+                  "h-[18px] w-[18px] shrink-0 transition-transform",
+                  isActive ? "text-[var(--rr-color-brand-primary)]" : "text-[var(--rr-color-text-inverse)]/50 group-hover:text-[var(--rr-color-text-inverse)]/80",
                   !isActive && "group-hover:scale-105"
-                )} 
-                aria-hidden="true" 
+                )}
+                aria-hidden="true"
               />
               {!collapsed && (
                 <span className="relative">{item.label}</span>
               )}
-              
-              {/* Active indicator bar */}
+
+              {/* Active indicator */}
               {isActive && !collapsed && (
-                <div className="absolute right-2 h-1.5 w-1.5 rounded-full bg-indigo-400 shadow-[0_0_8px_2px_rgba(129,140,248,0.4)]" />
+                <div className="absolute right-[var(--rr-space-2)] h-1.5 w-1.5 rounded-[var(--rr-radius-full)] bg-[var(--rr-color-brand-primary)] shadow-[0_0_8px_2px_rgba(196,167,125,0.4)]" />
               )}
             </Link>
           );
@@ -142,10 +140,10 @@ export function Sidebar() {
       </nav>
 
       {/* Footer */}
-      <div className="px-4 py-4 border-t border-white/[0.06]">
+      <div className="px-[var(--rr-space-4)] py-[var(--rr-space-4)] border-t border-[var(--rr-color-slate)]/20">
         {!collapsed && (
-          <p className="text-[11px] text-white/30 tracking-wide">
-            © 2026 Rise Roofing
+          <p className="text-[var(--rr-font-size-xs)] text-[var(--rr-color-text-inverse)]/30 tracking-wide">
+            QuickClaims AI
           </p>
         )}
       </div>

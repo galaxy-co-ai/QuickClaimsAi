@@ -134,7 +134,7 @@ export function SettingsClient({
     <Card className="overflow-hidden shadow-xl border-0 bg-white/80 backdrop-blur-xl rounded-2xl">
       <div className="flex min-h-[560px]">
         {/* Sidebar Navigation */}
-        <div className="w-56 border-r border-slate-200/60 bg-gradient-to-b from-slate-50/80 to-slate-100/60 p-4 flex-shrink-0 rounded-l-2xl">
+        <div className="w-56 border-r border-[var(--rr-color-border-default)]/60 bg-gradient-to-b from-[var(--rr-color-sand-light)]/80 to-[var(--rr-color-sand)]/60 p-4 flex-shrink-0 rounded-l-2xl">
           <nav className="space-y-1" aria-label="Settings navigation">
             {visibleTabs.map((tab) => {
               const Icon = tab.icon;
@@ -148,11 +148,11 @@ export function SettingsClient({
                     "group relative flex w-full items-center gap-3 rounded-xl px-3 py-2.5 text-sm font-medium transition-all duration-200",
                     isActive
                       ? [
-                          "bg-slate-900 text-white",
-                          "shadow-[0_2px_8px_-2px_rgba(15,23,42,0.25)]",
+                          "bg-[var(--rr-color-charcoal)] text-white",
+                          "shadow-[0_2px_8px_-2px_rgba(44,44,44,0.25)]",
                         ]
                       : [
-                          "text-slate-600 hover:text-slate-900",
+                          "text-[var(--rr-color-text-secondary)] hover:text-[var(--rr-color-text-primary)]",
                           "hover:bg-white/80 hover:shadow-[0_2px_8px_-4px_rgba(0,0,0,0.1)]",
                         ]
                   )}
@@ -160,7 +160,7 @@ export function SettingsClient({
                 >
                   {/* Subtle glow for active */}
                   {isActive && (
-                    <div className="absolute inset-0 rounded-xl bg-gradient-to-r from-indigo-500/5 via-transparent to-purple-500/5 pointer-events-none" />
+                    <div className="absolute inset-0 rounded-xl bg-gradient-to-r from-[var(--rr-color-brand-primary)]/5 via-transparent to-[var(--rr-color-brand-accent)]/5 pointer-events-none" />
                   )}
                   <Icon 
                     className={cn(
@@ -172,7 +172,7 @@ export function SettingsClient({
                   <span className="relative">{tab.label}</span>
                   {/* Active indicator */}
                   {isActive && (
-                    <div className="absolute right-2.5 h-1.5 w-1.5 rounded-full bg-indigo-400 shadow-[0_0_6px_1px_rgba(129,140,248,0.5)]" />
+                    <div className="absolute right-2.5 h-1.5 w-1.5 rounded-full bg-[var(--rr-color-brand-primary)] shadow-[0_0_6px_1px_rgba(196,167,125,0.5)]" />
                   )}
                 </button>
               );

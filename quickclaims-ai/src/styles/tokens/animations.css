@@ -1,0 +1,46 @@
+/* =================================================
+   QUICKCLAIMS AI - ANIMATION TOKENS
+   Subtle, functional animations
+   ================================================= */
+
+:root {
+  /* ========================================
+     DURATIONS
+     ======================================== */
+  --rr-duration-instant: 0ms;
+  --rr-duration-fast: 100ms;
+  --rr-duration-normal: 200ms;
+  --rr-duration-slow: 300ms;
+  --rr-duration-slower: 500ms;
+
+  /* ========================================
+     EASINGS
+     ======================================== */
+  --rr-ease-linear: linear;
+  --rr-ease-in: cubic-bezier(0.4, 0, 1, 1);
+  --rr-ease-out: cubic-bezier(0, 0, 0.2, 1);
+  --rr-ease-in-out: cubic-bezier(0.4, 0, 0.2, 1);
+  --rr-ease-bounce: cubic-bezier(0.68, -0.55, 0.265, 1.55);
+
+  /* ========================================
+     COMPOSED TRANSITIONS
+     ======================================== */
+  --rr-transition-colors: color var(--rr-duration-normal) var(--rr-ease-in-out),
+                          background-color var(--rr-duration-normal) var(--rr-ease-in-out),
+                          border-color var(--rr-duration-normal) var(--rr-ease-in-out);
+  --rr-transition-opacity: opacity var(--rr-duration-normal) var(--rr-ease-in-out);
+  --rr-transition-transform: transform var(--rr-duration-normal) var(--rr-ease-out);
+  --rr-transition-shadow: box-shadow var(--rr-duration-normal) var(--rr-ease-in-out);
+  --rr-transition-all: all var(--rr-duration-normal) var(--rr-ease-in-out);
+}
+
+/* Reduced motion support - zeros all durations */
+@media (prefers-reduced-motion: reduce) {
+  :root {
+    --rr-duration-instant: 0ms;
+    --rr-duration-fast: 0ms;
+    --rr-duration-normal: 0ms;
+    --rr-duration-slow: 0ms;
+    --rr-duration-slower: 0ms;
+  }
+}

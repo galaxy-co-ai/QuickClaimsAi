@@ -289,7 +289,7 @@ export function ClaimForm({
           {/* Name */}
           <div className="space-y-2">
             <Label htmlFor="policyholderName">
-              Policyholder Name <span className="text-red-500">*</span>
+              Policyholder Name <span className="text-[var(--rr-color-error)]">*</span>
             </Label>
             <Input
               id="policyholderName"
@@ -298,7 +298,7 @@ export function ClaimForm({
               aria-invalid={!!errors.policyholderName}
             />
             {errors.policyholderName && (
-              <p className="text-sm text-red-500">
+              <p className="text-[var(--rr-font-size-sm)] text-[var(--rr-color-error)]">
                 {errors.policyholderName.message}
               </p>
             )}
@@ -315,7 +315,7 @@ export function ClaimForm({
                 {...register("policyholderEmail")}
               />
               {errors.policyholderEmail && (
-                <p className="text-sm text-red-500">
+                <p className="text-[var(--rr-font-size-sm)] text-[var(--rr-color-error)]">
                   {errors.policyholderEmail.message}
                 </p>
               )}
@@ -356,7 +356,7 @@ export function ClaimForm({
           {/* Address */}
           <div className="space-y-2">
             <Label htmlFor="lossAddress">
-              Address Line 1 <span className="text-red-500">*</span>
+              Address Line 1 <span className="text-[var(--rr-color-error)]">*</span>
             </Label>
             <Input
               id="lossAddress"
@@ -365,7 +365,7 @@ export function ClaimForm({
               aria-invalid={!!errors.lossAddress}
             />
             {errors.lossAddress && (
-              <p className="text-sm text-red-500">{errors.lossAddress.message}</p>
+              <p className="text-[var(--rr-font-size-sm)] text-[var(--rr-color-error)]">{errors.lossAddress.message}</p>
             )}
           </div>
 
@@ -382,7 +382,7 @@ export function ClaimForm({
           <div className="grid gap-4 md:grid-cols-3">
             <div className="space-y-2">
               <Label htmlFor="lossCity">
-                City <span className="text-red-500">*</span>
+                City <span className="text-[var(--rr-color-error)]">*</span>
               </Label>
               <Input
                 id="lossCity"
@@ -391,12 +391,12 @@ export function ClaimForm({
                 aria-invalid={!!errors.lossCity}
               />
               {errors.lossCity && (
-                <p className="text-sm text-red-500">{errors.lossCity.message}</p>
+                <p className="text-[var(--rr-font-size-sm)] text-[var(--rr-color-error)]">{errors.lossCity.message}</p>
               )}
             </div>
             <div className="space-y-2">
               <Label htmlFor="lossState">
-                State <span className="text-red-500">*</span>
+                State <span className="text-[var(--rr-color-error)]">*</span>
               </Label>
               <Controller
                 name="lossState"
@@ -424,12 +424,12 @@ export function ClaimForm({
                 )}
               />
               {errors.lossState && (
-                <p className="text-sm text-red-500">{errors.lossState.message}</p>
+                <p className="text-[var(--rr-font-size-sm)] text-[var(--rr-color-error)]">{errors.lossState.message}</p>
               )}
             </div>
             <div className="space-y-2">
               <Label htmlFor="lossZip">
-                Postal Code <span className="text-red-500">*</span>
+                Postal Code <span className="text-[var(--rr-color-error)]">*</span>
               </Label>
               <Input
                 id="lossZip"
@@ -438,7 +438,7 @@ export function ClaimForm({
                 aria-invalid={!!errors.lossZip}
               />
               {errors.lossZip && (
-                <p className="text-sm text-red-500">{errors.lossZip.message}</p>
+                <p className="text-[var(--rr-font-size-sm)] text-[var(--rr-color-error)]">{errors.lossZip.message}</p>
               )}
             </div>
           </div>
@@ -456,7 +456,7 @@ export function ClaimForm({
             <div className="space-y-2">
               <div className="flex items-center justify-between">
                 <Label htmlFor="carrierId">
-                  Insurance Company <span className="text-red-500">*</span>
+                  Insurance Company <span className="text-[var(--rr-color-error)]">*</span>
                 </Label>
                 <CarrierFormModal
                   onCarrierCreated={(newCarrier) => {
@@ -492,14 +492,14 @@ export function ClaimForm({
                 )}
               />
               {errors.carrierId && (
-                <p className="text-sm text-red-500">{errors.carrierId.message}</p>
+                <p className="text-[var(--rr-font-size-sm)] text-[var(--rr-color-error)]">{errors.carrierId.message}</p>
               )}
             </div>
 
             {/* Date of Loss */}
             <div className="space-y-2">
               <Label htmlFor="dateOfLoss">
-                Date of Loss <span className="text-red-500">*</span>
+                Date of Loss <span className="text-[var(--rr-color-error)]">*</span>
               </Label>
               <Controller
                 name="dateOfLoss"
@@ -521,7 +521,7 @@ export function ClaimForm({
             {/* Claim Number */}
             <div className="space-y-2">
               <Label htmlFor="claimNumber">
-                Claim Number <span className="text-red-500">*</span>
+                Claim Number <span className="text-[var(--rr-color-error)]">*</span>
               </Label>
               <Input
                 id="claimNumber"
@@ -550,7 +550,7 @@ export function ClaimForm({
                   href="/dashboard/adjusters/new"
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="inline-flex items-center gap-1 text-xs text-blue-600 hover:text-blue-800 hover:underline"
+                  className="inline-flex items-center gap-[var(--rr-space-1)] text-[var(--rr-font-size-xs)] text-[var(--rr-color-brand-primary)] hover:text-[var(--rr-color-brand-primary-hover)] hover:underline"
                   aria-label="Add new adjuster in new tab"
                 >
                   <Plus className="h-3 w-3" />
@@ -589,7 +589,7 @@ export function ClaimForm({
                 )}
               />
               {!selectedCarrierId && (
-                <p className="text-xs text-slate-500">
+                <p className="text-[var(--rr-font-size-xs)] text-[var(--rr-color-text-secondary)]">
                   Select a carrier to see available adjusters
                 </p>
               )}
@@ -626,8 +626,8 @@ export function ClaimForm({
           </div>
 
           {/* Adjuster Override Fields */}
-          <div className="border-t pt-4">
-            <p className="text-sm font-medium text-slate-700 mb-3">
+          <div className="border-t border-[var(--rr-color-border-default)] pt-[var(--rr-space-4)]">
+            <p className="text-[var(--rr-font-size-sm)] font-[var(--rr-font-weight-medium)] text-[var(--rr-color-text-secondary)] mb-[var(--rr-space-3)]">
               Or enter adjuster details manually:
             </p>
             <div className="grid gap-4 md:grid-cols-3">
@@ -693,7 +693,7 @@ export function ClaimForm({
             {/* Contractor */}
             <div className="space-y-2">
               <Label htmlFor="contractorId">
-                Contractor <span className="text-red-500">*</span>
+                Contractor <span className="text-[var(--rr-color-error)]">*</span>
               </Label>
               <Controller
                 name="contractorId"
@@ -721,7 +721,7 @@ export function ClaimForm({
                 )}
               />
               {errors.contractorId && (
-                <p className="text-sm text-red-500">
+                <p className="text-[var(--rr-font-size-sm)] text-[var(--rr-color-error)]">
                   {errors.contractorId.message}
                 </p>
               )}
@@ -730,7 +730,7 @@ export function ClaimForm({
             {/* Estimator/Salesperson */}
             <div className="space-y-2">
               <Label htmlFor="estimatorId">
-                Salesperson <span className="text-red-500">*</span>
+                Salesperson <span className="text-[var(--rr-color-error)]">*</span>
               </Label>
               <Controller
                 name="estimatorId"
@@ -758,7 +758,7 @@ export function ClaimForm({
                 )}
               />
               {errors.estimatorId && (
-                <p className="text-sm text-red-500">
+                <p className="text-[var(--rr-font-size-sm)] text-[var(--rr-color-error)]">
                   {errors.estimatorId.message}
                 </p>
               )}
@@ -769,7 +769,7 @@ export function ClaimForm({
             {/* Job Type */}
             <div className="space-y-2">
               <Label htmlFor="jobType">
-                Job Type <span className="text-red-500">*</span>
+                Job Type <span className="text-[var(--rr-color-error)]">*</span>
               </Label>
               <Controller
                 name="jobType"
@@ -799,7 +799,7 @@ export function ClaimForm({
             {/* Property Type */}
             <div className="space-y-2">
               <Label htmlFor="propertyType">
-                Property Type <span className="text-red-500">*</span>
+                Property Type <span className="text-[var(--rr-color-error)]">*</span>
               </Label>
               <Controller
                 name="propertyType"
@@ -860,7 +860,7 @@ export function ClaimForm({
             {/* Total Squares */}
             <div className="space-y-2">
               <Label htmlFor="totalSquares">
-                Squares <span className="text-red-500">*</span>
+                Squares <span className="text-[var(--rr-color-error)]">*</span>
               </Label>
               <Input
                 id="totalSquares"
@@ -871,7 +871,7 @@ export function ClaimForm({
                 aria-invalid={!!errors.totalSquares}
               />
               {errors.totalSquares && (
-                <p className="text-sm text-red-500">
+                <p className="text-[var(--rr-font-size-sm)] text-[var(--rr-color-error)]">
                   {errors.totalSquares.message}
                 </p>
               )}
@@ -880,10 +880,10 @@ export function ClaimForm({
             {/* Initial Roof RCV */}
             <div className="space-y-2">
               <Label htmlFor="roofRCV">
-                Initial Roof RCV <span className="text-red-500">*</span>
+                Initial Roof RCV <span className="text-[var(--rr-color-error)]">*</span>
               </Label>
               <div className="relative">
-                <span className="absolute left-3 top-1/2 -translate-y-1/2 text-slate-500">
+                <span className="absolute left-[var(--rr-space-3)] top-1/2 -translate-y-1/2 text-[var(--rr-color-text-secondary)]">
                   $
                 </span>
                 <Input
@@ -897,17 +897,17 @@ export function ClaimForm({
                 />
               </div>
               {errors.roofRCV && (
-                <p className="text-sm text-red-500">{errors.roofRCV.message}</p>
+                <p className="text-[var(--rr-font-size-sm)] text-[var(--rr-color-error)]">{errors.roofRCV.message}</p>
               )}
             </div>
 
             {/* Initial Total RCV */}
             <div className="space-y-2">
               <Label htmlFor="initialRCV">
-                Initial Total RCV <span className="text-red-500">*</span>
+                Initial Total RCV <span className="text-[var(--rr-color-error)]">*</span>
               </Label>
               <div className="relative">
-                <span className="absolute left-3 top-1/2 -translate-y-1/2 text-slate-500">
+                <span className="absolute left-[var(--rr-space-3)] top-1/2 -translate-y-1/2 text-[var(--rr-color-text-secondary)]">
                   $
                 </span>
                 <Input
@@ -921,17 +921,17 @@ export function ClaimForm({
                 />
               </div>
               {errors.initialRCV && (
-                <p className="text-sm text-red-500">{errors.initialRCV.message}</p>
+                <p className="text-[var(--rr-font-size-sm)] text-[var(--rr-color-error)]">{errors.initialRCV.message}</p>
               )}
             </div>
 
             {/* Initial $ Per SQ (calculated) */}
-            <div className="space-y-2">
+            <div className="space-y-[var(--rr-space-2)]">
               <Label>Initial $ Per SQ</Label>
-              <div className="h-10 flex items-center px-3 bg-slate-100 rounded-xl border border-slate-200 text-sm">
+              <div className="h-[var(--rr-input-height)] flex items-center px-[var(--rr-space-3)] bg-[var(--rr-color-sand)] rounded-[var(--rr-radius-xl)] border border-[var(--rr-color-border-default)] text-[var(--rr-font-size-sm)] text-[var(--rr-color-text-secondary)]">
                 ${initialDollarPerSquare}
               </div>
-              <p className="text-xs text-slate-500">Auto-calculated</p>
+              <p className="text-[var(--rr-font-size-xs)] text-[var(--rr-color-text-tertiary)]">Auto-calculated</p>
             </div>
           </div>
         </CardContent>
@@ -949,7 +949,7 @@ export function ClaimForm({
               <div className="space-y-2">
                 <Label htmlFor="finalRoofRCV">Final Roof RCV</Label>
                 <div className="relative">
-                  <span className="absolute left-3 top-1/2 -translate-y-1/2 text-slate-500">
+                  <span className="absolute left-3 top-1/2 -translate-y-1/2 text-[var(--rr-color-text-secondary)]">
                     $
                   </span>
                   <Input
@@ -967,7 +967,7 @@ export function ClaimForm({
               <div className="space-y-2">
                 <Label htmlFor="finalTotalRCV">Final Total RCV</Label>
                 <div className="relative">
-                  <span className="absolute left-3 top-1/2 -translate-y-1/2 text-slate-500">
+                  <span className="absolute left-3 top-1/2 -translate-y-1/2 text-[var(--rr-color-text-secondary)]">
                     $
                   </span>
                   <Input
@@ -982,21 +982,21 @@ export function ClaimForm({
               </div>
 
               {/* Final $ Per SQ (calculated) */}
-              <div className="space-y-2">
+              <div className="space-y-[var(--rr-space-2)]">
                 <Label>Final $ Per SQ</Label>
-                <div className="h-10 flex items-center px-3 bg-slate-100 rounded-xl border border-slate-200 text-sm">
+                <div className="h-[var(--rr-input-height)] flex items-center px-[var(--rr-space-3)] bg-[var(--rr-color-sand)] rounded-[var(--rr-radius-xl)] border border-[var(--rr-color-border-default)] text-[var(--rr-font-size-sm)] text-[var(--rr-color-text-secondary)]">
                   {finalDollarPerSquare ? `$${finalDollarPerSquare}` : "-"}
                 </div>
-                <p className="text-xs text-slate-500">Auto-calculated</p>
+                <p className="text-[var(--rr-font-size-xs)] text-[var(--rr-color-text-tertiary)]">Auto-calculated</p>
               </div>
 
               {/* Total Increase (calculated) */}
-              <div className="space-y-2">
+              <div className="space-y-[var(--rr-space-2)]">
                 <Label>Total Increase</Label>
-                <div className="h-10 flex items-center px-3 bg-slate-100 rounded-xl border border-slate-200 text-sm">
+                <div className="h-[var(--rr-input-height)] flex items-center px-[var(--rr-space-3)] bg-[var(--rr-color-sand)] rounded-[var(--rr-radius-xl)] border border-[var(--rr-color-border-default)] text-[var(--rr-font-size-sm)] text-[var(--rr-color-text-secondary)]">
                   {totalIncrease ? `$${totalIncrease}` : "-"}
                 </div>
-                <p className="text-xs text-slate-500">Final - Initial</p>
+                <p className="text-[var(--rr-font-size-xs)] text-[var(--rr-color-text-tertiary)]">Final - Initial</p>
               </div>
             </div>
 
@@ -1005,7 +1005,7 @@ export function ClaimForm({
               <div className="space-y-2">
                 <Label htmlFor="moneyReleasedAmount">Money Released Amount</Label>
                 <div className="relative">
-                  <span className="absolute left-3 top-1/2 -translate-y-1/2 text-slate-500">
+                  <span className="absolute left-3 top-1/2 -translate-y-1/2 text-[var(--rr-color-text-secondary)]">
                     $
                   </span>
                   <Input

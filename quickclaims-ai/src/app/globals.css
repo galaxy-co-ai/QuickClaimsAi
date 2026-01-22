@@ -1,131 +1,179 @@
+/* =================================================
+   QUICKCLAIMS AI - GLOBAL STYLES
+   Design system from Results Roofing (Dune aesthetic)
+   ================================================= */
+
 @import "tailwindcss";
+@import '../styles/tokens/index.css';
 
-/* QuickClaims AI - Design Tokens */
-:root {
-  /* Brand Colors - Deep Blue & Gold (inspired by professional insurance/roofing) */
-  --background: 0 0% 100%;
-  --foreground: 222.2 84% 4.9%;
-  
-  --card: 0 0% 100%;
-  --card-foreground: 222.2 84% 4.9%;
-  
-  --popover: 0 0% 100%;
-  --popover-foreground: 222.2 84% 4.9%;
-  
-  --primary: 221.2 83.2% 53.3%;
-  --primary-foreground: 210 40% 98%;
-  
-  --secondary: 210 40% 96.1%;
-  --secondary-foreground: 222.2 47.4% 11.2%;
-  
-  --muted: 210 40% 96.1%;
-  --muted-foreground: 215.4 16.3% 46.9%;
-  
-  --accent: 45 93% 47%;
-  --accent-foreground: 222.2 47.4% 11.2%;
-  
-  --destructive: 0 84.2% 60.2%;
-  --destructive-foreground: 210 40% 98%;
-  
-  --border: 214.3 31.8% 91.4%;
-  --input: 214.3 31.8% 91.4%;
-  --ring: 221.2 83.2% 53.3%;
-  
-  /* Semantic Colors */
-  --success: 142 76% 36%;
-  --success-foreground: 0 0% 100%;
-  --warning: 45 93% 47%;
-  --warning-foreground: 222.2 47.4% 11.2%;
-  --info: 199 89% 48%;
-  --info-foreground: 0 0% 100%;
-  
-  /* Spacing & Radius */
-  --radius: 0.5rem;
-  
-  /* Sidebar */
-  --sidebar-background: 222.2 84% 4.9%;
-  --sidebar-foreground: 210 40% 98%;
-  --sidebar-primary: 221.2 83.2% 53.3%;
-  --sidebar-primary-foreground: 210 40% 98%;
-  --sidebar-accent: 217.2 32.6% 17.5%;
-  --sidebar-accent-foreground: 210 40% 98%;
-  --sidebar-border: 217.2 32.6% 17.5%;
-  --sidebar-ring: 221.2 83.2% 53.3%;
+/* ========================================
+   CSS RESET & BASE STYLES
+   ======================================== */
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
 }
 
-.dark {
-  --background: 222.2 84% 4.9%;
-  --foreground: 210 40% 98%;
-  
-  --card: 222.2 84% 4.9%;
-  --card-foreground: 210 40% 98%;
-  
-  --popover: 222.2 84% 4.9%;
-  --popover-foreground: 210 40% 98%;
-  
-  --primary: 217.2 91.2% 59.8%;
-  --primary-foreground: 222.2 47.4% 11.2%;
-  
-  --secondary: 217.2 32.6% 17.5%;
-  --secondary-foreground: 210 40% 98%;
-  
-  --muted: 217.2 32.6% 17.5%;
-  --muted-foreground: 215 20.2% 65.1%;
-  
-  --accent: 45 93% 47%;
-  --accent-foreground: 222.2 47.4% 11.2%;
-  
-  --destructive: 0 62.8% 30.6%;
-  --destructive-foreground: 210 40% 98%;
-  
-  --border: 217.2 32.6% 17.5%;
-  --input: 217.2 32.6% 17.5%;
-  --ring: 224.3 76.3% 48%;
-}
-
-/* Base Styles */
-* {
-  border-color: hsl(var(--border));
+html {
+  font-size: 16px;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  text-rendering: optimizeLegibility;
 }
 
 html,
 body {
   height: 100%;
-  overflow: hidden;
 }
 
 body {
-  background: hsl(var(--background));
-  color: hsl(var(--foreground));
+  font-family: var(--rr-font-family-sans);
+  font-size: var(--rr-font-size-base);
+  font-weight: var(--rr-font-weight-normal);
+  line-height: var(--rr-line-height-normal);
+  color: var(--rr-color-text-primary);
+  background-color: var(--rr-color-bg-primary);
+  min-height: 100vh;
 }
 
-/* Custom Scrollbar */
+/* ========================================
+   TYPOGRAPHY BASE
+   ======================================== */
+
+h1, h2, h3, h4, h5, h6 {
+  font-weight: var(--rr-font-weight-semibold);
+  line-height: var(--rr-line-height-tight);
+  letter-spacing: var(--rr-letter-spacing-tight);
+  color: var(--rr-color-text-primary);
+}
+
+h1 {
+  font-size: var(--rr-font-size-4xl);
+}
+
+h2 {
+  font-size: var(--rr-font-size-3xl);
+}
+
+h3 {
+  font-size: var(--rr-font-size-2xl);
+}
+
+h4 {
+  font-size: var(--rr-font-size-xl);
+}
+
+h5 {
+  font-size: var(--rr-font-size-lg);
+}
+
+h6 {
+  font-size: var(--rr-font-size-base);
+}
+
+p {
+  margin-bottom: var(--rr-space-4);
+  color: var(--rr-color-text-secondary);
+}
+
+a {
+  color: var(--rr-color-text-link);
+  text-decoration: none;
+  transition: var(--rr-transition-colors);
+}
+
+a:hover {
+  color: var(--rr-color-text-link-hover);
+}
+
+/* ========================================
+   FOCUS STATES
+   ======================================== */
+
+:focus-visible {
+  outline: var(--rr-focus-ring-width) solid var(--rr-focus-ring-color);
+  outline-offset: var(--rr-focus-ring-offset);
+}
+
+/* Remove default focus for mouse users */
+:focus:not(:focus-visible) {
+  outline: none;
+}
+
+/* ========================================
+   FORM ELEMENTS BASE
+   ======================================== */
+
+button,
+input,
+select,
+textarea {
+  font-family: inherit;
+  font-size: inherit;
+  line-height: inherit;
+}
+
+button {
+  cursor: pointer;
+  border: none;
+  background: none;
+}
+
+/* ========================================
+   UTILITY CLASSES
+   ======================================== */
+
+.sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
+}
+
+/* ========================================
+   SCROLLBAR STYLING
+   ======================================== */
+
 ::-webkit-scrollbar {
   width: 8px;
   height: 8px;
 }
 
 ::-webkit-scrollbar-track {
-  background: hsl(var(--muted));
-  border-radius: var(--radius);
+  background: var(--rr-color-bg-tertiary);
 }
 
 ::-webkit-scrollbar-thumb {
-  background: hsl(var(--muted-foreground) / 0.3);
-  border-radius: var(--radius);
+  background: var(--rr-color-stone);
+  border-radius: var(--rr-radius-full);
 }
 
 ::-webkit-scrollbar-thumb:hover {
-  background: hsl(var(--muted-foreground) / 0.5);
+  background: var(--rr-color-slate);
 }
 
-/* Focus Styles */
-:focus-visible {
-  outline: 2px solid hsl(var(--ring));
-  outline-offset: 2px;
+/* ========================================
+   SELECTION STYLING
+   ======================================== */
+
+::selection {
+  background-color: var(--rr-color-sandstone);
+  color: var(--rr-color-charcoal);
 }
 
-/* Animations */
+/* ========================================
+   ANIMATIONS
+   ======================================== */
+
 @keyframes fadeIn {
   from {
     opacity: 0;
@@ -137,31 +185,58 @@ body {
   }
 }
 
-.animate-fade-in {
-  animation: fadeIn 0.3s ease-out;
+@keyframes spin {
+  to {
+    transform: rotate(360deg);
+  }
 }
 
-/* React DatePicker Custom Styles */
+@keyframes pulse {
+  0%, 100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.5;
+  }
+}
+
+.animate-fade-in {
+  animation: fadeIn var(--rr-duration-slow) var(--rr-ease-out);
+}
+
+.animate-spin {
+  animation: spin 1s linear infinite;
+}
+
+.animate-pulse {
+  animation: pulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+}
+
+/* ========================================
+   REACT DATEPICKER CUSTOM STYLES
+   ======================================== */
+
 .react-datepicker {
-  font-family: inherit !important;
-  border-radius: 0.75rem !important;
-  border: 1px solid hsl(var(--border)) !important;
-  box-shadow: 0 10px 15px -3px rgb(0 0 0 / 0.1), 0 4px 6px -4px rgb(0 0 0 / 0.1) !important;
+  font-family: var(--rr-font-family-sans) !important;
+  border-radius: var(--rr-radius-lg) !important;
+  border: 1px solid var(--rr-color-border-default) !important;
+  box-shadow: var(--rr-shadow-lg) !important;
   overflow: hidden;
+  background-color: var(--rr-color-bg-secondary) !important;
 }
 
 .react-datepicker__header {
-  background-color: white !important;
-  border-bottom: 1px solid hsl(var(--border)) !important;
+  background-color: var(--rr-color-bg-secondary) !important;
+  border-bottom: 1px solid var(--rr-color-border-default) !important;
   border-radius: 0 !important;
-  padding-top: 0.75rem !important;
+  padding-top: var(--rr-space-3) !important;
 }
 
 .react-datepicker__current-month {
-  font-weight: 500 !important;
-  font-size: 0.875rem !important;
-  color: hsl(var(--foreground)) !important;
-  margin-bottom: 0.5rem !important;
+  font-weight: var(--rr-font-weight-medium) !important;
+  font-size: var(--rr-font-size-sm) !important;
+  color: var(--rr-color-text-primary) !important;
+  margin-bottom: var(--rr-space-2) !important;
 }
 
 .react-datepicker__day-names {
@@ -169,73 +244,126 @@ body {
 }
 
 .react-datepicker__day-name {
-  color: hsl(var(--muted-foreground)) !important;
-  font-weight: 400 !important;
-  font-size: 0.75rem !important;
+  color: var(--rr-color-text-tertiary) !important;
+  font-weight: var(--rr-font-weight-normal) !important;
+  font-size: var(--rr-font-size-xs) !important;
   width: 2rem !important;
   line-height: 2rem !important;
   margin: 0.125rem !important;
 }
 
 .react-datepicker__month {
-  margin: 0.5rem !important;
+  margin: var(--rr-space-2) !important;
 }
 
 .react-datepicker__day {
   width: 2rem !important;
   line-height: 2rem !important;
   margin: 0.125rem !important;
-  border-radius: 0.5rem !important;
-  font-size: 0.875rem !important;
-  color: hsl(var(--foreground)) !important;
-  transition: all 0.15s ease !important;
+  border-radius: var(--rr-radius-md) !important;
+  font-size: var(--rr-font-size-sm) !important;
+  color: var(--rr-color-text-primary) !important;
+  transition: var(--rr-transition-all) !important;
 }
 
 .react-datepicker__day:hover {
-  background-color: hsl(var(--muted)) !important;
-  border-radius: 0.5rem !important;
+  background-color: var(--rr-color-surface-hover) !important;
+  border-radius: var(--rr-radius-md) !important;
 }
 
 .react-datepicker__day--selected,
 .react-datepicker__day--keyboard-selected {
-  background-color: hsl(var(--primary)) !important;
-  color: white !important;
-  font-weight: 500 !important;
+  background-color: var(--rr-color-brand-primary) !important;
+  color: var(--rr-color-text-inverse) !important;
+  font-weight: var(--rr-font-weight-medium) !important;
 }
 
 .react-datepicker__day--selected:hover,
 .react-datepicker__day--keyboard-selected:hover {
-  background-color: hsl(var(--primary) / 0.9) !important;
+  background-color: var(--rr-color-brand-primary-hover) !important;
 }
 
 .react-datepicker__day--today {
-  background-color: hsl(var(--muted)) !important;
-  font-weight: 600 !important;
+  background-color: var(--rr-color-surface-hover) !important;
+  font-weight: var(--rr-font-weight-semibold) !important;
 }
 
 .react-datepicker__day--today.react-datepicker__day--selected {
-  background-color: hsl(var(--primary)) !important;
+  background-color: var(--rr-color-brand-primary) !important;
 }
 
 .react-datepicker__day--outside-month {
-  color: hsl(var(--muted-foreground)) !important;
+  color: var(--rr-color-text-tertiary) !important;
 }
 
 .react-datepicker__navigation {
-  top: 0.75rem !important;
+  top: var(--rr-space-3) !important;
 }
 
 .react-datepicker__navigation-icon::before {
-  border-color: hsl(var(--muted-foreground)) !important;
+  border-color: var(--rr-color-text-tertiary) !important;
   border-width: 2px 2px 0 0 !important;
   height: 0.5rem !important;
   width: 0.5rem !important;
 }
 
 .react-datepicker__navigation:hover *::before {
-  border-color: hsl(var(--foreground)) !important;
+  border-color: var(--rr-color-text-primary) !important;
 }
 
 .react-datepicker__triangle {
   display: none !important;
+}
+
+/* ========================================
+   SONNER TOAST CUSTOMIZATION
+   ======================================== */
+
+[data-sonner-toaster] {
+  font-family: var(--rr-font-family-sans) !important;
+}
+
+[data-sonner-toast] {
+  background-color: var(--rr-color-bg-secondary) !important;
+  border: 1px solid var(--rr-color-border-default) !important;
+  border-radius: var(--rr-radius-lg) !important;
+  box-shadow: var(--rr-shadow-lg) !important;
+  color: var(--rr-color-text-primary) !important;
+}
+
+[data-sonner-toast][data-type="success"] {
+  background-color: var(--rr-color-status-success-bg) !important;
+  border-color: var(--rr-color-status-success) !important;
+}
+
+[data-sonner-toast][data-type="error"] {
+  background-color: var(--rr-color-status-error-bg) !important;
+  border-color: var(--rr-color-status-error) !important;
+}
+
+[data-sonner-toast][data-type="warning"] {
+  background-color: var(--rr-color-status-warning-bg) !important;
+  border-color: var(--rr-color-status-warning) !important;
+}
+
+/* ========================================
+   CLERK COMPONENT OVERRIDES
+   ======================================== */
+
+.cl-rootBox {
+  font-family: var(--rr-font-family-sans) !important;
+}
+
+.cl-card {
+  border-radius: var(--rr-radius-lg) !important;
+  box-shadow: var(--rr-shadow-lg) !important;
+}
+
+.cl-formButtonPrimary {
+  background-color: var(--rr-color-brand-primary) !important;
+  border-radius: var(--rr-radius-md) !important;
+}
+
+.cl-formButtonPrimary:hover {
+  background-color: var(--rr-color-brand-primary-hover) !important;
 }

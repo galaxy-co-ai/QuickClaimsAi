@@ -13,7 +13,7 @@ const TabsList = React.forwardRef<
   <TabsPrimitive.List
     ref={ref}
     className={cn(
-      "inline-flex h-10 items-center justify-center rounded-xl bg-slate-100 p-1 text-slate-500",
+      "inline-flex h-[var(--rr-button-height-md)] items-center justify-center rounded-[var(--rr-radius-lg)] bg-[var(--rr-color-bg-tertiary)] p-[var(--rr-space-1)] text-[var(--rr-color-text-tertiary)]",
       className
     )}
     {...props}
@@ -28,10 +28,10 @@ const TabsTrigger = React.forwardRef<
   <TabsPrimitive.Trigger
     ref={ref}
     className={cn(
-      "inline-flex items-center justify-center whitespace-nowrap rounded-lg px-3 py-1.5 text-sm font-medium ring-offset-white transition-all duration-200",
-      "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-500/40 focus-visible:ring-offset-2",
+      "inline-flex items-center justify-center whitespace-nowrap rounded-[var(--rr-radius-md)] px-[var(--rr-space-3)] py-[var(--rr-space-2)] text-[var(--rr-font-size-sm)] font-[var(--rr-font-weight-medium)] transition-all",
+      "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--rr-color-focus-ring)] focus-visible:ring-offset-2",
       "disabled:pointer-events-none disabled:opacity-50",
-      "data-[state=active]:bg-white data-[state=active]:text-slate-950 data-[state=active]:shadow-sm",
+      "data-[state=active]:bg-[var(--rr-color-bg-secondary)] data-[state=active]:text-[var(--rr-color-text-primary)] data-[state=active]:shadow-[var(--rr-shadow-sm)]",
       className
     )}
     {...props}
@@ -46,7 +46,7 @@ const TabsContent = React.forwardRef<
   <TabsPrimitive.Content
     ref={ref}
     className={cn(
-      "mt-2 ring-offset-white focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-slate-950 focus-visible:ring-offset-2",
+      "mt-[var(--rr-space-2)] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--rr-color-focus-ring)] focus-visible:ring-offset-2",
       className
     )}
     {...props}

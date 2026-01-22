@@ -61,13 +61,13 @@ const ACTION_LABELS: Record<string, string> = {
 };
 
 const ACTION_COLORS: Record<string, string> = {
-  create: "bg-green-100 text-green-800",
-  update: "bg-blue-100 text-blue-800",
-  delete: "bg-red-100 text-red-800",
-  status_change: "bg-purple-100 text-purple-800",
-  approve: "bg-emerald-100 text-emerald-800",
-  submit: "bg-amber-100 text-amber-800",
-  login: "bg-slate-100 text-slate-800",
+  create: "bg-[var(--rr-color-success)]/10 text-[var(--rr-color-success)]",
+  update: "bg-[var(--rr-color-info)]/10 text-[var(--rr-color-info)]",
+  delete: "bg-[var(--rr-color-error)]/10 text-[var(--rr-color-error)]",
+  status_change: "bg-[var(--rr-color-brand-accent)]/10 text-[var(--rr-color-brand-accent)]",
+  approve: "bg-[var(--rr-color-success)]/10 text-[var(--rr-color-success)]",
+  submit: "bg-[var(--rr-color-warning)]/10 text-[var(--rr-color-warning)]",
+  login: "bg-[var(--rr-color-sand)] text-[var(--rr-color-text-primary)]",
 };
 
 const ENTITY_TYPE_LABELS: Record<string, string> = {
@@ -219,7 +219,7 @@ export function AuditLogClient({
             {/* Entity ID Search */}
             <div className="relative">
               <Search
-                className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-slate-400"
+                className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-[var(--rr-color-stone)]"
                 aria-hidden="true"
               />
               <input
@@ -228,7 +228,7 @@ export function AuditLogClient({
                 value={currentFilters.entityId || ""}
                 onChange={(e) => updateFilter("entityId", e.target.value)}
                 disabled={isPending}
-                className="h-10 rounded-lg border border-slate-200 bg-white pl-10 pr-4 text-sm outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500"
+                className="h-10 rounded-lg border border-[var(--rr-color-border-default)] bg-white pl-10 pr-4 text-sm outline-none focus:border-[var(--rr-color-brand-primary)] focus:ring-1 focus:ring-[var(--rr-color-brand-primary)]"
                 aria-label="Search by entity ID"
               />
             </div>
@@ -240,7 +240,7 @@ export function AuditLogClient({
                 size="sm"
                 onClick={clearAllFilters}
                 disabled={isPending}
-                className="gap-1 text-slate-500 hover:text-slate-700"
+                className="gap-1 text-[var(--rr-color-stone)] hover:text-[var(--rr-color-text-secondary)]"
               >
                 <X className="h-4 w-4" />
                 Clear
@@ -261,7 +261,7 @@ export function AuditLogClient({
         </CardHeader>
         <CardContent className="p-0">
           {logs.length === 0 ? (
-            <div className="p-8 text-center text-slate-500">
+            <div className="p-8 text-center text-[var(--rr-color-stone)]">
               No audit log entries found matching your filters.
             </div>
           ) : (
@@ -269,13 +269,13 @@ export function AuditLogClient({
               {logs.map((log) => (
                 <div
                   key={log.id}
-                  className="p-4 hover:bg-slate-50 transition-colors"
+                  className="p-4 hover:bg-[var(--rr-color-surface-hover)] transition-colors"
                 >
                   <div className="flex items-start justify-between gap-4">
                     <div className="flex-1 min-w-0">
                       <div className="flex items-center gap-2 flex-wrap">
                         <Badge
-                          className={`${ACTION_COLORS[log.action] || "bg-slate-100 text-slate-800"}`}
+                          className={`${ACTION_COLORS[log.action] || "bg-[var(--rr-color-sand)] text-[var(--rr-color-text-primary)]"}`}
                         >
                           {ACTION_LABELS[log.action] || log.action}
                         </Badge>
@@ -283,23 +283,23 @@ export function AuditLogClient({
                           {ENTITY_TYPE_LABELS[log.entityType] || log.entityType}
                         </Badge>
                         {log.fieldName && (
-                          <span className="text-sm text-slate-500">
-                            Field: <code className="bg-slate-100 px-1 rounded">{log.fieldName}</code>
+                          <span className="text-sm text-[var(--rr-color-stone)]">
+                            Field: <code className="bg-[var(--rr-color-sand)] px-1 rounded">{log.fieldName}</code>
                           </span>
                         )}
                       </div>
-                      <div className="mt-2 text-sm text-slate-600">
+                      <div className="mt-2 text-sm text-[var(--rr-color-text-secondary)]">
                         <span className="font-medium">{log.userEmail}</span>
                         {log.oldValue && log.newValue && (
                           <span className="ml-2">
                             changed from{" "}
-                            <code className="bg-red-50 text-red-700 px-1 rounded">
+                            <code className="bg-[var(--rr-color-error)]/10 text-[var(--rr-color-error)] px-1 rounded">
                               {log.oldValue.length > 50
                                 ? log.oldValue.substring(0, 50) + "..."
                                 : log.oldValue}
                             </code>{" "}
                             to{" "}
-                            <code className="bg-green-50 text-green-700 px-1 rounded">
+                            <code className="bg-[var(--rr-color-success)]/10 text-[var(--rr-color-success)] px-1 rounded">
                               {log.newValue.length > 50
                                 ? log.newValue.substring(0, 50) + "..."
                                 : log.newValue}
@@ -307,11 +307,11 @@ export function AuditLogClient({
                           </span>
                         )}
                       </div>
-                      <div className="mt-1 text-xs text-slate-400">
+                      <div className="mt-1 text-xs text-[var(--rr-color-stone)]">
                         Entity ID: {log.entityId}
                       </div>
                     </div>
-                    <div className="text-right text-sm text-slate-500 whitespace-nowrap">
+                    <div className="text-right text-sm text-[var(--rr-color-stone)] whitespace-nowrap">
                       {formatDistanceToNow(new Date(log.createdAt), {
                         addSuffix: true,
                       })}
@@ -327,7 +327,7 @@ export function AuditLogClient({
       {/* Pagination */}
       {pagination.totalPages > 1 && (
         <div className="flex items-center justify-between">
-          <p className="text-sm text-slate-600">
+          <p className="text-sm text-[var(--rr-color-text-secondary)]">
             Showing {(pagination.page - 1) * pagination.limit + 1} to{" "}
             {Math.min(pagination.page * pagination.limit, pagination.total)} of{" "}
             {pagination.total} entries

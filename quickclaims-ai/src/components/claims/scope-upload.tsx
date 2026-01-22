@@ -79,38 +79,38 @@ export function ScopeUpload({ onDataExtracted, disabled }: ScopeUploadProps) {
         variant="outline"
         onClick={handleClick}
         disabled={disabled || isUploading}
-        className="w-full border-dashed border-2 h-auto py-4 hover:bg-slate-50"
+        className="w-full border-dashed border-2 h-auto py-[var(--rr-space-4)] hover:bg-[var(--rr-color-surface-hover)]"
       >
-        <div className="flex flex-col items-center gap-2 text-center">
+        <div className="flex flex-col items-center gap-[var(--rr-space-2)] text-center">
           {isUploading ? (
             <>
-              <Loader2 className="h-6 w-6 animate-spin text-blue-600" />
+              <Loader2 className="h-6 w-6 animate-spin text-[var(--rr-color-brand-primary)]" />
               <div>
-                <p className="font-medium text-slate-900">Extracting data...</p>
-                <p className="text-sm text-slate-500">
+                <p className="font-[var(--rr-font-weight-medium)] text-[var(--rr-color-text-primary)]">Extracting data...</p>
+                <p className="text-[var(--rr-font-size-sm)] text-[var(--rr-color-text-secondary)]">
                   AI is reading {fileName || "the PDF"}
                 </p>
               </div>
             </>
           ) : success ? (
             <>
-              <CheckCircle className="h-6 w-6 text-green-600" />
+              <CheckCircle className="h-6 w-6 text-[var(--rr-color-success)]" />
               <div>
-                <p className="font-medium text-green-700">Data extracted successfully!</p>
-                <p className="text-sm text-slate-500">
+                <p className="font-[var(--rr-font-weight-medium)] text-[var(--rr-color-success)]">Data extracted successfully!</p>
+                <p className="text-[var(--rr-font-size-sm)] text-[var(--rr-color-text-secondary)]">
                   Review and edit the fields below
                 </p>
               </div>
             </>
           ) : (
             <>
-              <div className="flex items-center gap-2">
-                <Upload className="h-5 w-5 text-slate-400" />
-                <FileText className="h-5 w-5 text-slate-400" />
+              <div className="flex items-center gap-[var(--rr-space-2)]">
+                <Upload className="h-5 w-5 text-[var(--rr-color-stone)]" />
+                <FileText className="h-5 w-5 text-[var(--rr-color-stone)]" />
               </div>
               <div>
-                <p className="font-medium text-slate-900">Upload Insurance Scope PDF</p>
-                <p className="text-sm text-slate-500">
+                <p className="font-[var(--rr-font-weight-medium)] text-[var(--rr-color-text-primary)]">Upload Insurance Scope PDF</p>
+                <p className="text-[var(--rr-font-size-sm)] text-[var(--rr-color-text-secondary)]">
                   Auto-fill form fields from adjuster&apos;s estimate
                 </p>
               </div>
@@ -120,11 +120,11 @@ export function ScopeUpload({ onDataExtracted, disabled }: ScopeUploadProps) {
       </Button>
 
       {error && (
-        <div className="flex items-start gap-2 p-3 bg-red-50 border border-red-200 rounded-xl">
-          <AlertCircle className="h-5 w-5 text-red-500 flex-shrink-0 mt-0.5" />
-          <div className="text-sm">
-            <p className="font-medium text-red-800">Failed to extract data</p>
-            <p className="text-red-600">{error}</p>
+        <div className="flex items-start gap-[var(--rr-space-2)] p-[var(--rr-space-3)] bg-[var(--rr-color-error)]/10 border border-[var(--rr-color-error)]/20 rounded-[var(--rr-radius-xl)]">
+          <AlertCircle className="h-5 w-5 text-[var(--rr-color-error)] flex-shrink-0 mt-0.5" />
+          <div className="text-[var(--rr-font-size-sm)]">
+            <p className="font-[var(--rr-font-weight-medium)] text-[var(--rr-color-error)]">Failed to extract data</p>
+            <p className="text-[var(--rr-color-error)]/80">{error}</p>
           </div>
         </div>
       )}

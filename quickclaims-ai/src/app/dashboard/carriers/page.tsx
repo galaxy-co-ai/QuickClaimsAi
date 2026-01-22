@@ -29,8 +29,8 @@ export default async function CarriersPage() {
       {/* Page Header */}
       <div className="flex items-center justify-between">
         <div>
-          <h1 className="text-2xl font-bold text-slate-900">Insurance Carriers</h1>
-          <p className="text-slate-600">
+          <h1 className="text-2xl font-bold text-[var(--rr-color-text-primary)]">Insurance Carriers</h1>
+          <p className="text-[var(--rr-color-text-secondary)]">
             Manage insurance carrier profiles and adjusters (alphabetical list)
           </p>
         </div>
@@ -46,11 +46,11 @@ export default async function CarriersPage() {
       {carriers.length === 0 ? (
         <Card>
           <CardContent className="flex flex-col items-center justify-center py-12">
-            <Shield className="h-12 w-12 text-slate-300 mb-4" />
-            <h3 className="text-lg font-medium text-slate-900 mb-2">
+            <Shield className="h-12 w-12 text-[var(--rr-color-stone)] mb-4" />
+            <h3 className="text-lg font-medium text-[var(--rr-color-text-primary)] mb-2">
               No carriers yet
             </h3>
-            <p className="text-slate-500 mb-4 text-center max-w-sm">
+            <p className="text-[var(--rr-color-stone)] mb-4 text-center max-w-sm">
               Add insurance carriers to associate with claims and track adjusters.
             </p>
             <Link href="/dashboard/carriers/new">
@@ -62,7 +62,7 @@ export default async function CarriersPage() {
         <Card>
           <CardHeader>
             <CardTitle className="flex items-center gap-2">
-              <Shield className="h-5 w-5 text-blue-500" />
+              <Shield className="h-5 w-5 text-[var(--rr-color-brand-primary)]" />
               {carriers.length} Carrier(s)
             </CardTitle>
           </CardHeader>
@@ -71,7 +71,7 @@ export default async function CarriersPage() {
               <div key={letter} className="space-y-2">
                 {/* Letter Header */}
                 <div className="sticky top-0 bg-white z-10 py-1">
-                  <span className="inline-flex items-center justify-center w-8 h-8 rounded-full bg-slate-100 text-sm font-bold text-slate-700">
+                  <span className="inline-flex items-center justify-center w-8 h-8 rounded-full bg-[var(--rr-color-sand)] text-sm font-bold text-[var(--rr-color-text-secondary)]">
                     {letter}
                   </span>
                 </div>

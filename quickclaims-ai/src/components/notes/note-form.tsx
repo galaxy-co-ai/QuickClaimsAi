@@ -61,16 +61,16 @@ export function NoteForm({ claimId }: NoteFormProps) {
 
   // Updated type buttons per client request: General, Call, Email, Document
   const typeButtons: Array<{ value: NoteTypeValue; label: string; color: string }> = [
-    { value: "general", label: "General", color: "bg-slate-100 hover:bg-slate-200 border-slate-300" },
-    { value: "call", label: "Call", color: "bg-green-100 hover:bg-green-200 border-green-300" },
-    { value: "email", label: "Email", color: "bg-blue-100 hover:bg-blue-200 border-blue-300" },
-    { value: "document", label: "Document", color: "bg-amber-100 hover:bg-amber-200 border-amber-300" },
+    { value: "general", label: "General", color: "bg-[var(--rr-color-sand)] hover:bg-[var(--rr-color-sand-light)] border-[var(--rr-color-border-default)]" },
+    { value: "call", label: "Call", color: "bg-[var(--rr-color-success)]/10 hover:bg-[var(--rr-color-success)]/20 border-[var(--rr-color-success)]/30" },
+    { value: "email", label: "Email", color: "bg-[var(--rr-color-info)]/10 hover:bg-[var(--rr-color-info)]/20 border-[var(--rr-color-info)]/30" },
+    { value: "document", label: "Document", color: "bg-[var(--rr-color-warning)]/10 hover:bg-[var(--rr-color-warning)]/20 border-[var(--rr-color-warning)]/30" },
   ];
 
   return (
-    <form onSubmit={handleSubmit(onSubmit)} className="space-y-3">
+    <form onSubmit={handleSubmit(onSubmit)} className="space-y-[var(--rr-space-3)]">
       <div>
-        <Label className="text-sm text-slate-600 mb-2 block">Add a note</Label>
+        <Label className="text-[var(--rr-font-size-sm)] text-[var(--rr-color-text-secondary)] mb-[var(--rr-space-2)] block">Add a note</Label>
         <Textarea
           {...register("content")}
           placeholder="Type your note here..."
@@ -79,12 +79,12 @@ export function NoteForm({ claimId }: NoteFormProps) {
           disabled={isPending}
         />
         {errors.content && (
-          <p className="text-sm text-red-500 mt-1">{errors.content.message}</p>
+          <p className="text-[var(--rr-font-size-sm)] text-[var(--rr-color-error)] mt-[var(--rr-space-1)]">{errors.content.message}</p>
         )}
       </div>
 
       <div className="flex items-center justify-between">
-        <div className="flex gap-2">
+        <div className="flex gap-[var(--rr-space-2)]">
           {typeButtons.map((type) => (
             <button
               key={type.value}
@@ -92,10 +92,10 @@ export function NoteForm({ claimId }: NoteFormProps) {
               onClick={() => setNoteType(type.value)}
               aria-pressed={noteType === type.value}
               aria-label={`Set note type to ${type.label}`}
-              className={`px-3 py-1 text-xs font-medium rounded-full border transition-colors ${
+              className={`px-[var(--rr-space-3)] py-[var(--rr-space-1)] text-[var(--rr-font-size-xs)] font-[var(--rr-font-weight-medium)] rounded-[var(--rr-radius-full)] border transition-colors ${
                 noteType === type.value
-                  ? `${type.color} ring-2 ring-offset-1 ring-slate-400`
-                  : "bg-white border-slate-200 hover:bg-slate-50"
+                  ? `${type.color} ring-2 ring-offset-1 ring-[var(--rr-color-stone)]`
+                  : "bg-[var(--rr-color-bg-secondary)] border-[var(--rr-color-border-default)] hover:bg-[var(--rr-color-surface-hover)]"
               }`}
             >
               {type.label}
@@ -108,7 +108,7 @@ export function NoteForm({ claimId }: NoteFormProps) {
             <Loader2 className="h-4 w-4 animate-spin" />
           ) : (
             <>
-              <Send className="h-4 w-4 mr-1" />
+              <Send className="h-4 w-4 mr-[var(--rr-space-1)]" />
               Add Note
             </>
           )}

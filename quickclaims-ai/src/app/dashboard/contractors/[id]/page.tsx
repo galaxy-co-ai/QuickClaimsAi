@@ -35,11 +35,11 @@ export default async function ContractorDetailPage({
             </Button>
           </Link>
           <div>
-            <h1 className="text-2xl font-bold text-slate-900">
+            <h1 className="text-2xl font-bold text-[var(--rr-color-text-primary)]">
               {contractor.companyName}
             </h1>
             {contractor.contactName && (
-              <p className="text-slate-600">{contractor.contactName}</p>
+              <p className="text-[var(--rr-color-text-secondary)]">{contractor.contactName}</p>
             )}
           </div>
         </div>
@@ -59,20 +59,20 @@ export default async function ContractorDetailPage({
           </CardHeader>
           <CardContent className="space-y-3">
             <div className="flex items-center gap-3">
-              <Mail className="h-4 w-4 text-slate-400" />
+              <Mail className="h-4 w-4 text-[var(--rr-color-stone)]" />
               <a
                 href={`mailto:${contractor.email}`}
-                className="text-blue-600 hover:underline"
+                className="text-[var(--rr-color-brand-primary)] hover:underline"
               >
                 {contractor.email}
               </a>
             </div>
             {contractor.phone && (
               <div className="flex items-center gap-3">
-                <Phone className="h-4 w-4 text-slate-400" />
+                <Phone className="h-4 w-4 text-[var(--rr-color-stone)]" />
                 <a
                   href={`tel:${contractor.phone}`}
-                  className="text-blue-600 hover:underline"
+                  className="text-[var(--rr-color-brand-primary)] hover:underline"
                 >
                   {contractor.phone}
                 </a>
@@ -80,8 +80,8 @@ export default async function ContractorDetailPage({
             )}
             {contractor.address && (
               <div className="flex items-start gap-3">
-                <MapPin className="h-4 w-4 text-slate-400 mt-0.5" />
-                <span className="text-slate-700">{contractor.address}</span>
+                <MapPin className="h-4 w-4 text-[var(--rr-color-stone)] mt-0.5" />
+                <span className="text-[var(--rr-color-text-secondary)]">{contractor.address}</span>
               </div>
             )}
           </CardContent>
@@ -94,14 +94,14 @@ export default async function ContractorDetailPage({
           </CardHeader>
           <CardContent className="space-y-3">
             <div className="flex items-center justify-between">
-              <span className="text-slate-600">Billing Rate</span>
+              <span className="text-[var(--rr-color-text-secondary)]">Billing Rate</span>
               <span className="font-semibold text-lg">
                 {(Number(contractor.billingPercentage) * 100).toFixed(1)}%
               </span>
             </div>
             {contractor.paymentTerms && (
               <div className="flex items-center justify-between">
-                <span className="text-slate-600">Payment Terms</span>
+                <span className="text-[var(--rr-color-text-secondary)]">Payment Terms</span>
                 <span className="font-medium">{contractor.paymentTerms}</span>
               </div>
             )}
@@ -115,13 +115,13 @@ export default async function ContractorDetailPage({
           </CardHeader>
           <CardContent className="space-y-3">
             <div className="flex items-center justify-between">
-              <span className="text-slate-600">Total Claims</span>
+              <span className="text-[var(--rr-color-text-secondary)]">Total Claims</span>
               <span className="font-semibold text-lg">
                 {contractor._count.claims}
               </span>
             </div>
             <div className="flex items-center justify-between">
-              <span className="text-slate-600">Status</span>
+              <span className="text-[var(--rr-color-text-secondary)]">Status</span>
               <Badge variant="success">Active</Badge>
             </div>
           </CardContent>
@@ -135,7 +135,7 @@ export default async function ContractorDetailPage({
             <CardTitle className="text-base">Notes</CardTitle>
           </CardHeader>
           <CardContent>
-            <p className="text-slate-700 whitespace-pre-wrap">{contractor.notes}</p>
+            <p className="text-[var(--rr-color-text-secondary)] whitespace-pre-wrap">{contractor.notes}</p>
           </CardContent>
         </Card>
       )}
@@ -147,7 +147,7 @@ export default async function ContractorDetailPage({
           {contractor.claims.length > 0 && (
             <Link
               href={`/dashboard/claims?contractor=${id}`}
-              className="text-sm text-blue-600 hover:underline"
+              className="text-sm text-[var(--rr-color-brand-primary)] hover:underline"
             >
               View all →
             </Link>
@@ -155,8 +155,8 @@ export default async function ContractorDetailPage({
         </CardHeader>
         <CardContent>
           {contractor.claims.length === 0 ? (
-            <div className="text-center py-8 text-slate-500">
-              <FileText className="h-8 w-8 mx-auto mb-2 text-slate-300" />
+            <div className="text-center py-8 text-[var(--rr-color-stone)]">
+              <FileText className="h-8 w-8 mx-auto mb-2 text-[var(--rr-color-stone)]" />
               <p>No claims yet</p>
             </div>
           ) : (
@@ -165,16 +165,16 @@ export default async function ContractorDetailPage({
                 <Link
                   key={claim.id}
                   href={`/dashboard/claims/${claim.id}`}
-                  className="flex items-center justify-between p-3 rounded-lg border hover:bg-slate-50 transition-colors"
+                  className="flex items-center justify-between p-3 rounded-lg border hover:bg-[var(--rr-color-surface-hover)] transition-colors"
                 >
                   <div>
                     <p className="font-medium">{claim.policyholderName}</p>
-                    <p className="text-sm text-slate-500">
+                    <p className="text-sm text-[var(--rr-color-stone)]">
                       {formatDate(claim.createdAt)}
                     </p>
                   </div>
                   <div className="flex items-center gap-3">
-                    <span className="font-medium text-green-600">
+                    <span className="font-medium text-[var(--rr-color-success)]">
                       {formatCurrency(Number(claim.totalIncrease))}
                     </span>
                     <span

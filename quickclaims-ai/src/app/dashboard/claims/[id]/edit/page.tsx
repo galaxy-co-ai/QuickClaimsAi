@@ -76,8 +76,8 @@ export default async function EditClaimPage({ params }: EditClaimPageProps) {
     <div className="max-w-3xl mx-auto space-y-6">
       {/* Page Header */}
       <div>
-        <h1 className="text-2xl font-bold text-slate-900">Edit Claim</h1>
-        <p className="text-slate-600">
+        <h1 className="text-2xl font-bold text-[var(--rr-color-text-primary)]">Edit Claim</h1>
+        <p className="text-[var(--rr-color-text-secondary)]">
           Update claim information for {claim.policyholderName}
         </p>
       </div>

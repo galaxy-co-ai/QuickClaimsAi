@@ -29,8 +29,8 @@ export default async function EditCarrierPage({ params }: EditCarrierPageProps) 
           </Button>
         </Link>
         <div>
-          <h1 className="text-2xl font-bold text-slate-900">Edit Carrier</h1>
-          <p className="text-slate-600">{carrier.name}</p>
+          <h1 className="text-2xl font-bold text-[var(--rr-color-text-primary)]">Edit Carrier</h1>
+          <p className="text-[var(--rr-color-text-secondary)]">{carrier.name}</p>
         </div>
       </div>
 

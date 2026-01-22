@@ -33,8 +33,8 @@ export default async function CarrierDetailPage({
             </Button>
           </Link>
           <div>
-            <h1 className="text-2xl font-bold text-slate-900">{carrier.name}</h1>
-            <p className="text-slate-600">Insurance Carrier</p>
+            <h1 className="text-2xl font-bold text-[var(--rr-color-text-primary)]">{carrier.name}</h1>
+            <p className="text-[var(--rr-color-text-secondary)]">Insurance Carrier</p>
           </div>
         </div>
         <Link href={`/dashboard/carriers/${id}/edit`}>
@@ -54,10 +54,10 @@ export default async function CarrierDetailPage({
           <CardContent className="space-y-3">
             {carrier.email && (
               <div className="flex items-center gap-3">
-                <Mail className="h-4 w-4 text-slate-400" />
+                <Mail className="h-4 w-4 text-[var(--rr-color-stone)]" />
                 <a
                   href={`mailto:${carrier.email}`}
-                  className="text-blue-600 hover:underline"
+                  className="text-[var(--rr-color-brand-primary)] hover:underline"
                 >
                   {carrier.email}
                 </a>
@@ -65,10 +65,10 @@ export default async function CarrierDetailPage({
             )}
             {carrier.phone && (
               <div className="flex items-center gap-3">
-                <Phone className="h-4 w-4 text-slate-400" />
+                <Phone className="h-4 w-4 text-[var(--rr-color-stone)]" />
                 <a
                   href={`tel:${carrier.phone}`}
-                  className="text-blue-600 hover:underline"
+                  className="text-[var(--rr-color-brand-primary)] hover:underline"
                 >
                   {carrier.phone}
                 </a>
@@ -76,19 +76,19 @@ export default async function CarrierDetailPage({
             )}
             {carrier.website && (
               <div className="flex items-center gap-3">
-                <Globe className="h-4 w-4 text-slate-400" />
+                <Globe className="h-4 w-4 text-[var(--rr-color-stone)]" />
                 <a
                   href={carrier.website}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="text-blue-600 hover:underline truncate"
+                  className="text-[var(--rr-color-brand-primary)] hover:underline truncate"
                 >
                   {carrier.website}
                 </a>
               </div>
             )}
             {!carrier.email && !carrier.phone && !carrier.website && (
-              <p className="text-slate-500 text-sm">No contact info added</p>
+              <p className="text-[var(--rr-color-stone)] text-sm">No contact info added</p>
             )}
           </CardContent>
         </Card>
@@ -100,13 +100,13 @@ export default async function CarrierDetailPage({
           </CardHeader>
           <CardContent className="space-y-3">
             <div className="flex items-center justify-between">
-              <span className="text-slate-600">Total Claims</span>
+              <span className="text-[var(--rr-color-text-secondary)]">Total Claims</span>
               <span className="font-semibold text-lg">
                 {carrier._count.claims}
               </span>
             </div>
             <div className="flex items-center justify-between">
-              <span className="text-slate-600">Adjusters</span>
+              <span className="text-[var(--rr-color-text-secondary)]">Adjusters</span>
               <span className="font-semibold text-lg">
                 {carrier._count.adjusters}
               </span>
@@ -132,7 +132,7 @@ export default async function CarrierDetailPage({
             <CardTitle className="text-base">Notes</CardTitle>
           </CardHeader>
           <CardContent>
-            <p className="text-slate-700 whitespace-pre-wrap">{carrier.notes}</p>
+            <p className="text-[var(--rr-color-text-secondary)] whitespace-pre-wrap">{carrier.notes}</p>
           </CardContent>
         </Card>
       )}
@@ -150,8 +150,8 @@ export default async function CarrierDetailPage({
         </CardHeader>
         <CardContent>
           {carrier.adjusters.length === 0 ? (
-            <div className="text-center py-8 text-slate-500">
-              <Users className="h-8 w-8 mx-auto mb-2 text-slate-300" />
+            <div className="text-center py-8 text-[var(--rr-color-stone)]">
+              <Users className="h-8 w-8 mx-auto mb-2 text-[var(--rr-color-stone)]" />
               <p>No adjusters yet</p>
               <p className="text-sm">Add adjusters to track claim contacts</p>
             </div>
@@ -164,7 +164,7 @@ export default async function CarrierDetailPage({
                 >
                   <div>
                     <p className="font-medium">{adjuster.name}</p>
-                    <p className="text-sm text-slate-500">
+                    <p className="text-sm text-[var(--rr-color-stone)]">
                       {adjuster.type === "desk"
                         ? "Desk Adjuster"
                         : adjuster.type === "field"
@@ -172,11 +172,11 @@ export default async function CarrierDetailPage({
                         : "Independent Adjuster"}
                     </p>
                   </div>
-                  <div className="flex items-center gap-4 text-sm text-slate-600">
+                  <div className="flex items-center gap-4 text-sm text-[var(--rr-color-text-secondary)]">
                     {adjuster.email && (
                       <a
                         href={`mailto:${adjuster.email}`}
-                        className="hover:text-blue-600"
+                        className="hover:text-[var(--rr-color-brand-primary)]"
                       >
                         {adjuster.email}
                       </a>
@@ -184,7 +184,7 @@ export default async function CarrierDetailPage({
                     {adjuster.phone && (
                       <a
                         href={`tel:${adjuster.phone}`}
-                        className="hover:text-blue-600"
+                        className="hover:text-[var(--rr-color-brand-primary)]"
                       >
                         {adjuster.phone}
                       </a>

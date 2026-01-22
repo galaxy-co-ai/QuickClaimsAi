@@ -39,7 +39,7 @@ export function ContractorSidebar() {
     <aside
       className={cn(
         "flex h-screen flex-col transition-all duration-300 ease-out",
-        "bg-gradient-to-b from-slate-900/95 via-slate-900/98 to-slate-950",
+        "bg-gradient-to-b from-[var(--rr-color-charcoal)]/95 via-[var(--rr-color-charcoal)]/98 to-[var(--rr-color-charcoal)]",
         "backdrop-blur-xl border-r border-white/[0.08]",
         "rounded-r-2xl shadow-2xl shadow-black/20",
         collapsed ? "w-16" : "w-64"
@@ -120,7 +120,7 @@ export function ContractorSidebar() {
               
               {/* Active indicator bar */}
               {isActive && !collapsed && (
-                <div className="absolute right-2 h-1.5 w-1.5 rounded-full bg-emerald-400 shadow-[0_0_8px_2px_rgba(52,211,153,0.4)]" />
+                <div className="absolute right-2 h-1.5 w-1.5 rounded-full bg-[var(--rr-color-success)] shadow-[0_0_8px_2px_rgba(52,211,153,0.4)]" />
               )}
             </Link>
           );

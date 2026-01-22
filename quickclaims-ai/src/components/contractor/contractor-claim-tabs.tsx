@@ -57,11 +57,11 @@ interface ContractorClaimTabsProps {
 }
 
 const SUPPLEMENT_STATUS_COLORS: Record<string, string> = {
-  draft: "bg-slate-100 text-slate-800",
-  submitted: "bg-blue-100 text-blue-800",
-  pending: "bg-yellow-100 text-yellow-800",
-  approved: "bg-green-100 text-green-800",
-  denied: "bg-red-100 text-red-800",
+  draft: "bg-[var(--rr-color-sand)] text-[var(--rr-color-text-primary)]",
+  submitted: "bg-[var(--rr-color-info)]/10 text-[var(--rr-color-info)]",
+  pending: "bg-[var(--rr-color-warning)]/10 text-[var(--rr-color-warning)]",
+  approved: "bg-[var(--rr-color-success)]/10 text-[var(--rr-color-success)]",
+  denied: "bg-[var(--rr-color-error)]/10 text-[var(--rr-color-error)]",
   partial: "bg-orange-100 text-orange-800",
 };
 
@@ -104,7 +104,7 @@ export function ContractorClaimTabs({ claim }: ContractorClaimTabsProps) {
   };
 
   return (
-    <div className="rounded-lg border bg-white shadow-sm">
+    <div className="rounded-lg border bg-[var(--rr-color-surface-primary)] shadow-sm">
       {/* Tab Headers */}
       <div className="flex border-b">
         {tabs.map((tab) => (
@@ -114,13 +114,13 @@ export function ContractorClaimTabs({ claim }: ContractorClaimTabsProps) {
             className={cn(
               "flex items-center gap-2 px-4 py-3 text-sm font-medium border-b-2 -mb-px transition-colors",
               activeTab === tab.id
-                ? "border-blue-600 text-blue-600"
-                : "border-transparent text-slate-500 hover:text-slate-700"
+                ? "border-[var(--rr-color-brand-primary)] text-[var(--rr-color-brand-primary)]"
+                : "border-transparent text-[var(--rr-color-stone)] hover:text-[var(--rr-color-text-secondary)]"
             )}
           >
             <tab.icon className="h-4 w-4" />
             {tab.label}
-            <span className="rounded-full bg-slate-100 px-2 py-0.5 text-xs">
+            <span className="rounded-full bg-[var(--rr-color-sand)] px-2 py-0.5 text-xs">
               {tab.count}
             </span>
           </button>
@@ -132,14 +132,14 @@ export function ContractorClaimTabs({ claim }: ContractorClaimTabsProps) {
         {activeTab === "supplements" && (
           <div className="space-y-4">
             {claim.supplements.length === 0 ? (
-              <p className="text-center text-slate-500 py-8">No supplements yet</p>
+              <p className="text-center text-[var(--rr-color-stone)] py-8">No supplements yet</p>
             ) : (
               claim.supplements.map((supp) => (
                 <div key={supp.id} className="rounded-lg border p-4">
                   <div className="flex items-start justify-between">
                     <div>
                       <p className="font-medium">{supp.description}</p>
-                      <p className="text-sm text-slate-500">
+                      <p className="text-sm text-[var(--rr-color-stone)]">
                         Added by {supp.createdBy.firstName} {supp.createdBy.lastName} on{" "}
                         {new Date(supp.createdAt).toLocaleDateString()}
                       </p>
@@ -150,15 +150,15 @@ export function ContractorClaimTabs({ claim }: ContractorClaimTabsProps) {
                   </div>
                   <div className="mt-3 flex gap-6 text-sm">
                     <div>
-                      <span className="text-slate-500">Amount: </span>
+                      <span className="text-[var(--rr-color-stone)]">Amount: </span>
                       <span className="font-medium">
                         {"$" + decimalToNumber(supp.amount).toLocaleString()}
                       </span>
                     </div>
                     {supp.approvedAmount && (
                       <div>
-                        <span className="text-slate-500">Approved: </span>
-                        <span className="font-medium text-green-600">
+                        <span className="text-[var(--rr-color-stone)]">Approved: </span>
+                        <span className="font-medium text-[var(--rr-color-success)]">
                           {"$" + decimalToNumber(supp.approvedAmount).toLocaleString()}
                         </span>
                       </div>
@@ -173,7 +173,7 @@ export function ContractorClaimTabs({ claim }: ContractorClaimTabsProps) {
         {activeTab === "documents" && (
           <div className="space-y-2">
             {claim.documents.length === 0 ? (
-              <p className="text-center text-slate-500 py-8">No documents yet</p>
+              <p className="text-center text-[var(--rr-color-stone)] py-8">No documents yet</p>
             ) : (
               claim.documents.map((doc) => (
                 <a
@@ -181,19 +181,19 @@ export function ContractorClaimTabs({ claim }: ContractorClaimTabsProps) {
                   href={doc.url}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="flex items-center justify-between rounded-lg border p-3 hover:bg-slate-50"
+                  className="flex items-center justify-between rounded-lg border p-3 hover:bg-[var(--rr-color-surface-hover)]"
                 >
                   <div className="flex items-center gap-3">
-                    <FileText className="h-5 w-5 text-slate-400" />
+                    <FileText className="h-5 w-5 text-[var(--rr-color-stone)]" />
                     <div>
                       <p className="font-medium">{doc.originalFilename}</p>
-                      <p className="text-sm text-slate-500">
+                      <p className="text-sm text-[var(--rr-color-stone)]">
                         {DOCUMENT_TYPE_LABELS[doc.type] || doc.type} |{" "}
                         {(doc.size / 1024).toFixed(0)} KB
                       </p>
                     </div>
                   </div>
-                  <Download className="h-4 w-4 text-slate-400" />
+                  <Download className="h-4 w-4 text-[var(--rr-color-stone)]" />
                 </a>
               ))
             )}
@@ -210,7 +210,7 @@ export function ContractorClaimTabs({ claim }: ContractorClaimTabsProps) {
                 onChange={(e) => setComment(e.target.value)}
                 rows={3}
               />
-              {error && <p className="text-sm text-red-600">{error}</p>}
+              {error && <p className="text-sm text-[var(--rr-color-error)]">{error}</p>}
               <div className="flex justify-end">
                 <Button
                   onClick={handleSubmitComment}
@@ -226,24 +226,24 @@ export function ContractorClaimTabs({ claim }: ContractorClaimTabsProps) {
             {/* Notes List */}
             <div className="border-t pt-4">
               {claim.notes.length === 0 ? (
-                <p className="text-center text-slate-500 py-8">No activity yet</p>
+                <p className="text-center text-[var(--rr-color-stone)] py-8">No activity yet</p>
               ) : (
                 <div className="space-y-4">
                   {claim.notes.map((note) => (
                     <div key={note.id} className="flex gap-3">
-                      <div className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-slate-100">
-                        <MessageSquare className="h-4 w-4 text-slate-500" />
+                      <div className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-[var(--rr-color-sand)]">
+                        <MessageSquare className="h-4 w-4 text-[var(--rr-color-stone)]" />
                       </div>
                       <div className="flex-1">
                         <div className="flex items-center gap-2">
                           <span className="font-medium">
                             {note.user.firstName} {note.user.lastName}
                           </span>
-                          <span className="text-sm text-slate-500">
+                          <span className="text-sm text-[var(--rr-color-stone)]">
                             {new Date(note.createdAt).toLocaleString()}
                           </span>
                         </div>
-                        <p className="mt-1 text-slate-700 whitespace-pre-wrap">
+                        <p className="mt-1 text-[var(--rr-color-text-secondary)] whitespace-pre-wrap">
                           {note.content}
                         </p>
                       </div>

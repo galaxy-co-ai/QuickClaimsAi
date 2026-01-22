@@ -13,8 +13,8 @@ export default async function BillingPage() {
     <div className="space-y-6">
       {/* Page Header */}
       <div>
-        <h1 className="text-2xl font-bold text-slate-900">Billing Management</h1>
-        <p className="text-slate-600">
+        <h1 className="text-2xl font-bold text-[var(--rr-color-text-primary)]">Billing Management</h1>
+        <p className="text-[var(--rr-color-text-secondary)]">
           Track and manage contractor billing payments
         </p>
       </div>

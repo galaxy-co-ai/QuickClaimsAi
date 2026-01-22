@@ -1,0 +1,111 @@
+/* =================================================
+   QUICKCLAIMS AI - COMPONENT TOKENS
+   Component-specific sizing and styling tokens
+   ================================================= */
+
+:root {
+  /* ========================================
+     BUTTON TOKENS
+     ======================================== */
+  --rr-button-height-sm: 36px;
+  --rr-button-height-md: 44px;
+  --rr-button-height-lg: 52px;
+  --rr-button-padding-x-sm: var(--rr-space-3);
+  --rr-button-padding-x-md: var(--rr-space-4);
+  --rr-button-padding-x-lg: var(--rr-space-6);
+  --rr-button-min-width: 120px;
+  --rr-button-font-size: var(--rr-font-size-base);
+
+  /* ========================================
+     ICON BUTTON TOKENS
+     ======================================== */
+  --rr-icon-button-size-sm: 32px;
+  --rr-icon-button-size-md: 40px;
+  --rr-icon-button-size-lg: 48px;
+  --rr-icon-size-sm: 16px;
+  --rr-icon-size-md: 20px;
+  --rr-icon-size-lg: 24px;
+
+  /* ========================================
+     INPUT TOKENS
+     ======================================== */
+  --rr-input-height: 48px;
+  --rr-input-padding-x: var(--rr-space-3);
+  --rr-input-padding-y: var(--rr-space-3);
+  --rr-input-border-width: 1px;
+  --rr-input-border-width-focus: 2px;
+  --rr-input-font-size: var(--rr-font-size-base);
+
+  /* ========================================
+     CHECKBOX TOKENS
+     ======================================== */
+  --rr-checkbox-size: 20px;
+
+  /* ========================================
+     RADIO CARD TOKENS
+     ======================================== */
+  --rr-radio-card-min-height: 80px;
+  --rr-radio-card-padding: var(--rr-space-4);
+  --rr-radio-card-gap: var(--rr-space-3);
+  --rr-radio-card-border-width: 1px;
+  --rr-radio-card-border-width-selected: 2px;
+
+  /* ========================================
+     CARD TOKENS
+     ======================================== */
+  --rr-card-padding-sm: var(--rr-space-4);
+  --rr-card-padding-md: var(--rr-space-6);
+  --rr-card-padding-lg: var(--rr-space-8);
+  --rr-card-border-radius: var(--rr-radius-lg);
+
+  /* ========================================
+     HEADER TOKENS
+     ======================================== */
+  --rr-header-height-mobile: 56px;
+  --rr-header-height-desktop: 64px;
+
+  /* ========================================
+     NAVIGATION TOKENS
+     ======================================== */
+  --rr-bottom-tab-height: 64px;
+  --rr-side-nav-width: 240px;
+  --rr-progress-indicator-height: 4px;
+
+  /* ========================================
+     MODAL TOKENS
+     ======================================== */
+  --rr-modal-width-sm: 400px;
+  --rr-modal-width-md: 560px;
+  --rr-modal-width-lg: 720px;
+  --rr-modal-padding: var(--rr-space-6);
+  --rr-modal-backdrop-opacity: 0.5;
+
+  /* ========================================
+     TOAST TOKENS
+     ======================================== */
+  --rr-toast-width: 360px;
+  --rr-toast-border-width: 1px;
+
+  /* ========================================
+     CALENDAR/DATEPICKER TOKENS
+     ======================================== */
+  --rr-calendar-cell-size: 40px;
+
+  /* ========================================
+     TIMELINE TOKENS
+     ======================================== */
+  --rr-timeline-node-size: 32px;
+  --rr-timeline-connector-width: 2px;
+
+  /* ========================================
+     FOCUS RING TOKENS
+     ======================================== */
+  --rr-focus-ring-width: 2px;
+  --rr-focus-ring-offset: 2px;
+  --rr-focus-ring-color: var(--rr-color-sandstone);
+
+  /* ========================================
+     TOUCH TARGET TOKENS
+     ======================================== */
+  --rr-touch-target-min: 44px;
+}

@@ -171,7 +171,7 @@ export function BillingClient({ initialData, contractors }: BillingClientProps) 
       <div className="grid gap-4 md:grid-cols-3">
         <Card>
           <CardHeader className="pb-2">
-            <CardTitle className="text-sm font-medium text-slate-600">Total Claims</CardTitle>
+            <CardTitle className="text-sm font-medium text-[var(--rr-color-text-secondary)]">Total Claims</CardTitle>
           </CardHeader>
           <CardContent>
             <p className="text-2xl font-bold">{data.totals.count}</p>
@@ -179,20 +179,20 @@ export function BillingClient({ initialData, contractors }: BillingClientProps) 
         </Card>
         <Card>
           <CardHeader className="pb-2">
-            <CardTitle className="text-sm font-medium text-slate-600">Total Increase</CardTitle>
+            <CardTitle className="text-sm font-medium text-[var(--rr-color-text-secondary)]">Total Increase</CardTitle>
           </CardHeader>
           <CardContent>
-            <p className="text-2xl font-bold text-green-600">
+            <p className="text-2xl font-bold text-[var(--rr-color-success)]">
               {formatCurrency(data.totals.totalIncrease)}
             </p>
           </CardContent>
         </Card>
         <Card>
           <CardHeader className="pb-2">
-            <CardTitle className="text-sm font-medium text-slate-600">Total Billing</CardTitle>
+            <CardTitle className="text-sm font-medium text-[var(--rr-color-text-secondary)]">Total Billing</CardTitle>
           </CardHeader>
           <CardContent>
-            <p className="text-2xl font-bold text-blue-600">
+            <p className="text-2xl font-bold text-[var(--rr-color-info)]">
               {formatCurrency(data.totals.totalBilling)}
             </p>
           </CardContent>
@@ -252,14 +252,14 @@ export function BillingClient({ initialData, contractors }: BillingClientProps) 
 
       {/* Selection Actions */}
       {selectedIds.size > 0 && (
-        <Card className="bg-blue-50 border-blue-200">
+        <Card className="bg-[var(--rr-color-info)]/10 border-[var(--rr-color-info)]/20">
           <CardContent className="py-3">
             <div className="flex items-center justify-between">
               <div className="flex items-center gap-4">
-                <span className="font-medium text-blue-800">
+                <span className="font-medium text-[var(--rr-color-info)]">
                   {selectedIds.size} claim(s) selected
                 </span>
-                <span className="text-blue-700">
+                <span className="text-[var(--rr-color-info)]/80">
                   Total: {formatCurrency(selectedTotal)}
                 </span>
               </div>
@@ -271,7 +271,7 @@ export function BillingClient({ initialData, contractors }: BillingClientProps) 
                   size="sm"
                   onClick={handleMarkSelectedPaid}
                   disabled={isPending}
-                  className="bg-green-600 hover:bg-green-700"
+                  className="bg-[var(--rr-color-success)] hover:bg-[var(--rr-color-success)]/90"
                 >
                   {isPending ? (
                     <Loader2 className="h-4 w-4 animate-spin mr-1" />
@@ -290,7 +290,7 @@ export function BillingClient({ initialData, contractors }: BillingClientProps) 
       <Card>
         <CardHeader className="flex flex-row items-center justify-between">
           <CardTitle className="flex items-center gap-2">
-            <DollarSign className="h-5 w-5 text-green-500" />
+            <DollarSign className="h-5 w-5 text-[var(--rr-color-success)]" />
             Billing Claims
           </CardTitle>
           <Button variant="outline" size="sm" onClick={selectAllUnpaid}>
@@ -299,8 +299,8 @@ export function BillingClient({ initialData, contractors }: BillingClientProps) 
         </CardHeader>
         <CardContent>
           {data.claims.length === 0 ? (
-            <div className="text-center py-12 text-slate-500">
-              <DollarSign className="h-12 w-12 mx-auto mb-3 text-slate-300" />
+            <div className="text-center py-12 text-[var(--rr-color-stone)]">
+              <DollarSign className="h-12 w-12 mx-auto mb-3 text-[var(--rr-color-stone)]/50" />
               <p>No billing claims found</p>
               <p className="text-sm">Adjust filters to see more results</p>
             </div>
@@ -308,7 +308,7 @@ export function BillingClient({ initialData, contractors }: BillingClientProps) 
             <div className="overflow-x-auto">
               <table className="w-full text-sm">
                 <thead>
-                  <tr className="border-b bg-slate-50">
+                  <tr className="border-b bg-[var(--rr-color-sand-light)]">
                     <th className="text-left p-3 w-10">
                       <span className="sr-only">Select</span>
                     </th>
@@ -323,31 +323,31 @@ export function BillingClient({ initialData, contractors }: BillingClientProps) 
                 </thead>
                 <tbody>
                   {data.claims.map((claim) => (
-                    <tr key={claim.id} className={`border-b hover:bg-slate-50 ${claim.isPaid ? "bg-green-50" : ""}`}>
+                    <tr key={claim.id} className={`border-b hover:bg-[var(--rr-color-surface-hover)] ${claim.isPaid ? "bg-[var(--rr-color-success)]/5" : ""}`}>
                       <td className="p-3">
                         <button
                           onClick={() => toggleSelection(claim.id)}
-                          className="p-1 rounded hover:bg-slate-200"
+                          className="p-1 rounded hover:bg-[var(--rr-color-sand)]"
                           aria-label={selectedIds.has(claim.id) ? "Deselect claim" : "Select claim"}
                         >
                           {selectedIds.has(claim.id) ? (
-                            <CheckCircle className="h-5 w-5 text-blue-600" />
+                            <CheckCircle className="h-5 w-5 text-[var(--rr-color-info)]" />
                           ) : (
-                            <Circle className="h-5 w-5 text-slate-400" />
+                            <Circle className="h-5 w-5 text-[var(--rr-color-stone)]" />
                           )}
                         </button>
                       </td>
                       <td className="p-3">
                         <Link
                           href={`/dashboard/claims/${claim.id}`}
-                          className="font-medium text-blue-600 hover:underline"
+                          className="font-medium text-[var(--rr-color-brand-primary)] hover:underline"
                         >
                           {claim.policyholderName}
                         </Link>
-                        <p className="text-xs text-slate-500">{claim.lossAddress}</p>
+                        <p className="text-xs text-[var(--rr-color-stone)]">{claim.lossAddress}</p>
                       </td>
-                      <td className="p-3 text-slate-600">{claim.contractorName}</td>
-                      <td className="p-3 text-right text-green-600">
+                      <td className="p-3 text-[var(--rr-color-text-secondary)]">{claim.contractorName}</td>
+                      <td className="p-3 text-right text-[var(--rr-color-success)]">
                         {formatCurrency(claim.totalIncrease)}
                       </td>
                       <td className="p-3 text-right font-medium">
@@ -358,12 +358,12 @@ export function BillingClient({ initialData, contractors }: BillingClientProps) 
                       </td>
                       <td className="p-3 text-center">
                         {claim.isPaid ? (
-                          <span className="inline-flex items-center gap-1 text-green-600">
+                          <span className="inline-flex items-center gap-1 text-[var(--rr-color-success)]">
                             <CheckCircle className="h-4 w-4" />
                             <span className="text-xs">{formatDate(claim.billingPaidAt!)}</span>
                           </span>
                         ) : (
-                          <span className="text-slate-400 text-xs">Unpaid</span>
+                          <span className="text-[var(--rr-color-stone)] text-xs">Unpaid</span>
                         )}
                       </td>
                       <td className="p-3">

@@ -1,0 +1,49 @@
+/* =================================================
+   QUICKCLAIMS AI - TYPOGRAPHY TOKENS
+   Inter font family with full type scale
+   ================================================= */
+
+:root {
+  /* ========================================
+     FONT FAMILIES
+     ======================================== */
+  --rr-font-family-sans: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+  --rr-font-family-mono: 'JetBrains Mono', 'SF Mono', Consolas, 'Liberation Mono', Menlo, monospace;
+
+  /* ========================================
+     FONT SIZES
+     Base: 16px (1rem)
+     ======================================== */
+  --rr-font-size-xs: 0.75rem;    /* 12px - Caption, fine print */
+  --rr-font-size-sm: 0.875rem;   /* 14px - Secondary text */
+  --rr-font-size-base: 1rem;     /* 16px - Body text */
+  --rr-font-size-lg: 1.125rem;   /* 18px - Lead text */
+  --rr-font-size-xl: 1.25rem;    /* 20px - H4 */
+  --rr-font-size-2xl: 1.5rem;    /* 24px - H3 */
+  --rr-font-size-3xl: 1.875rem;  /* 30px - H2 */
+  --rr-font-size-4xl: 2.25rem;   /* 36px - H1 */
+  --rr-font-size-display: 3rem;  /* 48px - Display headings */
+
+  /* ========================================
+     FONT WEIGHTS
+     ======================================== */
+  --rr-font-weight-normal: 400;
+  --rr-font-weight-medium: 500;
+  --rr-font-weight-semibold: 600;
+
+  /* ========================================
+     LINE HEIGHTS
+     ======================================== */
+  --rr-line-height-tight: 1.2;   /* Headings */
+  --rr-line-height-snug: 1.375;  /* Short paragraphs */
+  --rr-line-height-normal: 1.5;  /* Body text */
+  --rr-line-height-relaxed: 1.625; /* Long-form reading */
+
+  /* ========================================
+     LETTER SPACING
+     ======================================== */
+  --rr-letter-spacing-tight: -0.025em;
+  --rr-letter-spacing-normal: 0;
+  --rr-letter-spacing-wide: 0.025em;
+  --rr-letter-spacing-wider: 0.05em;
+}

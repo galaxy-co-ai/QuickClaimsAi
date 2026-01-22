@@ -29,8 +29,8 @@ export default async function EditAdjusterPage({ params }: EditAdjusterPageProps
     <div className="max-w-2xl mx-auto space-y-6">
       {/* Page Header */}
       <div>
-        <h1 className="text-2xl font-bold text-slate-900">Edit Adjuster</h1>
-        <p className="text-slate-600">Update adjuster information for {adjuster.name}</p>
+        <h1 className="text-2xl font-bold text-[var(--rr-color-text-primary)]">Edit Adjuster</h1>
+        <p className="text-[var(--rr-color-text-secondary)]">Update adjuster information for {adjuster.name}</p>
       </div>
 
       <AdjusterForm

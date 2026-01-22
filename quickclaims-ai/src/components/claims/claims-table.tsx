@@ -44,12 +44,12 @@ export function ClaimsTable({ claims, pagination }: ClaimsTableProps) {
   if (claims.length === 0) {
     return (
       <Card>
-        <CardContent className="flex flex-col items-center justify-center py-12">
-          <FileText className="h-12 w-12 text-slate-300 mb-4" />
-          <h3 className="text-lg font-medium text-slate-900 mb-2">
+        <CardContent className="flex flex-col items-center justify-center py-[var(--rr-space-12)]">
+          <FileText className="h-12 w-12 text-[var(--rr-color-stone)] mb-[var(--rr-space-4)]" />
+          <h3 className="text-[var(--rr-font-size-lg)] font-[var(--rr-font-weight-medium)] text-[var(--rr-color-text-primary)] mb-[var(--rr-space-2)]">
             No claims found
           </h3>
-          <p className="text-slate-500 mb-4 text-center max-w-sm">
+          <p className="text-[var(--rr-color-text-secondary)] mb-[var(--rr-space-4)] text-center max-w-sm">
             No claims match your current filters. Try adjusting your search or create a new claim.
           </p>
           <Link href="/dashboard/claims/new">
@@ -62,9 +62,9 @@ export function ClaimsTable({ claims, pagination }: ClaimsTableProps) {
 
   return (
     <Card>
-      <CardHeader className="flex flex-row items-center justify-between pb-4">
+      <CardHeader className="flex flex-row items-center justify-between pb-[var(--rr-space-4)]">
         <CardTitle>All Claims</CardTitle>
-        <span className="text-sm text-slate-500">
+        <span className="text-[var(--rr-font-size-sm)] text-[var(--rr-color-text-secondary)]">
           {pagination.total} claim{pagination.total !== 1 ? "s" : ""}
         </span>
       </CardHeader>
@@ -72,18 +72,18 @@ export function ClaimsTable({ claims, pagination }: ClaimsTableProps) {
         <div className="overflow-x-auto">
           <table className="w-full" role="table">
             <thead>
-              <tr className="border-b text-left text-sm text-slate-500">
-                <th className="pb-3 font-medium w-8"></th>
-                <th className="pb-3 font-medium">Status</th>
-                <th className="pb-3 font-medium">Claim #</th>
-                <th className="pb-3 font-medium">Policyholder</th>
-                <th className="pb-3 font-medium">Carrier</th>
-                <th className="pb-3 font-medium">Contractor</th>
-                <th className="pb-3 font-medium">Job Type</th>
-                <th className="pb-3 font-medium">Estimator</th>
-                <th className="pb-3 font-medium text-right">Increase</th>
-                <th className="pb-3 font-medium text-right">Commission</th>
-                <th className="pb-3 font-medium text-right">Days in Status</th>
+              <tr className="border-b border-[var(--rr-color-border-default)] text-left text-[var(--rr-font-size-sm)] text-[var(--rr-color-text-secondary)]">
+                <th className="pb-[var(--rr-space-3)] font-[var(--rr-font-weight-medium)] w-8"></th>
+                <th className="pb-[var(--rr-space-3)] font-[var(--rr-font-weight-medium)]">Status</th>
+                <th className="pb-[var(--rr-space-3)] font-[var(--rr-font-weight-medium)]">Claim #</th>
+                <th className="pb-[var(--rr-space-3)] font-[var(--rr-font-weight-medium)]">Policyholder</th>
+                <th className="pb-[var(--rr-space-3)] font-[var(--rr-font-weight-medium)]">Carrier</th>
+                <th className="pb-[var(--rr-space-3)] font-[var(--rr-font-weight-medium)]">Contractor</th>
+                <th className="pb-[var(--rr-space-3)] font-[var(--rr-font-weight-medium)]">Job Type</th>
+                <th className="pb-[var(--rr-space-3)] font-[var(--rr-font-weight-medium)]">Estimator</th>
+                <th className="pb-[var(--rr-space-3)] font-[var(--rr-font-weight-medium)] text-right">Increase</th>
+                <th className="pb-[var(--rr-space-3)] font-[var(--rr-font-weight-medium)] text-right">Commission</th>
+                <th className="pb-[var(--rr-space-3)] font-[var(--rr-font-weight-medium)] text-right">Days in Status</th>
               </tr>
             </thead>
             <tbody>
@@ -96,13 +96,13 @@ export function ClaimsTable({ claims, pagination }: ClaimsTableProps) {
 
         {/* Pagination */}
         {pagination.totalPages > 1 && (
-          <div className="flex items-center justify-between pt-4 border-t mt-4">
-            <div className="text-sm text-slate-500">
+          <div className="flex items-center justify-between pt-[var(--rr-space-4)] border-t border-[var(--rr-color-border-default)] mt-[var(--rr-space-4)]">
+            <div className="text-[var(--rr-font-size-sm)] text-[var(--rr-color-text-secondary)]">
               Showing {(pagination.page - 1) * pagination.limit + 1}-
               {Math.min(pagination.page * pagination.limit, pagination.total)} of{" "}
               {pagination.total}
             </div>
-            <div className="flex items-center gap-2">
+            <div className="flex items-center gap-[var(--rr-space-2)]">
               <Button
                 variant="outline"
                 size="sm"
@@ -111,7 +111,7 @@ export function ClaimsTable({ claims, pagination }: ClaimsTableProps) {
               >
                 Previous
               </Button>
-              <div className="flex items-center gap-1">
+              <div className="flex items-center gap-[var(--rr-space-1)]">
                 {Array.from({ length: Math.min(5, pagination.totalPages) }, (_, i) => {
                   let pageNum: number;
                   if (pagination.totalPages <= 5) {
@@ -163,74 +163,74 @@ function ClaimRow({ claim }: { claim: ClaimWithRelations }) {
   }[complianceStatus];
 
   const complianceColor = {
-    compliant: "text-green-500",
-    warning: "text-yellow-500",
-    overdue: "text-red-500",
+    compliant: "text-[var(--rr-color-success)]",
+    warning: "text-[var(--rr-color-warning)]",
+    overdue: "text-[var(--rr-color-error)]",
   }[complianceStatus];
 
   const totalIncrease = Number(claim.totalIncrease);
   const estimatorCommission = Number(claim.estimatorCommission);
-  
+
   // Calculate days in current status
   const daysInStatus = Math.floor(
     (Date.now() - new Date(claim.statusChangedAt).getTime()) / (1000 * 60 * 60 * 24)
   );
 
   return (
-    <tr className="border-b last:border-0 hover:bg-slate-50 cursor-pointer">
-      <td className="py-4">
+    <tr className="border-b border-[var(--rr-color-border-default)] last:border-0 hover:bg-[var(--rr-color-surface-hover)] cursor-pointer">
+      <td className="py-[var(--rr-space-4)]">
         <ComplianceIcon
           className={`h-4 w-4 ${complianceColor}`}
           aria-label={`${complianceStatus}: ${hours}h since last activity`}
         />
       </td>
-      <td className="py-4">
+      <td className="py-[var(--rr-space-4)]">
         <span
-          className={`inline-flex rounded-full px-2 py-1 text-xs font-medium ${
-            CLAIM_STATUS_COLORS[claim.status] || "bg-gray-100 text-gray-800"
+          className={`inline-flex rounded-[var(--rr-radius-full)] px-[var(--rr-space-2)] py-[var(--rr-space-1)] text-[var(--rr-font-size-xs)] font-[var(--rr-font-weight-medium)] ${
+            CLAIM_STATUS_COLORS[claim.status] || "bg-[var(--rr-color-sand)] text-[var(--rr-color-text-primary)]"
           }`}
         >
           {CLAIM_STATUS_LABELS[claim.status] || claim.status}
         </span>
       </td>
-      <td className="py-4 text-sm text-slate-700">
+      <td className="py-[var(--rr-space-4)] text-[var(--rr-font-size-sm)] text-[var(--rr-color-text-secondary)]">
         {claim.claimNumber || "-"}
       </td>
-      <td className="py-4">
+      <td className="py-[var(--rr-space-4)]">
         <Link
           href={`/dashboard/claims/${claim.id}`}
-          className="block hover:text-blue-600"
+          className="block hover:text-[var(--rr-color-brand-primary)]"
         >
-          <div className="font-medium text-slate-900">
+          <div className="font-[var(--rr-font-weight-medium)] text-[var(--rr-color-text-primary)]">
             {claim.policyholderName}
           </div>
-          <div className="text-sm text-slate-500">
+          <div className="text-[var(--rr-font-size-sm)] text-[var(--rr-color-text-secondary)]">
             {claim.lossAddress}, {claim.lossCity}
           </div>
         </Link>
       </td>
-      <td className="py-4 text-sm text-slate-700">
+      <td className="py-[var(--rr-space-4)] text-[var(--rr-font-size-sm)] text-[var(--rr-color-text-secondary)]">
         {claim.carrier.name}
       </td>
-      <td className="py-4 text-sm text-slate-700">
+      <td className="py-[var(--rr-space-4)] text-[var(--rr-font-size-sm)] text-[var(--rr-color-text-secondary)]">
         {claim.contractor.companyName}
       </td>
-      <td className="py-4">
-        <span className="inline-flex rounded-md bg-slate-100 px-2 py-1 text-xs font-medium text-slate-700">
+      <td className="py-[var(--rr-space-4)]">
+        <span className="inline-flex rounded-[var(--rr-radius-md)] bg-[var(--rr-color-sand)] px-[var(--rr-space-2)] py-[var(--rr-space-1)] text-[var(--rr-font-size-xs)] font-[var(--rr-font-weight-medium)] text-[var(--rr-color-text-secondary)]">
           {JOB_TYPE_LABELS[claim.jobType] || claim.jobType}
         </span>
       </td>
-      <td className="py-4 text-slate-700">
+      <td className="py-[var(--rr-space-4)] text-[var(--rr-color-text-secondary)]">
         {claim.estimator.firstName} {claim.estimator.lastName}
       </td>
-      <td className="py-4 text-right font-medium text-green-600">
+      <td className="py-[var(--rr-space-4)] text-right font-[var(--rr-font-weight-medium)] text-[var(--rr-color-success)]">
         {totalIncrease > 0 ? formatCurrency(totalIncrease) : "-"}
       </td>
-      <td className="py-4 text-right font-medium text-blue-600">
+      <td className="py-[var(--rr-space-4)] text-right font-[var(--rr-font-weight-medium)] text-[var(--rr-color-brand-primary)]">
         {estimatorCommission > 0 ? formatCurrency(estimatorCommission) : "-"}
       </td>
-      <td className="py-4 text-right text-sm">
-        <span className={daysInStatus > 3 ? "text-red-500 font-medium" : "text-slate-500"}>
+      <td className="py-[var(--rr-space-4)] text-right text-[var(--rr-font-size-sm)]">
+        <span className={daysInStatus > 3 ? "text-[var(--rr-color-error)] font-[var(--rr-font-weight-medium)]" : "text-[var(--rr-color-text-secondary)]"}>
           {daysInStatus === 0 ? "Today" : daysInStatus === 1 ? "1 day" : `${daysInStatus} days`}
         </span>
       </td>

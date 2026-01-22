@@ -73,16 +73,16 @@ export function OrganizationSettings({ settings }: OrganizationSettingsProps) {
   return (
     <div className="space-y-6">
       <div>
-        <h2 className="text-lg font-semibold text-slate-900">Organization</h2>
-        <p className="text-sm text-slate-500">
+        <h2 className="text-lg font-semibold text-[var(--rr-color-text-primary)]">Organization</h2>
+        <p className="text-sm text-[var(--rr-color-stone)]">
           Configure your company information and settings
         </p>
       </div>
 
       {/* Company Information Section */}
       <div className="space-y-4">
-        <h3 className="font-medium text-slate-800 flex items-center gap-2">
-          <Building2 className="h-4 w-4 text-slate-400" />
+        <h3 className="font-medium text-[var(--rr-color-text-secondary)] flex items-center gap-2">
+          <Building2 className="h-4 w-4 text-[var(--rr-color-stone)]" />
           Company Information
         </h3>
 
@@ -120,18 +120,18 @@ export function OrganizationSettings({ settings }: OrganizationSettingsProps) {
             onChange={handleChange}
             placeholder="123 Main Street&#10;Suite 100&#10;Austin, TX 78701"
             rows={3}
-            className="flex min-h-[80px] w-full rounded-xl border border-slate-200 bg-white px-3 py-2 text-sm placeholder:text-slate-400 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-500/40 focus-visible:border-blue-500 disabled:cursor-not-allowed disabled:opacity-50 transition-all duration-200"
+            className="flex min-h-[80px] w-full rounded-xl border border-[var(--rr-color-border-default)] bg-white px-3 py-2 text-sm placeholder:text-[var(--rr-color-stone)] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--rr-color-brand-primary)]/40 focus-visible:border-[var(--rr-color-brand-primary)] disabled:cursor-not-allowed disabled:opacity-50 transition-all duration-200"
           />
-          <p className="text-xs text-slate-500">
+          <p className="text-xs text-[var(--rr-color-stone)]">
             This address will appear on generated reports and invoices
           </p>
         </div>
       </div>
 
       {/* Compliance Settings */}
-      <div className="space-y-4 pt-4 border-t border-slate-200">
-        <h3 className="font-medium text-slate-800 flex items-center gap-2">
-          <Clock className="h-4 w-4 text-slate-400" />
+      <div className="space-y-4 pt-4 border-t border-[var(--rr-color-border-default)]">
+        <h3 className="font-medium text-[var(--rr-color-text-secondary)] flex items-center gap-2">
+          <Clock className="h-4 w-4 text-[var(--rr-color-stone)]" />
           Compliance Settings
         </h3>
 
@@ -148,9 +148,9 @@ export function OrganizationSettings({ settings }: OrganizationSettingsProps) {
               onChange={handleChange}
               className="w-24"
             />
-            <span className="text-slate-500">hours</span>
+            <span className="text-[var(--rr-color-stone)]">hours</span>
           </div>
-          <p className="text-xs text-slate-500">
+          <p className="text-xs text-[var(--rr-color-stone)]">
             Claims without activity beyond this threshold will be flagged.
             Default is 48 hours per Rise&apos;s commitment.
           </p>
@@ -158,9 +158,9 @@ export function OrganizationSettings({ settings }: OrganizationSettingsProps) {
       </div>
 
       {/* Report Customization */}
-      <div className="space-y-4 pt-4 border-t border-slate-200">
-        <h3 className="font-medium text-slate-800 flex items-center gap-2">
-          <FileText className="h-4 w-4 text-slate-400" />
+      <div className="space-y-4 pt-4 border-t border-[var(--rr-color-border-default)]">
+        <h3 className="font-medium text-[var(--rr-color-text-secondary)] flex items-center gap-2">
+          <FileText className="h-4 w-4 text-[var(--rr-color-stone)]" />
           Report Customization
         </h3>
 
@@ -173,7 +173,7 @@ export function OrganizationSettings({ settings }: OrganizationSettingsProps) {
             onChange={handleChange}
             placeholder="Optional header text that appears at the top of generated reports..."
             rows={2}
-            className="flex min-h-[60px] w-full rounded-xl border border-slate-200 bg-white px-3 py-2 text-sm placeholder:text-slate-400 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-500/40 focus-visible:border-blue-500 disabled:cursor-not-allowed disabled:opacity-50 transition-all duration-200"
+            className="flex min-h-[60px] w-full rounded-xl border border-[var(--rr-color-border-default)] bg-white px-3 py-2 text-sm placeholder:text-[var(--rr-color-stone)] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--rr-color-brand-primary)]/40 focus-visible:border-[var(--rr-color-brand-primary)] disabled:cursor-not-allowed disabled:opacity-50 transition-all duration-200"
           />
         </div>
 
@@ -186,16 +186,16 @@ export function OrganizationSettings({ settings }: OrganizationSettingsProps) {
             onChange={handleChange}
             placeholder="Payment terms, disclaimers, or other footer content..."
             rows={2}
-            className="flex min-h-[60px] w-full rounded-xl border border-slate-200 bg-white px-3 py-2 text-sm placeholder:text-slate-400 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-500/40 focus-visible:border-blue-500 disabled:cursor-not-allowed disabled:opacity-50 transition-all duration-200"
+            className="flex min-h-[60px] w-full rounded-xl border border-[var(--rr-color-border-default)] bg-white px-3 py-2 text-sm placeholder:text-[var(--rr-color-stone)] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--rr-color-brand-primary)]/40 focus-visible:border-[var(--rr-color-brand-primary)] disabled:cursor-not-allowed disabled:opacity-50 transition-all duration-200"
           />
-          <p className="text-xs text-slate-500">
+          <p className="text-xs text-[var(--rr-color-stone)]">
             Example: &quot;Payment due within 30 days of invoice date.&quot;
           </p>
         </div>
       </div>
 
       {/* Save Button */}
-      <div className="flex justify-end pt-4 border-t border-slate-200">
+      <div className="flex justify-end pt-4 border-t border-[var(--rr-color-border-default)]">
         <Button onClick={handleSave} disabled={isLoading}>
           {isLoading && <Loader2 className="h-4 w-4 mr-2 animate-spin" />}
           Save Changes

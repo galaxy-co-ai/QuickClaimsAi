@@ -1,0 +1,54 @@
+/* =================================================
+   QUICKCLAIMS AI - SPACING TOKENS
+   4px base grid system
+   ================================================= */
+
+:root {
+  /* ========================================
+     SPACING SCALE
+     Base: 4px
+     ======================================== */
+  --rr-space-0: 0;
+  --rr-space-1: 0.25rem;   /* 4px */
+  --rr-space-2: 0.5rem;    /* 8px */
+  --rr-space-3: 0.75rem;   /* 12px */
+  --rr-space-4: 1rem;      /* 16px */
+  --rr-space-5: 1.25rem;   /* 20px */
+  --rr-space-6: 1.5rem;    /* 24px */
+  --rr-space-7: 2rem;      /* 32px */
+  --rr-space-8: 2.5rem;    /* 40px */
+  --rr-space-9: 3rem;      /* 48px */
+  --rr-space-10: 4rem;     /* 64px */
+  --rr-space-12: 6rem;     /* 96px */
+  --rr-space-16: 8rem;     /* 128px */
+
+  /* ========================================
+     SEMANTIC SPACING
+     Named for common use cases
+     ======================================== */
+
+  /* Component internal spacing */
+  --rr-space-component-xs: var(--rr-space-1);    /* 4px - tight internal */
+  --rr-space-component-sm: var(--rr-space-2);    /* 8px - compact */
+  --rr-space-component-md: var(--rr-space-3);    /* 12px - default */
+  --rr-space-component-lg: var(--rr-space-4);    /* 16px - spacious */
+  --rr-space-component-xl: var(--rr-space-6);    /* 24px - very spacious */
+
+  /* Layout spacing (sections, containers) */
+  --rr-space-layout-xs: var(--rr-space-4);       /* 16px */
+  --rr-space-layout-sm: var(--rr-space-6);       /* 24px */
+  --rr-space-layout-md: var(--rr-space-8);       /* 40px */
+  --rr-space-layout-lg: var(--rr-space-10);      /* 64px */
+  --rr-space-layout-xl: var(--rr-space-12);      /* 96px */
+
+  /* Page-level spacing */
+  --rr-space-page-gutter: var(--rr-space-4);     /* 16px - mobile */
+  --rr-space-page-gutter-lg: var(--rr-space-6);  /* 24px - desktop */
+
+  /* Gap utilities */
+  --rr-gap-xs: var(--rr-space-1);    /* 4px */
+  --rr-gap-sm: var(--rr-space-2);    /* 8px */
+  --rr-gap-md: var(--rr-space-4);    /* 16px */
+  --rr-gap-lg: var(--rr-space-6);    /* 24px */
+  --rr-gap-xl: var(--rr-space-8);    /* 40px */
+}

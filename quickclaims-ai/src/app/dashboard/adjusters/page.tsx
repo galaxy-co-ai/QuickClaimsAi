@@ -45,8 +45,8 @@ export default async function AdjustersPage() {
       {/* Page Header */}
       <div className="flex items-center justify-between">
         <div>
-          <h1 className="text-2xl font-bold text-slate-900">Adjusters</h1>
-          <p className="text-slate-600">
+          <h1 className="text-2xl font-bold text-[var(--rr-color-text-primary)]">Adjusters</h1>
+          <p className="text-[var(--rr-color-text-secondary)]">
             Manage insurance adjusters grouped by carrier
           </p>
         </div>
@@ -62,11 +62,11 @@ export default async function AdjustersPage() {
       {adjusters.length === 0 ? (
         <Card>
           <CardContent className="flex flex-col items-center justify-center py-12">
-            <UserCheck className="h-12 w-12 text-slate-300 mb-4" />
-            <h3 className="text-lg font-medium text-slate-900 mb-2">
+            <UserCheck className="h-12 w-12 text-[var(--rr-color-stone)] mb-4" />
+            <h3 className="text-lg font-medium text-[var(--rr-color-text-primary)] mb-2">
               No adjusters yet
             </h3>
-            <p className="text-slate-500 mb-4 text-center max-w-sm">
+            <p className="text-[var(--rr-color-stone)] mb-4 text-center max-w-sm">
               Add your first adjuster to track carrier contacts and improve your negotiation history.
             </p>
             <Link href="/dashboard/adjusters/new">
@@ -78,7 +78,7 @@ export default async function AdjustersPage() {
         <Card>
           <CardHeader>
             <CardTitle className="flex items-center gap-2">
-              <UserCheck className="h-5 w-5 text-green-500" />
+              <UserCheck className="h-5 w-5 text-[var(--rr-color-success)]" />
               {adjusters.length} Adjuster(s) across {sortedCarriers.length} Carrier(s)
             </CardTitle>
           </CardHeader>
@@ -87,7 +87,7 @@ export default async function AdjustersPage() {
               <div key={letter} className="space-y-3">
                 {/* Letter Header */}
                 <div className="sticky top-0 bg-white z-10 py-1">
-                  <span className="inline-flex items-center justify-center w-8 h-8 rounded-full bg-slate-100 text-sm font-bold text-slate-700">
+                  <span className="inline-flex items-center justify-center w-8 h-8 rounded-full bg-[var(--rr-color-sand)] text-sm font-bold text-[var(--rr-color-text-secondary)]">
                     {letter}
                   </span>
                 </div>

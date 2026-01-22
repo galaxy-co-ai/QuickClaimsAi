@@ -17,7 +17,7 @@ const DropdownMenuContent = React.forwardRef<
       ref={ref}
       sideOffset={sideOffset}
       className={cn(
-        "z-50 min-w-[8rem] overflow-hidden rounded-xl border border-slate-200/80 bg-white/95 backdrop-blur-xl p-1.5 text-slate-950 shadow-lg shadow-black/10",
+        "z-[var(--rr-z-50)] min-w-[8rem] overflow-hidden rounded-[var(--rr-radius-lg)] border border-[var(--rr-color-border-default)] bg-[var(--rr-color-bg-secondary)] p-[var(--rr-space-2)] text-[var(--rr-color-text-primary)] shadow-[var(--rr-shadow-lg)]",
         "data-[state=open]:animate-in data-[state=closed]:animate-out",
         "data-[state=closed]:fade-out-0 data-[state=open]:fade-in-0",
         "data-[state=closed]:zoom-out-95 data-[state=open]:zoom-in-95",
@@ -40,8 +40,8 @@ const DropdownMenuItem = React.forwardRef<
   <DropdownMenuPrimitive.Item
     ref={ref}
     className={cn(
-      "relative flex cursor-default select-none items-center rounded-lg px-3 py-2 text-sm outline-none",
-      "transition-colors duration-150 focus:bg-slate-100 focus:text-slate-900",
+      "relative flex cursor-default select-none items-center rounded-[var(--rr-radius-md)] px-[var(--rr-space-3)] py-[var(--rr-space-2)] text-[var(--rr-font-size-sm)] outline-none",
+      "transition-colors focus:bg-[var(--rr-color-surface-hover)] focus:text-[var(--rr-color-text-primary)]",
       "data-[disabled]:pointer-events-none data-[disabled]:opacity-50",
       inset && "pl-8",
       className
@@ -57,7 +57,7 @@ const DropdownMenuSeparator = React.forwardRef<
 >(({ className, ...props }, ref) => (
   <DropdownMenuPrimitive.Separator
     ref={ref}
-    className={cn("-mx-1 my-1 h-px bg-slate-100", className)}
+    className={cn("-mx-1 my-1 h-px bg-[var(--rr-color-border-default)]", className)}
     {...props}
   />
 ));
@@ -72,7 +72,7 @@ const DropdownMenuLabel = React.forwardRef<
   <DropdownMenuPrimitive.Label
     ref={ref}
     className={cn(
-      "px-2 py-1.5 text-sm font-semibold",
+      "px-[var(--rr-space-2)] py-[var(--rr-space-2)] text-[var(--rr-font-size-sm)] font-[var(--rr-font-weight-semibold)] text-[var(--rr-color-text-primary)]",
       inset && "pl-8",
       className
     )}

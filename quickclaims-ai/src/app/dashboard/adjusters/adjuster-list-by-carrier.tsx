@@ -31,9 +31,9 @@ const TYPE_LABELS: Record<string, string> = {
 };
 
 const TYPE_COLORS: Record<string, string> = {
-  desk: "bg-blue-100 text-blue-700",
-  field: "bg-green-100 text-green-700",
-  independent: "bg-purple-100 text-purple-700",
+  desk: "bg-[var(--rr-color-info)]/10 text-[var(--rr-color-info)]",
+  field: "bg-[var(--rr-color-success)]/10 text-[var(--rr-color-success)]",
+  independent: "bg-[var(--rr-color-brand-accent)]/10 text-[var(--rr-color-brand-accent)]",
 };
 
 export function AdjusterListByCarrier({ carrier }: AdjusterListByCarrierProps) {
@@ -43,7 +43,7 @@ export function AdjusterListByCarrier({ carrier }: AdjusterListByCarrierProps) {
     <div className="border rounded-lg overflow-hidden">
       {/* Carrier Header */}
       <div
-        className="flex items-center justify-between p-3 bg-slate-50 hover:bg-slate-100 cursor-pointer"
+        className="flex items-center justify-between p-3 bg-[var(--rr-color-sand-light)] hover:bg-[var(--rr-color-sand)] cursor-pointer"
         onClick={() => setExpanded(!expanded)}
         role="button"
         aria-expanded={expanded}
@@ -58,7 +58,7 @@ export function AdjusterListByCarrier({ carrier }: AdjusterListByCarrierProps) {
       >
         <div className="flex items-center gap-3">
           <button
-            className="p-1 rounded hover:bg-slate-200"
+            className="p-1 rounded hover:bg-[var(--rr-color-sand)]"
             onClick={(e) => {
               e.stopPropagation();
               setExpanded(!expanded);
@@ -66,13 +66,13 @@ export function AdjusterListByCarrier({ carrier }: AdjusterListByCarrierProps) {
             aria-label={expanded ? "Collapse adjusters" : "Expand adjusters"}
           >
             {expanded ? (
-              <ChevronDown className="h-4 w-4 text-slate-500" />
+              <ChevronDown className="h-4 w-4 text-[var(--rr-color-stone)]" />
             ) : (
-              <ChevronRight className="h-4 w-4 text-slate-500" />
+              <ChevronRight className="h-4 w-4 text-[var(--rr-color-stone)]" />
             )}
           </button>
-          <Shield className="h-5 w-5 text-blue-500" />
-          <span className="font-medium text-slate-900">{carrier.name}</span>
+          <Shield className="h-5 w-5 text-[var(--rr-color-brand-primary)]" />
+          <span className="font-medium text-[var(--rr-color-text-primary)]">{carrier.name}</span>
           <Badge variant="secondary" className="ml-2">
             {carrier.adjusters.length} adjuster(s)
           </Badge>
@@ -94,12 +94,12 @@ export function AdjusterListByCarrier({ carrier }: AdjusterListByCarrierProps) {
             <Link
               key={adjuster.id}
               href={`/dashboard/adjusters/${adjuster.id}`}
-              className="flex items-center justify-between p-3 pl-12 hover:bg-slate-50 transition-colors"
+              className="flex items-center justify-between p-3 pl-12 hover:bg-[var(--rr-color-surface-hover)] transition-colors"
             >
               <div className="flex items-center gap-3">
                 <div>
-                  <div className="font-medium text-slate-700">{adjuster.name}</div>
-                  <div className="flex items-center gap-3 text-sm text-slate-500">
+                  <div className="font-medium text-[var(--rr-color-text-secondary)]">{adjuster.name}</div>
+                  <div className="flex items-center gap-3 text-sm text-[var(--rr-color-stone)]">
                     {adjuster.email && (
                       <span className="flex items-center gap-1">
                         <Mail className="h-3 w-3" />
@@ -116,7 +116,7 @@ export function AdjusterListByCarrier({ carrier }: AdjusterListByCarrierProps) {
                 </div>
               </div>
               <div className="flex items-center gap-3">
-                <span className="text-sm text-slate-500">
+                <span className="text-sm text-[var(--rr-color-stone)]">
                   {adjuster._count.claims} claims
                 </span>
                 <Badge className={TYPE_COLORS[adjuster.type] || TYPE_COLORS.desk}>
@@ -132,7 +132,7 @@ export function AdjusterListByCarrier({ carrier }: AdjusterListByCarrierProps) {
           <div className="p-3 pl-12">
             <Link
               href={`/dashboard/adjusters/new?carrierId=${carrier.id}`}
-              className="inline-flex items-center gap-1 text-sm text-blue-600 hover:underline"
+              className="inline-flex items-center gap-1 text-sm text-[var(--rr-color-brand-primary)] hover:underline"
             >
               + Add adjuster to {carrier.name}
             </Link>
